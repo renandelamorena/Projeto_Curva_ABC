@@ -1,6 +1,10 @@
-import pandas as pd
-import numpy as np
-import streamlit as st
+# python -m venv venv
+# ./venv/Scripts/activate
 
-st.title('Dashbord - Curva ABC')
+import streamlit as st
+# import requests
+import pandas as pd
+import plotly.express as px
+
+st.title('Dashbord - Projeto Curva ABC')
 
