@@ -6,6 +6,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import time
+import xlsxwriter
+from io import BytesIO
 
 st.set_page_config(layout='wide')
 
@@ -16,7 +18,28 @@ def formata_numero(valor, prefixo = ''):
         if valor < 1000:
             return f'{prefixo} {valor} {unidade}'
         valor /= 1000
-    return f'{prefixo} {valor} milhões' 
+    return f'{prefixo} {valor} milhões'
+
+def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
+    # Criar um DataFrame
+    df = pd.DataFrame(tabela_excel)
+
+    # Criar um buffer de bytes para armazenar o Excel em memória
+    output = BytesIO()
+
+    # Criar um objeto Excel a partir do DataFrame
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+
+    # Configurar o buffer para leitura
+    output.seek(0)
+
+    # Adicionar o botão de download
+    st.download_button(label = nome_do_botao,
+                        data = output.getvalue(),
+                        file_name = nome_do_arquivo,
+                        mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
 
 st.title('Dashbord - Projeto Curva ABC') ##Titulo
 
@@ -83,13 +106,29 @@ with aba1:
 #Apanha Caixa
 # with aba2:
 
-
 #Apanha Fracionado
 with aba3:
 
+    AC = 20
+    AB = 32
+    AA = 27
+    AM = 8
+    XPE = 9
+
+    total_enderecos_mosdulo = AC + AB + AA
+
     coluna1, coluna2, coluna3 = st.columns(3)
-    with coluna1:
+    with coluna2:
         st.metric('Total de Curvas B e C no Flowrack:', total_curva_bc_flowrack)
+        botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
+    with coluna1:
+        number = st.number_input('Número de modulos:', step=1, min_value=1, value=6, max_value=6)
+        st.write('Total de endereços utilizaveis (XPE não): ', number * total_enderecos_mosdulo)
+        st.write('Total de endereços classe AA é: ', number * AA)
+        st.write('Total de endereços classe AB é: ', number * AB)
+        st.write('Total de endereços classe AC é: ', number * AC)
+        st.write('Total de endereços liberados para antibióticos é: ', number * AM)
+        st.write('Total de endereços destinados para XAROPE é: ', number * XPE)
 
     st.plotly_chart(fig_total_curva_frac, use_container_width=True)
 
