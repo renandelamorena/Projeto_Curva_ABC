@@ -156,11 +156,13 @@ aba1, aba2, aba3 = st.tabs(['Métricas', 'Apanha Caixa', 'Apanha Fracionado'])
 
 #Métricas
 with aba1:
-    coluna1, coluna2, coluna3, coluna4 = st.columns(4)
-    with coluna1:
-        st.metric('Total de itens cadastrados:', formata_numero(situacao_final['Código'].shape[0]))
-    with coluna2:
-        st.metric('Total de curvas A (Medicamentos filtrados):', formata_numero(somente_med_A.shape[0]))
+
+    with st.expander('Fracionado'):
+        coluna1, coluna2, coluna3, coluna4 = st.columns(4)
+        with coluna1:   
+            st.metric('Total de itens cadastrados:', formata_numero(situacao_final['Código'].shape[0]))
+        with coluna2:
+            st.metric('Total de curvas A (Medicamentos filtrados):', formata_numero(somente_med_A.shape[0]))
 
     coluna1, coluna2, coluna3 = st.columns(3)
     with coluna1:
@@ -183,4 +185,15 @@ with aba3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
         botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
 
-    st.plotly_chart(fig_total_curva_frac, use_container_width=True)
+    #Fazer - graficos mostrando a saida por moulo (em unidade)
+
+    #Ideia - Mapa de calor com a saida por endereço do flowrack
+
+    #Fazer - grafico mostrando a saída por classe (em unidade)
+
+    modulos = {1:{'29_28':[29, 28]}
+               }
+
+    coluna1, coluna2 = st.columns(2)
+    with coluna1:
+        st.plotly_chart(fig_total_curva_frac, use_container_width=True)
