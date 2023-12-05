@@ -41,8 +41,8 @@ def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
 
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
-situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
-local_frac = pd.read_excel(r'..\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
+situacao_final = pd.read_excel(r'tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+local_frac = pd.read_excel(r'analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
 
