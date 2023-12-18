@@ -41,12 +41,14 @@ def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
 
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
-situacao_final = pd.read_excel(r'tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
-local_frac = pd.read_excel(r'analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
+situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+local_frac = pd.read_excel(r'..\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
 
 with st.sidebar:
+
+    st.write('# Filtros')
 
     AC = 20
     AB = 32
@@ -56,7 +58,13 @@ with st.sidebar:
 
     total_enderecos_mosdulo = AC + AB + AA
 
-    numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=6, max_value=6)
+    with st.expander('Fracionado'):
+        numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=6, max_value=6)
+
+        
+
+    with st.expander('Caixa Fechada'):
+        'teste'
 
     total_enderecos_molulos = numero_modulos * total_enderecos_mosdulo
     total_enderecos_aa = numero_modulos * AA
@@ -65,16 +73,14 @@ with st.sidebar:
     total_enderecos_am = numero_modulos * AM
     total_enderecos_xpe = numero_modulos * XPE
 
-    st.write('Endereços utilizaveis (XPE não): ', total_enderecos_molulos)
-    st.write('Endereços classe AA é: ', total_enderecos_aa)
-    st.write('Endereços classe AB é: ', total_enderecos_ab)
-    st.write('Endereços classe AC é: ', total_enderecos_ac)
-    st.write('Endereços liberados para antibióticos é: ', total_enderecos_am)
-    st.write('Endereços destinados para XAROPE é: ', total_enderecos_xpe)
-
 ## Tabelas
 
 ### Tabelas - Apanha Caixa
+
+sem_apanha_caixa = ((situacao_final['Ender.Cx.Fechada'].isna()) &\
+                    (situacao_final['Curva Frac'].notna()))
+
+enderecar_caixa = situacao_final[sem_apanha_caixa]
 
 ### Tabelas - Apanha Fracionado
 
@@ -202,6 +208,14 @@ for corredor in corredores:
 
     tabela_saida_modulo = pd.concat([tabela_saida_modulo, nova_linha.to_frame().T], ignore_index=True)
 
+#### Seleção e tabela de produtos com endereço de caixa fechada sem endereço de fracionado
+
+com_apanha_caixa_sem_apanha_frac = ((situacao_final['Ender.Cx.Fechada'].notna()) & \
+                                    (situacao_final['Ender.Fracionado'].isna())
+                                    )
+
+enderecar_frac = situacao_final[com_apanha_caixa_sem_apanha_frac]
+
 ## Graficos
 
 ### Graficos - Apanha Caixa
@@ -237,19 +251,43 @@ aba1, aba2, aba3 = st.tabs(['Métricas', 'Apanha Fracionado', 'Apanha Caixa'])
 #Métricas
 with aba1:
 
+    coluna1_aba1, coluna2_aba1 = st.columns(2)
 
+    with coluna1_aba1:
+        st.write('## Fracionado - Endereços:')
 
-    coluna1, coluna2 = st.columns(2)
-    with coluna1:
-        st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
-        with st.expander('Fracionado'):
-            coluna1, coluna2 = st.columns(2)
-            with coluna1:
+        st.write('Utilizaveis (XPE não): ', total_enderecos_molulos)
+        st.write('Classe AA é: ', total_enderecos_aa)
+        st.write('Classe AB é: ', total_enderecos_ab)
+        st.write('Endereços classe AC é: ', total_enderecos_ac)
+        st.write('Liberados para antibióticos é: ', total_enderecos_am)
+        st.write('Destinados para XAROPE é: ', total_enderecos_xpe)
+
+    with coluna2_aba1:
+            with st.expander('Fracionado'):
+                st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
                 st.metric('Curva A "medicamento"', formata_numero(somente_med_A.shape[0]))
 
-    with coluna2:
-        st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
+                container = st.container()
+                container.write("This is inside the container")
 
+                coluna1, coluna2 = st.columns(2)
+                with coluna1:
+                    st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
+                with coluna2:
+                    botao_donwload(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
+
+    coluna1_aba1, coluna2_aba1 = st.columns(2)
+
+    with coluna2_aba1:
+        with st.expander('Caixa Fechada'):
+            st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
+
+            coluna1, coluna2 = st.columns(2)
+            with coluna1:
+                st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
+            with coluna2:
+                botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
@@ -269,7 +307,7 @@ with aba2:
     with coluna1:
         st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
 
-        st.markdown('# Filtar Saída pela Classe')
+        st.markdown('# Filtrar Saída pela Classe')
 
         #Filtro por modulo
         modulos_escolhidos = st.multiselect('Selecione os modulos:', modulos_escolhidos, default = modulos_escolhidos)
