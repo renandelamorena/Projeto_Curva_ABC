@@ -341,7 +341,9 @@ with aba2:
 
         st.plotly_chart(fig_saida_por_classe, use_container_width=True)
 
-#Ideia - Mapa de calor com a saida por endereço do flowrack
-
 #Apanha Caixa
 # with aba3:
+        
+        
+        
+#Ideia - Mapa de calor com a saida por endereço do flowrack
