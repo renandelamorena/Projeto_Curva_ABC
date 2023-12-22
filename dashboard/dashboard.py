@@ -61,8 +61,6 @@ with st.sidebar:
     with st.expander('Fracionado'):
         numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=6, max_value=6)
 
-        
-
     with st.expander('Caixa Fechada'):
         'teste'
 
@@ -79,8 +77,85 @@ with st.sidebar:
 
 sem_apanha_caixa = ((situacao_final['Ender.Cx.Fechada'].isna()) &\
                     (situacao_final['Curva Frac'].notna()))
-
 enderecar_caixa = situacao_final[sem_apanha_caixa]
+
+df_local_not_na = situacao_final[~situacao_final['local'].isna()]
+
+#itens de 'ponta' no local errado
+selecao_local_ponta_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
+                             (df_local_not_na['Permite Frac.'] == 'Não') & \
+                             (df_local_not_na['Tipo'] == 'Ponta De G') & \
+                             (df_local_not_na['local'] != 'controlado') & \
+                             (df_local_not_na['local'] != 'ponta') & \
+                             (df_local_not_na['local'] != 'pallet')
+                             )
+mudar_para_ponta = df_local_not_na[selecao_local_ponta_mudar]
+
+
+#itens de 'prateleira' no local errado
+selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
+                             (df_local_not_na['Permite Frac.'] == 'Sim') & \
+                             (df_local_not_na['Tipo'] == 'Prateleira') & \
+                             (df_local_not_na['local'] != 'controlado') & \
+                             (df_local_not_na['local'] != 'prateleira')
+                             )
+mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
+
+#itens de 'fech_a' no local errado
+selecao_local_fech_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
+                             (df_local_not_na['Permite Frac.'] == 'Não') & \
+                             (df_local_not_na['Tipo'] == 'Flowrack') & \
+                             (df_local_not_na['local'] != 'controlado') & \
+                             (df_local_not_na['local'] != 'fech_a') & \
+                             (df_local_not_na['local'] != 'antibiotico') & \
+                             (df_local_not_na['local'] != 'pallet') & \
+                             (df_local_not_na['local'] != 'amostra') & \
+                             (df_local_not_na['local'] != 'flowrack')
+                             )
+mudar_para_fech_a = df_local_not_na[selecao_local_fech_a_mudar]
+
+#itens de 'aberta_b' no local errado
+selecao_local_aberta_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
+                             (df_local_not_na['Permite Frac.'] == 'Sim') & \
+                             (df_local_not_na['Tipo'] == 'Prateleira') & \
+                             (df_local_not_na['local'] != 'controlado') & \
+                             (df_local_not_na['local'] != 'antibiotico') & \
+                             (df_local_not_na['local'] != 'pet') & \
+                             (df_local_not_na['local'] != 'fd') & \
+                             (df_local_not_na['local'] != 'aberta_b')
+                             )
+mudar_para_aberta_b = df_local_not_na[selecao_local_aberta_b_mudar]
+
+#itens de 'aberta_c' no local errado
+selecao_local_aberta_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
+                             (df_local_not_na['Permite Frac.'] == 'Sim') & \
+                             (df_local_not_na['Tipo'] == 'Prateleira') & \
+                             (df_local_not_na['local'] != 'controlado') & \
+                             (df_local_not_na['local'] != 'fd') & \
+                             (df_local_not_na['local'] != 'antibiotico') & \
+                             (df_local_not_na['local'] != 'pet') & \
+                             (df_local_not_na['local'] != 'aberta_c')
+                             )
+mudar_para_aberta_c = df_local_not_na[selecao_local_aberta_c_mudar]
+
+#itens de 'antibiotico' no local errado
+selecao_local_am_mudar = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
+                          (df_local_not_na['local'] != 'antibiotico')
+                          )
+mudar_para_am = df_local_not_na[selecao_local_am_mudar]
+
+#itens de 'fech_bc' no local errado
+selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
+                                (df_local_not_na['Permite Frac.'] == 'Não') & \
+                                (df_local_not_na['Tipo'] == 'Prateleira') & \
+                                (df_local_not_na['local'] != 'controlado') & \
+                                (df_local_not_na['local'] != 'amostra') & \
+                                (df_local_not_na['local'] != 'pet') & \
+                                (df_local_not_na['local'] != 'fech_bc') & \
+                                (df_local_not_na['local'] != 'fd') & \
+                                (df_local_not_na['Curva Frac'].str.contains('B|C'))
+                                )
+mudar_para_fech_b_c = df_local_not_na[selecao_local_fech_b_c_mudar]
 
 ### Tabelas - Apanha Fracionado
 
@@ -93,7 +168,7 @@ selecao_curva_bc_frac_errado = (situacao_final['Tipo'] == 'Flowrack') & \
                                (situacao_final['Curva Frac'].isin(['B', 'C'])) & \
                                (situacao_final['Ender.Fracionado'] > 18.000) & \
                                (situacao_final['Ender.Fracionado'] != 9010.000)
-                       
+
 curva_bc_flowrack = situacao_final[selecao_curva_bc_frac_errado]
 curva_bc_flowrack = curva_bc_flowrack[['Código',
                                         'Descrição',
@@ -268,26 +343,20 @@ with aba1:
                 st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
                 st.metric('Curva A "medicamento"', formata_numero(somente_med_A.shape[0]))
 
-                container = st.container()
-                container.write("This is inside the container")
-
                 coluna1, coluna2 = st.columns(2)
                 with coluna1:
                     st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
                 with coluna2:
                     botao_donwload(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
 
-    coluna1_aba1, coluna2_aba1 = st.columns(2)
+            with st.expander('Caixa Fechada'):
+                st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
 
-    with coluna2_aba1:
-        with st.expander('Caixa Fechada'):
-            st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
-
-            coluna1, coluna2 = st.columns(2)
-            with coluna1:
-                st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
-            with coluna2:
-                botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
+                coluna1, coluna2 = st.columns(2)
+                with coluna1:
+                    st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
+                with coluna2:
+                    botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
@@ -313,8 +382,8 @@ with aba2:
         modulos_escolhidos = st.multiselect('Selecione os modulos:', modulos_escolhidos, default = modulos_escolhidos)
 
         #Filtro por local
-        locais = ['AA', 'AB', 'AC', 'XPE']
-        selecao_locais = st.selectbox('Selecione os locais:', locais)
+        classes_frac = ['AA', 'AB', 'AC', 'XPE']
+        selecao_locais = st.selectbox('Selecione os locais:', classes_frac)
 
         #Tabela de saido por local/classe
         produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
@@ -342,8 +411,34 @@ with aba2:
         st.plotly_chart(fig_saida_por_classe, use_container_width=True)
 
 #Apanha Caixa
-# with aba3:
+
+with aba3:
+
+
+
+    #Itens nos locais errados
+    with st.expander('Itens para mudar para o local:'):
+        #Selecionar o df
+        locais = ['Ponta', 'Prateleira', 'Apanha A', 'Aberta B', 'Aberta C', 'Apanha AM', 'Fechada B/C']
+        dfs_locais_errados = {'Ponta' : mudar_para_ponta,
+                            'Prateleira' : mudar_para_prateleira,
+                            'Apanha A' : mudar_para_fech_a,
+                            'Aberta B' : mudar_para_aberta_b,
+                            'Aberta C' : mudar_para_aberta_c,
+                            'Apanha AM' : mudar_para_am,
+                            'Fechada B/C' : mudar_para_fech_b_c,
+                            }
+
+        st.session_state.horizontal = True
+        local_selec = st.radio('Selecione o local:', locais,
+                                horizontal = st.session_state.horizontal)
         
-        
-        
+        df_selec = dfs_locais_errados[local_selec]
+        total_trocar = df_selec.shape[0]
+
+        st.metric('Total:', total_trocar)
+        botao_donwload(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
+
+        st.dataframe(df_selec)
+
 #Ideia - Mapa de calor com a saida por endereço do flowrack
