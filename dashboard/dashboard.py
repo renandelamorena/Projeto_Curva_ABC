@@ -39,6 +39,39 @@ def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
                         mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
 
+def criar_grafico_pizza(valores):
+    df = pd.DataFrame({'Situação' : ['Certo', 'Errado'],
+                       'Quantidade' : valores})
+    
+    fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', 
+                 color_discrete_map={'Certo':'mediumblue',
+                                    'Errado':'lightgrey'})
+
+    fig.update_traces(textposition='outside', textinfo='percent+label')
+    return fig
+
+def situacao_local(lista_locais, curva):
+
+    selecao = df_local_not_na['local'].isin(lista_locais)
+    df_local = df_local_not_na[selecao]
+
+    #Certo
+    selecao_local_certo = ((df_local['Curva Frac'].str.contains(curva))
+                            )
+    local_certo = df_local[selecao_local_certo]
+    local_total_certo = local_certo.shape[0]
+
+    #Errado
+    selecao_local_errado = (~(df_local['Curva Frac'].str.contains(curva))
+                                   )
+    local_errado = df_local[selecao_local_errado]
+    local_total_errado = local_errado.shape[0]
+
+    #Total
+    local_total = local_total_certo + local_total_errado
+
+    return local_total, local_total_certo, local_total_errado, local_certo, local_errado
+
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
 situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
@@ -80,6 +113,7 @@ sem_apanha_caixa = ((situacao_final['Ender.Cx.Fechada'].isna()) &\
 enderecar_caixa = situacao_final[sem_apanha_caixa]
 
 df_local_not_na = situacao_final[~situacao_final['local'].isna()]
+df_local_not_na.fillna('-',inplace=True)
 
 #itens de 'ponta' no local errado
 selecao_local_ponta_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
@@ -90,7 +124,23 @@ selecao_local_ponta_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                              (df_local_not_na['local'] != 'pallet')
                              )
 mudar_para_ponta = df_local_not_na[selecao_local_ponta_mudar]
+#No local de 'ponta', os itens certos e errados
+#Certo
+selecao_local_ponta_certo = ((df_local_not_na['Tipo'] == 'Ponta De G') & \
+                             (df_local_not_na['local'] == 'ponta')
+                             )
+local_ponta_certo = df_local_not_na[selecao_local_ponta_certo]
+local_ponta_total_certo = local_ponta_certo.shape[0]
 
+#Errado
+selecao_local_ponta_errado = ((df_local_not_na['Tipo'] != 'Ponta De G') & \
+                             (df_local_not_na['local'] == 'ponta')
+                             )
+local_ponta_errado = df_local_not_na[selecao_local_ponta_errado]
+local_ponta_total_errado = local_ponta_errado.shape[0]
+
+#Total
+local_ponta_total = local_ponta_total_certo + local_ponta_total_errado
 
 #itens de 'prateleira' no local errado
 selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
@@ -100,6 +150,9 @@ selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                              (df_local_not_na['local'] != 'prateleira')
                              )
 mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
+
+#No local de 'prateleira', os itens certos e errados
+local_prateleira = situacao_local(['prateleira'], 'A')
 
 #itens de 'fech_a' no local errado
 selecao_local_fech_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
@@ -114,6 +167,9 @@ selecao_local_fech_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                              )
 mudar_para_fech_a = df_local_not_na[selecao_local_fech_a_mudar]
 
+#No local de 'fech_a', os itens certos e errados
+local_fechada_a = situacao_local(['pallet', 'fech_a', 'flowrack'], 'A')
+
 #itens de 'aberta_b' no local errado
 selecao_local_aberta_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
                              (df_local_not_na['Permite Frac.'] == 'Sim') & \
@@ -125,6 +181,9 @@ selecao_local_aberta_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
                              (df_local_not_na['local'] != 'aberta_b')
                              )
 mudar_para_aberta_b = df_local_not_na[selecao_local_aberta_b_mudar]
+
+#No local de 'aberta_b', os itens certos e errados
+local_aberta_b = situacao_local(['aberta_b'], 'B')
 
 #itens de 'aberta_c' no local errado
 selecao_local_aberta_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
@@ -138,11 +197,31 @@ selecao_local_aberta_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
                              )
 mudar_para_aberta_c = df_local_not_na[selecao_local_aberta_c_mudar]
 
+#No local de 'aberta_c', os itens certos e errados
+local_aberta_c = situacao_local(['aberta_c'], 'C')
+
 #itens de 'antibiotico' no local errado
 selecao_local_am_mudar = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
                           (df_local_not_na['local'] != 'antibiotico')
                           )
 mudar_para_am = df_local_not_na[selecao_local_am_mudar]
+
+#No local de 'antibiotico', os itens certos e errados
+#Certo
+selecao_local_certo_am = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
+                          (df_local_not_na['local'] == 'antibiotico')
+                          )
+local_certo_am = df_local_not_na[selecao_local_certo_am]
+local_total_certo_am = local_certo_am.shape[0]
+#Errado
+selecao_local_errado_am = (~(df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
+                          (df_local_not_na['local'] == 'antibiotico')
+                          )
+local_errado_am = df_local_not_na[selecao_local_errado_am]
+local_total_errado_am = local_errado_am.shape[0]
+
+#Total
+local_total = local_total_certo_am + local_total_errado_am
 
 #itens de 'fech_bc' no local errado
 selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
@@ -156,6 +235,9 @@ selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\
                                 (df_local_not_na['Curva Frac'].str.contains('B|C'))
                                 )
 mudar_para_fech_b_c = df_local_not_na[selecao_local_fech_b_c_mudar]
+
+#No local de 'aberta_b', os itens certos e errados
+local_fech_bc = situacao_local(['fech_bc'], 'B|C')
 
 ### Tabelas - Apanha Fracionado
 
@@ -413,21 +495,51 @@ with aba2:
 #Apanha Caixa
 
 with aba3:
+    locais = ['Ponta', 'Prateleira', 'Apanha A', 'Aberta B', 'Aberta C', 'Apanha AM', 'Fechada B/C']
 
+    dfs_locais_valores = {'Ponta' : [local_ponta_total_certo, local_ponta_total_errado],
+                        'Prateleira' : [local_prateleira[1], local_prateleira[2]],
+                        'Apanha A' : [local_fechada_a[1], local_fechada_a[2]],
+                        'Aberta B' : [local_aberta_b[1], local_aberta_b[2]],
+                        'Aberta C' : [local_aberta_c[1], local_aberta_c[2]],
+                        'Apanha AM' : [local_total_certo_am, local_total_errado_am],
+                        'Fechada B/C' : [local_fech_bc[1], local_fech_bc[2]],
+                        }
+    dfs_locais_tabelas = {'Ponta' : [local_ponta_certo, local_ponta_errado],
+                        'Prateleira' : [local_prateleira[3], local_prateleira[4]],
+                        'Apanha A' : [local_fechada_a[3], local_fechada_a[4]],
+                        'Aberta B' : [local_aberta_b[3], local_aberta_b[4]],
+                        'Aberta C' : [local_aberta_c[3], local_aberta_c[4]],
+                        'Apanha AM' : [local_certo_am, local_errado_am],
+                        'Fechada B/C' : [local_fech_bc[3], local_fech_bc[4]],
+                        }
 
+    st.write('## Situação por local')
+
+    coluna1, coluna2 = st.columns(2)
+    with coluna1:
+        st.session_state.horizontal = False
+        opcao_local_grafico = st.radio('Selecione o local:', locais,
+                                    horizontal = st.session_state.horizontal)
+
+        botao_donwload(dfs_locais_tabelas[opcao_local_grafico][0], 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
+        botao_donwload(dfs_locais_tabelas[opcao_local_grafico][1], 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
+
+    with coluna2:
+        chart = criar_grafico_pizza(dfs_locais_valores[opcao_local_grafico])
+        st.plotly_chart(chart, use_container_width=True)
 
     #Itens nos locais errados
-    with st.expander('Itens para mudar para o local:'):
+    with st.expander('Itens para colocar no local:'):
         #Selecionar o df
-        locais = ['Ponta', 'Prateleira', 'Apanha A', 'Aberta B', 'Aberta C', 'Apanha AM', 'Fechada B/C']
         dfs_locais_errados = {'Ponta' : mudar_para_ponta,
-                            'Prateleira' : mudar_para_prateleira,
-                            'Apanha A' : mudar_para_fech_a,
-                            'Aberta B' : mudar_para_aberta_b,
-                            'Aberta C' : mudar_para_aberta_c,
-                            'Apanha AM' : mudar_para_am,
-                            'Fechada B/C' : mudar_para_fech_b_c,
-                            }
+                              'Prateleira' : mudar_para_prateleira,
+                              'Apanha A' : mudar_para_fech_a,
+                              'Aberta B' : mudar_para_aberta_b,
+                              'Aberta C' : mudar_para_aberta_c,
+                              'Apanha AM' : mudar_para_am,
+                              'Fechada B/C' : mudar_para_fech_b_c,
+                              }
 
         st.session_state.horizontal = True
         local_selec = st.radio('Selecione o local:', locais,
