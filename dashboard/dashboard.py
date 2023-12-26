@@ -486,7 +486,7 @@ with aba2:
                                text_auto=True,
                                title='Saída X Classe'
                                )
-
+        
     with coluna2:
         st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
 
