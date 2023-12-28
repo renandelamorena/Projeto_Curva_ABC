@@ -34,9 +34,5 @@ situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao
 with st.sidebar:
     st.markdown('# Filtros')
 
-coluna1, coluna2 = st.columns([10, 1])
+st.dataframe(situacao_final)
 
-with coluna1:
-    st.dataframe(situacao_final)
-with coluna2:
-    'marcador'
