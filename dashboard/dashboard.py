@@ -546,7 +546,7 @@ with aba3:
 
         st.metric('Total:', total_trocar)
         botao_donwload(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
-
+        
         st.dataframe(df_selec)
 
 #Ideia - Mapa de calor com a saida por endereço do flowrack
