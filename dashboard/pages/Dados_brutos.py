@@ -210,8 +210,6 @@ curva_abc_frac['Ender.Fracionado'] = curva_abc_frac['Ender.Fracionado'].astype(s
 
 refatorar_indece(curva_abc_frac, 'Ordem')
 
-curva_abc_frac
-
 # %% [markdown]
 # ### Caixa Fechada
 
@@ -224,8 +222,6 @@ curva_abc_cx['Ender.Fracionado'] = curva_abc_cx['Ender.Fracionado'].astype(str)
 
 refatorar_indece(curva_abc_cx, 'Ordem')
 
-curva_abc_cx
-
 # %% [markdown]
 # ### Geral
 
@@ -237,8 +233,6 @@ curva_abc_geral['Código'] = pd.to_numeric(curva_abc_geral['Código'])
 curva_abc_geral['Ender.Fracionado'] = curva_abc_geral['Ender.Fracionado'].astype(str)
 
 refatorar_indece(curva_abc_geral, 'Ordem')
-
-curva_abc_geral
 
 # %% [markdown]
 # ### Situação Final
@@ -265,8 +259,6 @@ situacao_final['Código'] = pd.to_numeric(situacao_final['Código'])
 situacao_final.drop_duplicates(subset=['Código'], keep='last', inplace=True)
 
 refatorar_indece(situacao_final, 'Ordem')
-
-situacao_final
 
 # %% [markdown]
 # # Organizando colunas
@@ -369,6 +361,52 @@ situacao_final.to_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.
 
 # %%
 
+# Comparar locais
+
+situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
+enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
+
+locais = pd.read_excel(r'../analise_curva_abc/local/datasets/local_apanha_cx.xlsx').astype(str)
+
+# %%
+def refatorar_indece(df, nome_index):
+    
+    qnt_linha = df.shape[0] + 1
+
+    index = [i for i in range(1, qnt_linha)]
+
+    df.set_index(pd.Index(index), inplace=True)
+
+    df.index.name = nome_index
+    
+    return df
+
+# %%
+enderecos_x_locais = pd.merge(enderecos, locais)
+
+# %%
+total_enderecos_usados = enderecos.drop_duplicates()
+
+# %%
+item_com_end = ~(enderecos['Ender.Cx.Fechada'] == 'nan')
+
+# %%
+enderecos[item_com_end]
+
+# %%
+teste = pd.merge(situacao_final, enderecos_x_locais, how = 'left')
+
+# %%
+teste.drop_duplicates(inplace = True)
+teste.set_index('Ordem', inplace=True)
+teste.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
+teste = refatorar_indece(teste, 'Ordem')
+
+# %%
+teste.to_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
+
+# %%
+
 # Streamlit
 
 st.title('Dados brutos')
@@ -379,4 +417,3 @@ with st.sidebar:
     st.markdown('# Filtros')
 
 st.dataframe(situacao_final)
-
