@@ -1,6 +1,8 @@
 #python -m venv venv
 #./venv/Scripts/activate
 
+# https://projeto-curva-abc.streamlit.app/
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -78,7 +80,7 @@ st.title('Dashbord - Projeto Curva ABC') #Titulo
 # *
 def caminho_absoluto(caminho_relativo_com_barras_normais):
     
-    caminho_base = os.getcwd()    
+    caminho_base = os.getcwd()
 
     caminho_absoluto = os.path.join(caminho_base, caminho_relativo_com_barras_normais)
 
