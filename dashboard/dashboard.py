@@ -76,9 +76,17 @@ st.title('Dashbord - Projeto Curva ABC') #Titulo
 
 import os
 st.write(os.getcwd())
-st.write(os.path.exists(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
+# st.write(os.path.exists(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
 
-situacao_final = pd.read_excel(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+def file_selector(folder_path=r'.\data\tratamento_curva_abc\dados_tratados'):
+    filenames = os.listdir(folder_path)
+    selected_filename = st.selectbox('Select a file', filenames)
+    return os.path.join(folder_path, selected_filename)
+
+filename = file_selector()
+st.write('You selected `%s`' % filename)
+
+situacao_final = pd.read_excel(r'.\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 local_frac = pd.read_excel(r'data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
