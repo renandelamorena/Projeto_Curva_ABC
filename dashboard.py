@@ -6,6 +6,7 @@ import pandas as pd
 import plotly.express as px
 import time
 from io import BytesIO
+import os
 
 st.set_page_config(layout='wide')
 
@@ -75,33 +76,18 @@ def situacao_local(lista_locais, curva):
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
 # *
+def caminho_absoluto(caminho_relativo_com_barras_normais):
+    
+    caminho_base = os.getcwd()    
 
-import os
-st.write(os.getcwd())
-# st.write(os.path.exists(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
+    caminho_absoluto = os.path.join(caminho_base, caminho_relativo_com_barras_normais)
 
-def file_selector(folder_path='.'):
-    filenames = os.listdir(folder_path)
-    selected_filename = st.selectbox('Select a file', filenames)
-    return os.path.join(folder_path, selected_filename)
-
-filename = file_selector()
-st.write('You selected `%s`' % filename)
-
-caminho_base = os.getcwd()
-
-# Define o caminho relativo
-caminho_relativo = 'data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx'
-
-# Combina o caminho base com o caminho relativo para formar um caminho absoluto
-caminho_absoluto = os.path.join(caminho_base, caminho_relativo)
-
-st.write(caminho_absoluto)
+    return caminho_absoluto
 
 # *
 
-situacao_final = pd.read_excel(caminho_absoluto).set_index('Ordem')
-local_frac = pd.read_excel(r'.\data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
+situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
+local_frac = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_frac.xlsx'))
 
 ## Barra lateral com filtros
 
