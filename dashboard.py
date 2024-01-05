@@ -74,6 +74,8 @@ def situacao_local(lista_locais, curva):
 
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
+# *
+
 import os
 st.write(os.getcwd())
 # st.write(os.path.exists(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
@@ -86,7 +88,19 @@ def file_selector(folder_path='.'):
 filename = file_selector()
 st.write('You selected `%s`' % filename)
 
-situacao_final = pd.read_excel(os.path.join(r'.\data\tratamento_curva_abc\dados_tratados', 'situacao_final.xlsx')).set_index('Ordem')
+caminho_base = os.getcwd()
+
+# Define o caminho relativo
+caminho_relativo = 'data\\analise_curva_abc\\local\\datasets\\local_apanha_frac.xlsx'
+
+# Combina o caminho base com o caminho relativo para formar um caminho absoluto
+caminho_absoluto = os.path.join(caminho_base, caminho_relativo)
+
+st.write(caminho_absoluto)
+
+# *
+
+situacao_final = pd.read_excel(r'.\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 local_frac = pd.read_excel(r'.\data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
