@@ -91,7 +91,7 @@ st.write('You selected `%s`' % filename)
 caminho_base = os.getcwd()
 
 # Define o caminho relativo
-caminho_relativo = 'data\\analise_curva_abc\\local\\datasets\\local_apanha_frac.xlsx'
+caminho_relativo = 'data\\tratamento_curva_abc\\dados_tratados\\situacao_final.xlsx'
 
 # Combina o caminho base com o caminho relativo para formar um caminho absoluto
 caminho_absoluto = os.path.join(caminho_base, caminho_relativo)
@@ -100,7 +100,7 @@ st.write(caminho_absoluto)
 
 # *
 
-situacao_final = pd.read_excel(r'.\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+situacao_final = pd.read_excel(caminho_absoluto).set_index('Ordem')
 local_frac = pd.read_excel(r'.\data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
