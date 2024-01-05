@@ -74,6 +74,10 @@ def situacao_local(lista_locais, curva):
 
 st.title('Dashbord - Projeto Curva ABC') #Titulo
 
+import os
+st.write(os.getcwd())
+st.write(os.path.exists(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
+
 situacao_final = pd.read_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 local_frac = pd.read_excel(r'data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
