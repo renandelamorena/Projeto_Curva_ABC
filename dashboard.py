@@ -86,7 +86,7 @@ def file_selector(folder_path='.'):
 filename = file_selector()
 st.write('You selected `%s`' % filename)
 
-situacao_final = pd.read_excel(r'.\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+situacao_final = pd.read_excel('.\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 local_frac = pd.read_excel(r'.\data\analise_curva_abc\local\datasets\local_apanha_frac.xlsx')
 
 ## Barra lateral com filtros
