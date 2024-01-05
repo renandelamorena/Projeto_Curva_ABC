@@ -78,7 +78,7 @@ import os
 st.write(os.getcwd())
 # st.write(os.path.exists(r'\mount\src\projeto_curva_abc\dashboard\data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx'))
 
-def file_selector(folder_path=r'.dashboard\data\tratamento_curva_abc\dados_tratados'):
+def file_selector(folder_path=r'.'):
     filenames = os.listdir(folder_path)
     selected_filename = st.selectbox('Select a file', filenames)
     return os.path.join(folder_path, selected_filename)
