@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import time
 from io import BytesIO
+import os
 
 def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
     #Criar um DataFrame
@@ -30,9 +31,17 @@ def consultar_valor_situacao_final(nome_coluna):
     coluna = linha_codigo[nome_coluna].values[0]
     return coluna
 
+def caminho_absoluto(caminho_relativo_com_barras_normais):
+    
+    caminho_base = os.getcwd()
+
+    caminho_absoluto = os.path.join(caminho_base, caminho_relativo_com_barras_normais)
+
+    return caminho_absoluto
+
 st.set_page_config(layout='wide')
 
-situacao_final = pd.read_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+situacao_final = pd.read_excel(caminho_absoluto(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')).set_index('Ordem')
 
 st.title('Consultas')
 
