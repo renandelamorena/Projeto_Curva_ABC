@@ -32,7 +32,7 @@ def consultar_valor_situacao_final(nome_coluna):
 
 st.set_page_config(layout='wide')
 
-situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+situacao_final = pd.read_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 
 st.title('Consultas')
 

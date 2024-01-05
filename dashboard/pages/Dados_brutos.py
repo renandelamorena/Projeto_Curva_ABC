@@ -38,16 +38,16 @@ pd.set_option('display.max_columns', None)
 # # Importando Dados
 
 # %%
-produtos = pd.read_excel(r'..\tratamento_curva_abc\datasets\produtos.xlsx')
+produtos = pd.read_excel(r'data\tratamento_curva_abc\datasets\produtos.xlsx')
 
 # %%
-curva_geral = pd.read_excel(r'..\tratamento_curva_abc\datasets\curva_geral.xlsx')
+curva_geral = pd.read_excel(r'data\tratamento_curva_abc\datasets\curva_geral.xlsx')
 
 # %%
-curva_cx = pd.read_excel(r'..\tratamento_curva_abc\datasets\curva_cx.xlsx')
+curva_cx = pd.read_excel(r'data\tratamento_curva_abc\datasets\curva_cx.xlsx')
 
 # %%
-curva_frac = pd.read_excel(r'..\tratamento_curva_abc\datasets\curva_frac.xlsx')
+curva_frac = pd.read_excel(r'data\tratamento_curva_abc\datasets\curva_frac.xlsx')
 
 # %% [markdown]
 # # Tratando Dados
@@ -354,19 +354,19 @@ curva_abc_frac['Descrição'] = curva_abc_frac['Descrição'].fillna('-')
 situacao_final['Descrição'] = situacao_final['Descrição'].fillna('-')
 
 # %%
-curva_abc_geral.to_excel(r'..\tratamento_curva_abc\dados_tratados\curva_abc_geral.xlsx')
-curva_abc_frac.to_excel(r'..\tratamento_curva_abc\dados_tratados\curva_abc_frac.xlsx')
-curva_abc_cx.to_excel(r'..\tratamento_curva_abc\dados_tratados\curva_abc_cx.xlsx')
-situacao_final.to_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
+curva_abc_geral.to_excel(r'data\tratamento_curva_abc\dados_tratados\curva_abc_geral.xlsx')
+curva_abc_frac.to_excel(r'data\tratamento_curva_abc\dados_tratados\curva_abc_frac.xlsx')
+curva_abc_cx.to_excel(r'data\tratamento_curva_abc\dados_tratados\curva_abc_cx.xlsx')
+situacao_final.to_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
 
 # %%
 
 # Comparar locais
 
-situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
+situacao_final = pd.read_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
 enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
 
-locais = pd.read_excel(r'../analise_curva_abc/local/datasets/local_apanha_cx.xlsx').astype(str)
+locais = pd.read_excel(r'data/analise_curva_abc/local/datasets/local_apanha_cx.xlsx').astype(str)
 
 # %%
 def refatorar_indece(df, nome_index):
@@ -403,7 +403,7 @@ teste.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
 teste = refatorar_indece(teste, 'Ordem')
 
 # %%
-teste.to_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
+teste.to_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
 
 # %%
 
@@ -411,7 +411,7 @@ teste.to_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx')
 
 st.title('Dados brutos')
 
-situacao_final = pd.read_excel(r'..\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
+situacao_final = pd.read_excel(r'data\tratamento_curva_abc\dados_tratados\situacao_final.xlsx').set_index('Ordem')
 
 with st.sidebar:
     st.markdown('# Filtros')
