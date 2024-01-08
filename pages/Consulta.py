@@ -45,10 +45,10 @@ situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados
 
 st.title('Consultas')
 
-aba_1, aba_2, aba_3 = st.tabs(['Curva ABC', 'Flowrack', 'Prateleira'])
+aba_1, aba_2, aba_3, aba_4 = st.tabs(['Curva ABC', 'Flowrack', 'Prateleira', 'Caixa Fechada'])
 
 with aba_1:
-
+    
     coluna_1, coluna_2 = st.columns([1, 4])
 
     with coluna_1:
@@ -100,11 +100,10 @@ with aba_1:
 
     with st.expander('Saída e Atividade'):
         
-        st.session_state.disabled = False
         selec = st.radio('Selecionar Tipo da Curva:', 
                          ['Frac', 'Cx', 'Geral'], 
                          index=0, 
-                         horizontal=st.session_state.horizontal)
+                         horizontal=True)
         
         if codigo != None and situacao_final['Código'].isin([codigo]).any():
         
@@ -135,8 +134,5 @@ with aba_1:
             col2.metric('Venda', ne)
             col3.metric('Dias pedidos', ne)
             col4.metric('Atv Ressup.', ne)
-
-    with st.expander('Ocupação'):
-        'A'
-
+            
 # with aba_2:
