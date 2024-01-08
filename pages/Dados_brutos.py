@@ -401,9 +401,6 @@ total_enderecos_usados = enderecos.drop_duplicates()
 item_com_end = ~(enderecos['Ender.Cx.Fechada'] == 'nan')
 
 # %%
-enderecos[item_com_end]
-
-# %%
 teste = pd.merge(situacao_final, enderecos_x_locais, how = 'left')
 
 # %%
