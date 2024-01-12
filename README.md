@@ -1,39 +1,40 @@
-# Projeto Curva ABC
+# Projeto de analise e tratamento automatico da curva ABC
+Projeto de analise descritiva da curva ABC de produtos em relação a sua produção e orientação da armazenagem 
 
-![Pagina inicial](img/pagina_inicial.png)
+## Divisão da saída no flowrack
 
-> Dê uma olhada no [projeto final](https://projeto-curva-abc.streamlit.app)!
->
-> Leia também sobre o [desenvolvimento do projeto]().
->
-> Documentação tecnica do [projeto da curva abc]().
+* Organizar o módulo por classes
+* Transferir diferença de saída por classes
 
-## Descrição
+## Tramento da curva
 
-Meu primeiro projeto de Analise de dados.
+### Porque tratar a curva?
 
-É um projeto que foi desenvolvido por mim, onde foram colocados em pratica os conhecimentos adquiridos na [formação de Ciencia de Dados](https://cursos.alura.com.br/degree/certificate/72841079-c405-4a94-af5d-e260c9451c76) da escola de tecnologia online [Alura](https://www.alura.com.br/).
+- As basses de dados são baixadas com alguns problemas que presisam ser tratados, como os nomes de colunas, espaços vazios no meio dos dados, códigos de produtos e etc. A fim de melhorar a leitura e interpretação dos dados, alem de deixa-los mais organizados.
 
-Objetivo do projeto:
+### Requisitos
 
-* Trazer para o meu ambiente de trabalho uma ferramenta diferenciada e desenvolver novas habilidades na minha area de trabalho pretendida.
+**Datasets:**
 
-* Facilitar e trazer eficiencai para a analise dos dados da Curva ABC baseado no estoque fisico e sua orientação.
+* produtos = cadastro de produtos (Endereços e cadastros);
+* curva_frac = curva de certo periodo de saida fracionada (normalmente 3 meses);
+* curva_cx = curva de certo periodo de saida de caixas (normalmente 3 meses);
+* curva_geral = curva de certo periodo de saida, tando de caixas quanto fracionado em unidades (normalmente 3 meses).
 
-* 
+### Caracteristicas
 
-## Sobre o Projeto
+**Ajusta:**
 
-Como o projeto esta estruturado?
+- Coluna de códigos
+- Linhas vazias
+- Renomeia colunas
 
-### Setup de ambiente:
+- Traz somente os dados necessarios
+- Junta as imformações da curva com cadastro
+- traz todos informações em _dados_tratados_ com _situacao_final_
 
-* 
+**Importante**
 
-### Como rodar localmente?
+- O ideal é atualizar as curvas (Fracionado, Caixa Fechada e Geral) a cada 3 meses
 
-* 
-
-## Projeto-Curva-ABC.app
-
-### Estrutura do projeto
+- Os cadastros de produtos podem e *devem* ser atualizados sempre que possível. (Recomendação: Atualizar todo dia, ou quando houver mudanças no estoque)
