@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import time
 from io import BytesIO
 import os
 
@@ -45,94 +44,88 @@ situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados
 
 st.title('Consultas')
 
-aba_1, aba_2, aba_3, aba_4 = st.tabs(['Curva ABC', 'Flowrack', 'Prateleira', 'Caixa Fechada'])
+coluna_1, coluna_2 = st.columns([1, 4])
 
-with aba_1:
+with coluna_1:
+    codigo = st.number_input('Código Produto:', value=None, placeholder='Escreva o Código...', step=0)
+with coluna_2:
+
+    if codigo != None and situacao_final['Código'].isin([codigo]).any():
+        linha_codigo = situacao_final.loc[situacao_final['Código'] == codigo]
+
+        descricao = linha_codigo['Descrição'].values[0]
+
+        end_frac = linha_codigo['Ender.Fracionado'].values[0]
+        end_cx = linha_codigo['Ender.Cx.Fechada'].values[0]
+
+        flag = linha_codigo['Permite Frac.'].values[0]
+        emb = linha_codigo['Embal.'].values[0]
+
+        local_frac = 'Em teste'
+        local_cx_fech = linha_codigo['local'].values[0]
+
+    else:
+        ne = 'Não encontrado'
+        descricao = ne
+
+        end_frac = ne
+        end_cx = ne
+
+        flag = ne
+        emb = ne
+
+        local_frac = 'Teste'
+        local_cx_fech = ne
+
+    st.metric('Descrição:', descricao)
+
+coluna_1, coluna_2, coluna_3 = st.columns([5, 4, 3])
+
+with coluna_1:    
+    st.metric('End. Fracionado:', end_frac)
+    st.metric('End. Cx. Fech:', end_cx)
+
+with coluna_2:
+    st.metric('Permite Frac:', flag)
+    st.metric('Embalagem:', emb)
+
+with coluna_3:
+    st.metric('Local Frac:', local_frac)
+    st.metric('Local Cx:', local_cx_fech)
+
+with st.expander('Saída e Atividade'):
     
-    coluna_1, coluna_2 = st.columns([1, 4])
-
-    with coluna_1:
-        codigo = st.number_input('Código Produto:', value=None, placeholder='Escreva o Código...', step=0)
-    with coluna_2:
-
-        if codigo != None and situacao_final['Código'].isin([codigo]).any():
-            linha_codigo = situacao_final.loc[situacao_final['Código'] == codigo]
-
-            descricao = linha_codigo['Descrição'].values[0]
-
-            end_frac = linha_codigo['Ender.Fracionado'].values[0]
-            end_cx = linha_codigo['Ender.Cx.Fechada'].values[0]
-
-            flag = linha_codigo['Permite Frac.'].values[0]
-            emb = linha_codigo['Embal.'].values[0]
-
-            local_frac = 'Em teste'
-            local_cx_fech = linha_codigo['local'].values[0]
-
-        else:
-            ne = 'Não encontrado'
-            descricao = ne
-
-            end_frac = ne
-            end_cx = ne
-
-            flag = ne
-            emb = ne
-
-            local_frac = 'Teste'
-            local_cx_fech = ne
-
-        st.metric('Descrição:', descricao)
+    selec = st.radio('Selecionar Tipo da Curva:', 
+                        ['Frac', 'Cx', 'Geral'], 
+                        index=0, 
+                        horizontal=True)
     
-    coluna_1, coluna_2, coluna_3 = st.columns([5, 4, 3])
-
-    with coluna_1:    
-        st.metric('End. Fracionado:', end_frac)
-        st.metric('End. Cx. Fech:', end_cx)
-
-    with coluna_2:
-        st.metric('Permite Frac:', flag)
-        st.metric('Embalagem:', emb)
+    if codigo != None and situacao_final['Código'].isin([codigo]).any():
     
-    with coluna_3:
-        st.metric('Local Frac:', local_frac)
-        st.metric('Local Cx:', local_cx_fech)
+        col1, col2, col3, col4 = st.columns(4)
 
-    with st.expander('Saída e Atividade'):
-        
-        selec = st.radio('Selecionar Tipo da Curva:', 
-                         ['Frac', 'Cx', 'Geral'], 
-                         index=0, 
-                         horizontal=True)
-        
-        if codigo != None and situacao_final['Código'].isin([codigo]).any():
-        
-            col1, col2, col3, col4 = st.columns(4)
+        col1.metric('Curva', consultar_valor_situacao_final(f'Curva {selec}'))
+        col2.metric('Venda', int(consultar_valor_situacao_final(f'Qtde Venda {selec}')))
+        col3.metric('Dias pedidos', int(consultar_valor_situacao_final(f'Dias Pedido {selec}')))
+        col4.metric('Atv Ressup.', int(consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}')))
 
-            col1.metric('Curva', consultar_valor_situacao_final(f'Curva {selec}'))
-            col2.metric('Venda', int(consultar_valor_situacao_final(f'Qtde Venda {selec}')))
-            col3.metric('Dias pedidos', int(consultar_valor_situacao_final(f'Dias Pedido {selec}')))
-            col4.metric('Atv Ressup.', int(consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}')))
+        saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
+        saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
 
-            saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
-            saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
+        df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
+                    'Quantidade' : [saida_frac, saida_und_cx]})
 
-            df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
-                       'Quantidade' : [saida_frac, saida_und_cx]})
-    
-            fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
-                 color_discrete_map={'Fracionado':'mediumblue',
-                                    'Caixa':'lightgrey'})
+        fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
+                color_discrete_map={'Fracionado':'mediumblue',
+                                'Caixa':'lightgrey'})
 
-            fig.update_traces(textposition='outside', textinfo='percent+label')
-            st.plotly_chart(fig, use_container_width=True)
+        fig.update_traces(textposition='outside', textinfo='percent+label')
+        st.plotly_chart(fig, use_container_width=True)
 
-        else:
-            col1, col2, col3, col4 = st.columns(4)
+    else:
+        col1, col2, col3, col4 = st.columns(4)
 
-            col1.metric('Curva', ne)
-            col2.metric('Venda', ne)
-            col3.metric('Dias pedidos', ne)
-            col4.metric('Atv Ressup.', ne)
-            
-# with aba_2:
+        col1.metric('Curva', ne)
+        col2.metric('Venda', ne)
+        col3.metric('Dias pedidos', ne)
+        col4.metric('Atv Ressup.', ne)
