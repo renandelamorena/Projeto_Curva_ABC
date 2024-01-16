@@ -10,6 +10,7 @@ from io import BytesIO
 import os
 
 st.set_page_config(
+    page_title='Projeto Curva ABC',
     layout='wide',
     page_icon=':bar-chart:'
     )
