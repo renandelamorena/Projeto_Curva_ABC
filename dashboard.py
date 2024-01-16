@@ -11,7 +11,7 @@ import os
 
 st.set_page_config(
     layout='wide',
-    page_icon='📊'
+    page_icon=':bar-chart:'
     )
 
 ## Func
