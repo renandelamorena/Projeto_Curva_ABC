@@ -28,7 +28,7 @@ Objetivo do projeto:
 
 ---
 
-![Pagina inicial do projeto](.\img\dashboard-curva-abc.png)
+![Pagina inicial do projeto](img\dashboard-curva-abc.png)
 
 ## Sobre o Projeto
 
@@ -38,7 +38,7 @@ Como o projeto esta estruturado?
 
 * Streamlit == 
 
-* [Outras bibliotecas](.\requeriments.txt)
+* [Outras bibliotecas](requirements.txt)
 
 ### Como rodar localmente?
 
