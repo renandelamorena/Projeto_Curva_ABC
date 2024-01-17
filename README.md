@@ -28,7 +28,7 @@ Objetivo do projeto:
 
 ---
 
-![Pagina inicial do projeto](img\dashboard-curva-abc.png)
+![Pagina inicial do projeto](/img/dashboard-curva-abc.png)
 
 ## Sobre o Projeto
 
