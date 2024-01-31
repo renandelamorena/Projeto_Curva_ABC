@@ -24,6 +24,15 @@ def p_i(pause):
 def p_f():
     pag.PAUSE = pause_geral
 
+# %%
+def caminho_absoluto(caminho_relativo_com_barras_normais):
+    
+    caminho_base = os.getcwd()
+
+    caminho_absoluto = os.path.join(caminho_base, caminho_relativo_com_barras_normais)
+
+    return caminho_absoluto
+
 # %% [markdown]
 # ## Func
 
@@ -137,13 +146,13 @@ def verificar_imagem_encontrada(tempo_inicial, timeout, caminho_imagem, tempo_ag
 # %%
 def abre_consulta_cadastro_produto():
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\gerenciamento\gerenciamento.png', 0.2)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/gerenciamento/gerenciamento.png'), 0.2)
     
-    verificar_imagem_encontrada(time.time(), 10, r'img\gerenciamento\consultas.png', 0.2)
-    click(r'img\gerenciamento\consultas.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/gerenciamento/consultas.png'), 0.2)
+    click(caminho_absoluto('img/gerenciamento/consultas.png'), 1)
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\gerenciamento\consulta_cadastro_endereco_apanha.png', 0.2)
-    click(r'img\gerenciamento\consulta_cadastro_endereco_apanha.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/gerenciamento/consulta_cadastro_endereco_apanha.png'), 0.2)
+    click(caminho_absoluto('img/gerenciamento/consulta_cadastro_endereco_apanha.png'), 1)
 
 # %%
 def baixar_cadastro_produto():
@@ -175,8 +184,8 @@ def baixar_cadastro_produto():
     pag.press('tab')
     pag.press('up', presses=2)
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\excel\botao_gerar_excel.png', 0.2)
-    click(r'img\excel\botao_gerar_excel.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/excel/botao_gerar_excel.png'), 0.2)
+    click(caminho_absoluto('img\excel\botao_gerar_excel.png'), 1)
 
     p_f()
 
@@ -198,43 +207,43 @@ def baixar_analise_curva(tipo_curva):
         pag.press('enter')
 
         # espera filtrar para precionar o botão
-        verificar_imagem_encontrada(time.time(), 1200, 'img/excel/botao_gerar_excel.png', 5)
-        click('img/excel/botao_gerar_excel.png', 1)
+        verificar_imagem_encontrada(time.time(), 1200, caminho_absoluto('img/excel/botao_gerar_excel.png'), 5)
+        click(caminho_absoluto('img/excel/botao_gerar_excel.png'), 1)
 
         pag.press('tab')
         pag.press('enter')
 
     if tipo_curva == 'curva_cx':
 
-        verificar_imagem_encontrada(time.time(), 20, 'img/gerenciamento/limpar_filtro.png', 1)
-        click('img/gerenciamento/limpar_filtro.png', 1)
+        verificar_imagem_encontrada(time.time(), 20, caminho_absoluto('img/gerenciamento/limpar_filtro.png'), 1)
+        click(caminho_absoluto('img/gerenciamento/limpar_filtro.png'), 1)
 
-        verificar_imagem_encontrada(time.time(), 20, 'img/gerenciamento/selec_curva_cx.png', 1)
-        click('img/gerenciamento/selec_curva_cx.png', 1)
+        verificar_imagem_encontrada(time.time(), 20, caminho_absoluto('img/gerenciamento/selec_curva_cx.png'), 1)
+        click(caminho_absoluto('img/gerenciamento/selec_curva_cx.png'), 1)
 
         pag.press('tab', presses=3)
         pag.press('enter')
 
         # espera filtrar para precionar o botão
-        verificar_imagem_encontrada(time.time(), 1200, 'img/excel/botao_gerar_excel.png', 5)
-        click('img/excel/botao_gerar_excel.png', 1)
+        verificar_imagem_encontrada(time.time(), 1200, caminho_absoluto('img/excel/botao_gerar_excel.png'), 5)
+        click(caminho_absoluto('img/excel/botao_gerar_excel.png'), 1)
         pag.press('tab')
         pag.press('enter')
 
     if tipo_curva == 'curva_frac':
         
-        verificar_imagem_encontrada(time.time(), 20, 'img/gerenciamento/limpar_filtro.png', 1)
-        click('img/gerenciamento/limpar_filtro.png', 1)
+        verificar_imagem_encontrada(time.time(), 20, caminho_absoluto('img/gerenciamento/limpar_filtro.png'), 1)
+        click(caminho_absoluto('img/gerenciamento/limpar_filtro.png'), 1)
 
-        verificar_imagem_encontrada(time.time(), 20, 'img/gerenciamento/selec_curva_frac.png', 1)
-        click('img/gerenciamento/selec_curva_frac.png', 1)
+        verificar_imagem_encontrada(time.time(), 20, caminho_absoluto('img/gerenciamento/selec_curva_frac.png'), 1)
+        click(caminho_absoluto('img/gerenciamento/selec_curva_frac.png'), 1)
 
         pag.press('tab', presses=3)
         pag.press('enter')
 
         # espera filtrar para precionar o botão
-        verificar_imagem_encontrada(time.time(), 1200, 'img/excel/botao_gerar_excel.png', 5)
-        click('img/excel/botao_gerar_excel.png', 1)
+        verificar_imagem_encontrada(time.time(), 1200, caminho_absoluto('img/excel/botao_gerar_excel.png'), 5)
+        click(caminho_absoluto('img/excel/botao_gerar_excel.png'), 1)
         pag.press('tab')
         pag.press('enter')
 
@@ -262,23 +271,23 @@ def abre_wms():
     pag.hotkey('ctrl', 'v')
     p_f()
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\aplicativos.png', 0.2)
-    click(r'img\aplicativos.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/aplicativos.png'), 0.2)
+    click(caminho_absoluto('img/aplicativos.png'), 1)
     
     # Seleciona WMS
     
-    verificar_imagem_encontrada(time.time(), 10, r'img\wms.png', 0.2)
-    click(r'img\wms.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/wms.png'), 0.2)
+    click(caminho_absoluto('img/wms.png'), 1)
 
     # Executa WMS
     
-    verificar_imagem_encontrada(time.time(), 10, r'img\executar.png', 0.2)
-    click(r'img\executar.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/executar.png'), 0.2)
+    click(caminho_absoluto('img/executar.png'), 1)
 
     # Loguin
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\usuario.png', 0.2)
-    click(r'img\usuario.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/usuario.png'), 0.2)
+    click(caminho_absoluto('img/usuario.png'), 1)
 
     login = 'renan'
     senha = 134679
@@ -299,8 +308,8 @@ def abre_app_wms(app):
 
     p_i(0.1)
     
-    verificar_imagem_encontrada(time.time(), 10, r'img\lupa_wms.png', 0.2)
-    click(r'img\lupa_wms.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/lupa_wms.png'), 0.2)
+    click(caminho_absoluto('img/lupa_wms.png'), 1)
 
     pcl.copy(app)
     
@@ -315,8 +324,8 @@ def abre_app_wms(app):
 def salvar_planilha(nome_arquivo, onde_fixado):
     
     # click no excel
-    verificar_imagem_encontrada(time.time(), 1200 , r'img\gerenciamento\exel_gerado.png', 5)
-    click(r'img\gerenciamento\exel_gerado.png', 1)  
+    verificar_imagem_encontrada(time.time(), 1200 , caminho_absoluto('img/gerenciamento/exel_gerado.png'), 5)
+    click(caminho_absoluto('img/gerenciamento/exel_gerado.png'), 1)  
 
     # tela cheia
     pag.hotkey('ctrl', 'shift', 'f1')
@@ -333,14 +342,14 @@ def salvar_planilha(nome_arquivo, onde_fixado):
     pag.press(onde_fixado)
 
     # coloca o nome do arquivo
-    verificar_imagem_encontrada(time.time(), 20 , r'img\excel\nome_arquivo.png', 0.1)
-    click(r'img\excel\nome_arquivo.png', 2)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/excel/nome_arquivo.png'), 0.1)
+    click(caminho_absoluto('img/excel/nome_arquivo.png'), 2)
     pcl.copy(nome_arquivo)
     pag.hotkey('ctrl', 'v')
 
     # salvar
-    verificar_imagem_encontrada(time.time(), 20 , r'img\excel\salvar_excel.png', 0.1)
-    click(r'img\excel\salvar_excel.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/excel/salvar_excel.png'), 0.1)
+    click(caminho_absoluto('img/excel/salvar_excel.png'), 1)
 
     # confirmar subistituição
     pag.press('tab')
@@ -365,11 +374,11 @@ def comitar_dados_atualizados():
     pag.hotkey('ctrl', 'v')
     p_f()
 
-    verificar_imagem_encontrada(time.time(), 10, r'img\aplicativos.png', 0.2)
-    click(r'img\aplicativos.png', 1)
+    verificar_imagem_encontrada(time.time(), 10, caminho_absoluto('img/aplicativos.png'), 0.2)
+    click(caminho_absoluto('img/aplicativos.png'), 1)
 
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\vscode.png', 0.1)
-    click(r'img\vscode\vscode.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/vscode.png'), 0.1)
+    click(caminho_absoluto('img/vscode/vscode.png'), 1)
 
     # abre nova janela
     pag.hotkey('ctrl', 'shift', 'n')
@@ -378,8 +387,8 @@ def comitar_dados_atualizados():
     pag.hotkey('ctrl', 'shift', 'g')
 
     # abrir pasta
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\abrir_pasta.png', 0.1)
-    click(r'img\vscode\abrir_pasta.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/abrir_pasta.png'), 0.1)
+    click(caminho_absoluto('img/vscode/abrir_pasta.png'), 1)
 
     pcl.copy(r'C:\Users\estoque\OneDrive - MAXIFARMA DISTRIBUIDORA DE MEDICAMENTOS LTDA\Documentos\estoque.renan\projetos\projeto_curva_abc')
     pag.hotkey('ctrl', 'v')
@@ -391,31 +400,31 @@ def comitar_dados_atualizados():
     pag.hotkey('ctrl', 'shift', 'g')
 
     # click na caixa de mensagem do commit
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\mensagem_do_commit.png', 0.1)
-    click(r'img\vscode\mensagem_do_commit.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/mensagem_do_commit.png'), 0.1)
+    click(caminho_absoluto('img/vscode/mensagem_do_commit.png'), 1)
 
     pcl.copy('atualizando cadastro de hoje')
     pag.hotkey('ctrl', 'v')
 
     # click em mudandanças
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\mudancas.png', 0.1)
-    click(r'img\vscode\mudancas.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/mudancas.png'), 0.1)
+    click(caminho_absoluto('img/vscode/mudancas.png'), 1)
 
     # click em adicionar mudanças
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\stage_all_changens.png', 0.1)
-    click(r'img\vscode\stage_all_changens.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/stage_all_changens.png'), 0.1)
+    click(caminho_absoluto('img/vscode/stage_all_changens.png'), 1)
 
     # click em configurações do commit
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\config.png', 0.1)
-    click(r'img\vscode\config.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/config.png'), 0.1)
+    click(caminho_absoluto('img/vscode/config.png'), 1)
 
     # click em commitar e sincronizar
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\comitar_e_sincronizar.png', 0.1)
-    click(r'img\vscode\comitar_e_sincronizar.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/comitar_e_sincronizar.png'), 0.1)
+    click(caminho_absoluto('img/vscode/comitar_e_sincronizar.png'), 1)
 
     # click em ok
-    verificar_imagem_encontrada(time.time(), 20 , r'img\vscode\ok.png', 0.1)
-    click(r'img\vscode\ok.png', 1)
+    verificar_imagem_encontrada(time.time(), 20 , caminho_absoluto('img/vscode/ok.png'), 0.1)
+    click(caminho_absoluto('img/vscode/ok.png'), 1)
 
 # %% [markdown]
 # # Tratamento de dados
@@ -429,13 +438,13 @@ def tratar_dados():
 
     # Importando Dados
 
-    produtos = pd.read_excel(r'../data/tratamento_curva_abc/datasets/produtos.xlsx')
+    produtos = pd.read_excel(caminho_absoluto('../data/tratamento_curva_abc/datasets/produtos.xlsx'))
 
-    curva_geral = pd.read_excel(r'../data/tratamento_curva_abc/datasets/curva_geral.xlsx')
+    curva_geral = pd.read_excel(caminho_absoluto('../data/tratamento_curva_abc/datasets/curva_geral.xlsx'))
 
-    curva_cx = pd.read_excel(r'../data/tratamento_curva_abc/datasets/curva_cx.xlsx')
+    curva_cx = pd.read_excel(caminho_absoluto('../data/tratamento_curva_abc/datasets/curva_cx.xlsx'))
 
-    curva_frac = pd.read_excel(r'../data/tratamento_curva_abc/datasets/curva_frac.xlsx')
+    curva_frac = pd.read_excel(caminho_absoluto('../data/tratamento_curva_abc/datasets/curva_frac.xlsx'))
 
     # Tratando Dados
 
@@ -715,18 +724,18 @@ def tratar_dados():
     situacao_final['Descrição'] = situacao_final['Descrição'].fillna('-')
 
     # %%
-    curva_abc_geral.to_excel(r'../data/tratamento_curva_abc/dados_tratados/curva_abc_geral.xlsx')
-    curva_abc_frac.to_excel(r'../data/tratamento_curva_abc/dados_tratados/curva_abc_frac.xlsx')
-    curva_abc_cx.to_excel(r'../data/tratamento_curva_abc/dados_tratados/curva_abc_cx.xlsx')
-    situacao_final.to_excel(r'../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')
+    curva_abc_geral.to_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/curva_abc_geral.xlsx'))
+    curva_abc_frac.to_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/curva_abc_frac.xlsx'))
+    curva_abc_cx.to_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/curva_abc_cx.xlsx'))
+    situacao_final.to_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx'))
 
     # Comparar locais
 
-    situacao_final = pd.read_excel(r'../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')
+    situacao_final = pd.read_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx'))
 
     enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
 
-    locais = pd.read_excel(r'../data/analise_curva_abc/local/datasets/local_apanha_cx.xlsx').astype(str)
+    locais = pd.read_excel(caminho_absoluto('../data/analise_curva_abc/local/datasets/local_apanha_cx.xlsx')).astype(str)
 
     def refatorar_indece(df, nome_index):
         
@@ -753,7 +762,7 @@ def tratar_dados():
     teste.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
     teste = refatorar_indece(teste, 'Ordem')
 
-    teste.to_excel(r'../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')
+    teste.to_excel(caminho_absoluto('../data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx'))
 
 # %% [markdown]
 # # Exe
@@ -788,8 +797,6 @@ pag.hotkey('alt', 'f4')
 pag.hotkey('alt', 'f4')
 
 tratar_dados()
-
-
 
 # %%
 comitar_dados_atualizados()
