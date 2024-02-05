@@ -51,7 +51,14 @@ st.title('Ocupação do estoque')
 aba1, aba2, aba3 = st.tabs(['Caixa Fechada', 'Flowrack', 'Prateleira'])
 
 with aba1:
-    chart = criar_mapa_de_calor_caixa_fechada('Ativ.Ressupr.Frac', 'Ressuprimento fracionado por endereço')
+
+    opcao_coluna = st.selectbox('Selecione o tipo de saída:',
+                                ('Ativ.Ressupr.Frac'),
+                                index = None,
+                                placeholder = 'Selecione',
+                                )
+
+    chart = criar_mapa_de_calor_caixa_fechada(opcao_coluna, 'Ressuprimento fracionado por endereço')
     st.plotly_chart(chart, use_container_width=True)
     
 with aba2:
