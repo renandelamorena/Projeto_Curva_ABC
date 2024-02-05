@@ -44,7 +44,7 @@ def criar_mapa_de_calor_caixa_fechada(coluna, nome_do_grafico):
                     )
 
   fig.update_xaxes(side='top')
-  fig.show()
+  return fig
   
 st.title('Ocupação do estoque')
 
@@ -52,7 +52,7 @@ aba1, aba2, aba3 = st.tabs(['Caixa Fechada', 'Fracionado', 'Prateleira'])
 
 with aba1:
     chart = criar_mapa_de_calor_caixa_fechada('Ativ.Ressupr.Frac', 'Ressuprimento fracionado por endereço')
-    st.plotly_chart(chart, use_container_width=True)
+    st.plotly_chart(chart)
     
 with aba2:
     'a'
