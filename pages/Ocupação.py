@@ -52,14 +52,25 @@ aba1, aba2, aba3 = st.tabs(['Caixa Fechada', 'Flowrack', 'Prateleira'])
 
 with aba1:
 
-    opcao_coluna = st.selectbox('Selecione o tipo de saída:',
-                                ('Ativ.Ressupr.Frac'),
-                                index = None,
-                                placeholder = 'Selecione',
-                                )
+    with st.expander('Saídas por endereço'):
+        opcao_coluna = st.selectbox('Selecione o tipo de saída:',
+                                    ('Ativ.Ressupr.Frac',
+                                    'Ativ.Ressupr.Cx',
+                                    'Ativ.Ressupr.Geral',
+                                    'Qtde Venda Frac',
+                                    'Qtde Venda Cx',
+                                    'Qtde Venda Geral',
+                                    'Dias Pedido Frac',
+                                    'Dias Pedido Cx',
+                                    'Dias Pedido Geral',
+                                    'Média por dia frac',
+                                    'Média por dia cx',
+                                    'Média por dia geral',
+                                    ),
+                                    )
 
-    chart = criar_mapa_de_calor_caixa_fechada(opcao_coluna, 'Ressuprimento fracionado por endereço')
-    st.plotly_chart(chart, use_container_width=True)
+        chart = criar_mapa_de_calor_caixa_fechada(opcao_coluna, f'{opcao_coluna} por Endereço de Caixa')
+        st.plotly_chart(chart, use_container_width=True)
     
 with aba2:
     ''
