@@ -130,7 +130,7 @@ with aba1:
         chart = criar_mapa_de_calor_saida(opcao_coluna, f'{opcao_coluna} por Endereço de Caixa')
 
     else:
-        chart = criar_mapa_de_calor_ocupacao(opcao_coluna, f'{opcao_coluna} por Endereço de Caixa')
+        chart = criar_mapa_de_calor_ocupacao(f'{opcao_coluna} por Endereço de Caixa')
 
     st.plotly_chart(chart, use_container_width=True)
     
