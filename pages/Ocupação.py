@@ -93,7 +93,7 @@ def criar_mapa_de_calor_ocupacao(nome_do_grafico):
                     )
 
     fig.update_xaxes(side='top')
-    fig.show()
+    return fig
 
 st.title('Ocupação do estoque')
 
