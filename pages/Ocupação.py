@@ -24,13 +24,13 @@ def criar_mapa_de_calor_saida(coluna, nome_do_grafico):
     coluna_x_endereço = pd.Series(coluna_x_endereço[coluna].values, index = coluna_x_endereço['Ender.Cx.Fechada']).to_dict()
 
     # Mapeia as informações da coluna com os indereços
-    coluna_por_enderço_cx_fechada = mapa.replace(coluna_x_endereço)
+    coluna_por_enderco = mapa.replace(coluna_x_endereço)
 
     # Criar o mapa de calor
     fig = go.Figure(data=go.Heatmap(
-                  z=coluna_por_enderço_cx_fechada.values, # Valores para a cor
-                  x=coluna_por_enderço_cx_fechada.columns, # Eixos X
-                  y=coluna_por_enderço_cx_fechada.index, # Eixo Y
+                  z=coluna_por_enderco.values, # Valores para a cor
+                  x=coluna_por_enderco.columns, # Eixos X
+                  y=coluna_por_enderco.index, # Eixo Y
                   colorbar_title='Saída',
                   colorscale=['LightBlue', 'DarkBlue'],
                   text=mapa,
@@ -68,13 +68,13 @@ def criar_mapa_de_calor_ocupacao(nome_do_grafico):
         tipo_da_ocupacao = pd.Series(qnt_enderecado_x_endereco['Código'].values, index = qnt_enderecado_x_endereco['Ender.Cx.Fechada']).to_dict()
 
     # Mapeia as informações da coluna com os indereços
-    coluna_por_enderço_cx_fechada = mapa.replace(tipo_da_ocupacao)
+    coluna_por_enderco = mapa.replace(tipo_da_ocupacao)
     
     # Criar o mapa de calor
     fig = go.Figure(data=go.Heatmap(
-                z=coluna_por_enderço_cx_fechada.values, # Valores para a cor
-                x=coluna_por_enderço_cx_fechada.columns, # Eixos X
-                y=coluna_por_enderço_cx_fechada.index, # Eixo Y
+                z=coluna_por_enderco.values, # Valores para a cor
+                x=coluna_por_enderco.columns, # Eixos X
+                y=coluna_por_enderco.index, # Eixo Y
                 colorbar_title='Saída',
                 colorscale=['LightBlue', 'DarkBlue'],
                 text=mapa,
