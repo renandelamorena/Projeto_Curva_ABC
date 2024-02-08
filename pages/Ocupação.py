@@ -12,16 +12,30 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
     return caminho_absoluto
 
+def refatorar_indece(df, nome_index):
+    
+    qnt_linha = df.shape[0] + 1
+
+    index = [i for i in range(1, qnt_linha)]
+
+    df.set_index(pd.Index(index), inplace=True)
+
+    df.index.name = nome_index
+    
+    return df
+
 situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
 mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx')).fillna('-').astype(str)
 
-def criar_mapa_de_calor_saida(coluna, nome_do_grafico):
+mapa_prateleira = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_prateleira_orientacao.xlsx'), sheet_name=None)
+
+def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
 
     # Agrupar por endereço e somar os dados da coluna
-    coluna_x_endereço = situacao_final[['Ender.Cx.Fechada', coluna]].groupby(['Ender.Cx.Fechada']).sum().reset_index()
+    coluna_x_endereço = situacao_final[[coluna_endereco, coluna_saida]].groupby([coluna_endereco]).sum().reset_index()
 
     # Cria um serie com os valores, para transformar em um dicionario
-    coluna_x_endereço = pd.Series(coluna_x_endereço[coluna].values, index = coluna_x_endereço['Ender.Cx.Fechada']).to_dict()
+    coluna_x_endereço = pd.Series(coluna_x_endereço[coluna_saida].values, index = coluna_x_endereço[coluna_endereco]).to_dict()
 
     # Mapeia as informações da coluna com os indereços
     coluna_por_enderco = mapa.replace(coluna_x_endereço)
@@ -45,7 +59,7 @@ def criar_mapa_de_calor_saida(coluna, nome_do_grafico):
                     xaxis_zeroline=False, yaxis_zeroline=False,
                     autosize=False,
                     width=1450,
-                    height=1200,
+                    height=len(mapa.index) * 13,
                     )
 
     fig.update_xaxes(side='top')
@@ -127,7 +141,7 @@ with aba1:
     opcao_coluna = st.selectbox('Selecione o tipo de saída:', colunas)
 
     if tipo_de_visualizacao == 'Saída':
-        chart = criar_mapa_de_calor_saida(opcao_coluna, f'{opcao_coluna} por Endereço de Caixa')
+        chart = criar_mapa_de_calor_saida('Ender.Cx.Fechada', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa')
 
     else:
         chart = criar_mapa_de_calor_ocupacao(f'{opcao_coluna} por Endereço de Caixa')
@@ -138,4 +152,59 @@ with aba2:
     ''
     
 with aba3:
-    ''
+    corredores = {'10' : mapa_prateleira['10'],
+                '11' : mapa_prateleira['11'],
+                '12' : mapa_prateleira['12'],
+                '13' : mapa_prateleira['13'],
+                '14' : mapa_prateleira['14'],
+                '15' : mapa_prateleira['15'],
+                '16' : mapa_prateleira['16'],
+                '17' : mapa_prateleira['17'],
+                '18' : mapa_prateleira['18'],
+                '19' : mapa_prateleira['19'],
+                '20' : mapa_prateleira['20'],
+                '21' : mapa_prateleira['21'],
+                '22' : mapa_prateleira['22'],
+                '23' : mapa_prateleira['23'],
+                '24' : mapa_prateleira['24'],
+                '25' : mapa_prateleira['25'],
+                '26' : mapa_prateleira['26'],
+                '27' : mapa_prateleira['27'],
+                '28' : mapa_prateleira['28'],
+                '29' : mapa_prateleira['29'],
+                }
+
+    mapa_geral_plateleiras = pd.concat(corredores)
+    refatorar_indece(mapa_geral_plateleiras, None)
+
+    radio_selecao_visao_prateleiras = st.radio('Selecione o tipo de vizualização das prateleiras:', ['Geral', 'Por corredor'])
+
+    if radio_selecao_visao_prateleiras == 'Geral':
+
+        criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_plateleiras, 'teste')
+
+    else:
+
+        corredor = st.selectbox('Selecion o Corredor:', ('10',
+                                                         '11',
+                                                         '12',
+                                                         '13',
+                                                         '14',
+                                                         '15',
+                                                         '16',
+                                                         '17',
+                                                         '18',
+                                                         '19',
+                                                         '20',
+                                                         '21',
+                                                         '22',
+                                                         '23',
+                                                         '24',
+                                                         '25',
+                                                         '26',
+                                                         '27',
+                                                         '28',
+                                                         '29',
+                                                         ))
+
+        criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], 'teste')
