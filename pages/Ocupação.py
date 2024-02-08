@@ -181,7 +181,9 @@ with aba3:
 
     if radio_selecao_visao_prateleiras == 'Geral':
 
-        criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_plateleiras, 'teste')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_plateleiras, 'teste')
+
+        st.plotly_chart(chart, use_container_width=True)
 
     else:
 
@@ -207,4 +209,6 @@ with aba3:
                                                          '29',
                                                          ))
 
-        criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], 'teste')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], 'teste')
+
+        st.plotly_chart(chart, use_container_width=True)
