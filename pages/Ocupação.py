@@ -59,13 +59,13 @@ def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafi
                     xaxis_zeroline=False, yaxis_zeroline=False,
                     autosize=False,
                     width=1450,
-                    height=len(mapa.index) * 13,
+                    height=len(mapa.index) * 20,
                     )
 
     fig.update_xaxes(side='top')
     return fig
 
-def criar_mapa_de_calor_ocupacao(nome_do_grafico):
+def criar_mapa_de_calor_cadastro(nome_do_grafico):
     ## Ocupação (Cadastro)
 
     coluna_x_endereço = situacao_final[['Ender.Cx.Fechada', 'Código']]
@@ -142,10 +142,10 @@ with aba1:
     opcao_coluna = st.selectbox('Selecione o tipo de saída:', colunas)
 
     if tipo_de_visualizacao == 'Cadastro':
-        chart = criar_mapa_de_calor_ocupacao(f'{opcao_coluna} por Endereço de Caixa')
+        chart = criar_mapa_de_calor_cadastro(f'{opcao_coluna} por Endereço de Caixa Fechada')
 
     else:
-        chart = criar_mapa_de_calor_saida('Ender.Cx.Fechada', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa')
+        chart = criar_mapa_de_calor_saida('Ender.Cx.Fechada', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa Fechada')
 
     st.plotly_chart(chart, use_container_width=True)
     
@@ -190,6 +190,6 @@ with aba3:
 
         corredor = st.selectbox('Selecion o Corredor:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], f'Mapa de calor de saída do corredor{corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)
