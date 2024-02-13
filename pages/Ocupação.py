@@ -4,6 +4,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 import os
 
+st.set_page_config(
+    page_title='Ocupação',
+    layout='wide',
+    page_icon=':bar-chart:'
+    )
+
 def caminho_absoluto(caminho_relativo_com_barras_normais):
     
     caminho_base = os.getcwd()

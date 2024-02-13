@@ -4,6 +4,12 @@ import plotly.express as px
 from io import BytesIO
 import os
 
+st.set_page_config(
+    page_title='Consulta',
+    layout='wide',
+    page_icon=':bar-chart:'
+    )
+
 def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
     #Criar um DataFrame
     df = pd.DataFrame(tabela_excel)
@@ -37,8 +43,6 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
     caminho_absoluto = os.path.join(caminho_base, caminho_relativo_com_barras_normais)
 
     return caminho_absoluto
-
-st.set_page_config(layout='wide')
 
 situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
 
