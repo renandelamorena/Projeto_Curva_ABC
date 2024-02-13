@@ -1,4 +1,4 @@
-#python -m venv venv
+#python -m venv 
 #./venv/Scripts/activate
 
 # https://projeto-curva-abc.streamlit.app/
