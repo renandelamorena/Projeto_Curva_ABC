@@ -32,10 +32,15 @@ def refatorar_indece(df, nome_index):
 
 situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
 mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx')).fillna('-').astype(str)
-
 mapa_prateleira = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_prateleira_orientacao.xlsx'), sheet_name=None)
+mapa_flowrack = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_flowrack_orientacao.xlsx'), sheet_name=None)
 
 def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
+    
+    if len(mapa.index) * 20 < 500:
+        altura = 500
+    else:
+        altura = len(mapa.index) * 20
 
     # Agrupar por endereço e somar os dados da coluna
     coluna_x_endereço = situacao_final[[coluna_endereco, coluna_saida]].groupby([coluna_endereco]).sum().reset_index()
@@ -64,8 +69,8 @@ def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafi
                     xaxis_showgrid=False, yaxis_showgrid=False,
                     xaxis_zeroline=False, yaxis_zeroline=False,
                     autosize=False,
-                    width=1450,
-                    height=len(mapa.index) * 20,
+                    width=7000,
+                    height=altura,
                     )
 
     fig.update_xaxes(side='top')
@@ -108,7 +113,7 @@ def criar_mapa_de_calor_cadastro(nome_do_grafico):
                     xaxis_showgrid=False, yaxis_showgrid=False,
                     xaxis_zeroline=False, yaxis_zeroline=False,
                     autosize=False,
-                    width=1450,
+                    width=2000,
                     height=1200,
                     )
 
@@ -156,35 +161,27 @@ with aba1:
     st.plotly_chart(chart, use_container_width=True)
     
 with aba2:
-    ''
+    mapa_geral_flowrack = pd.concat(mapa_flowrack.values(), axis=1)
+
+    radio_selecao_visao_flowrack = st.radio('Selecione o tipo de vizualização do flowrack:', ['Por corredor', 'Geral'])
+
+    if radio_selecao_visao_flowrack == 'Geral':
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_flowrack, 'Mapa de calor geral do flowrack')
+
+        st.plotly_chart(chart, use_container_width=False)
+
+    else:
+        corredor = st.selectbox('Selecione o Corredor:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
+
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
+
+        st.plotly_chart(chart, use_container_width=True)
     
 with aba3:
-    corredores = {'10' : mapa_prateleira['10'],
-                  '11' : mapa_prateleira['11'],
-                  '12' : mapa_prateleira['12'],
-                  '13' : mapa_prateleira['13'],
-                  '14' : mapa_prateleira['14'],
-                  '15' : mapa_prateleira['15'],
-                  '16' : mapa_prateleira['16'],
-                  '17' : mapa_prateleira['17'],
-                  '18' : mapa_prateleira['18'],
-                  '19' : mapa_prateleira['19'],
-                  '20' : mapa_prateleira['20'],
-                  '21' : mapa_prateleira['21'],
-                  '22' : mapa_prateleira['22'],
-                  '23' : mapa_prateleira['23'],
-                  '24' : mapa_prateleira['24'],
-                  '25' : mapa_prateleira['25'],
-                  '26' : mapa_prateleira['26'],
-                  '27' : mapa_prateleira['27'],
-                  '28' : mapa_prateleira['28'],
-                  '29' : mapa_prateleira['29'],
-                  }
-
-    mapa_geral_plateleiras = pd.concat(corredores)
+    mapa_geral_plateleiras = pd.concat(mapa_prateleira)
     refatorar_indece(mapa_geral_plateleiras, None)
 
-    radio_selecao_visao_prateleiras = st.radio('Selecione o tipo de vizualização das prateleiras:', ['Geral', 'Por corredor'])
+    radio_selecao_visao_prateleiras = st.radio('Selecione o tipo de vizualização das prateleiras:', ['Por corredor', 'Geral'])
 
     if radio_selecao_visao_prateleiras == 'Geral':
 
@@ -196,6 +193,6 @@ with aba3:
 
         corredor = st.selectbox('Selecion o Corredor:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', corredores[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)
