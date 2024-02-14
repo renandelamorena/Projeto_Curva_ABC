@@ -122,9 +122,12 @@ def criar_mapa_de_calor_cadastro(nome_do_grafico):
 
 st.title('Ocupação do estoque')
 
-aba1, aba2, aba3 = st.tabs(['Caixa Fechada', 'Flowrack', 'Prateleira'])
+aba1, aba2, aba3, aba4 = st.tabs(['Métricas', 'Caixa Fechada', 'Flowrack', 'Prateleira'])
 
 with aba1:
+    'Em teste'
+
+with aba2:
 
     tipo_de_visualizacao = st.radio('Selecione o tipo de vizualização:',
                                     ['Cadastro', 'Saída'],
@@ -160,7 +163,7 @@ with aba1:
 
     st.plotly_chart(chart, use_container_width=True)
     
-with aba2:
+with aba3:
     mapa_geral_flowrack = pd.concat(mapa_flowrack.values(), axis=1)
 
     radio_selecao_visao_flowrack = st.radio('Selecione o tipo de vizualização do flowrack:', ['Por corredor', 'Geral'])
@@ -177,7 +180,7 @@ with aba2:
 
         st.plotly_chart(chart, use_container_width=True)
     
-with aba3:
+with aba4:
     mapa_geral_plateleiras = pd.concat(mapa_prateleira)
     refatorar_indece(mapa_geral_plateleiras, None)
 
