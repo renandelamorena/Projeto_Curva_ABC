@@ -76,11 +76,9 @@ Como o projeto esta estruturado?
 
     * >💡 Há um executável em `.\data\tratamento_curva_abc\tratamento_curva.exe` para tratar os dados separadamente.
 
-        * > 📝 **NOTA:** Os dados são tratados separadamentes em quanto o app esta em execução (Página de **DADOS BRUTOS**).
-
 * Em `.\data\analise_curva_abc` contém a lógica das análises:
 
-    * Divisão 
+    * Divisão
 
     * Localização 
 
@@ -90,9 +88,9 @@ Como o projeto esta estruturado?
 >
 >    * Mertricas' - totais de endereços, com os totais em números dos produtos que estão certos ou errados a serem alterados.
 >
->    * Vizualição da divisão da saída dos produtos fracionados, e pordutos com locais a serem alterados, com disponibilidade de baixar os dados dos mesmos em excel.
+>    * Vizualição da divisão da saída dos produtos fracionados, e produtos com locais a serem alterados, com disponibilidade de baixar os dados em excel.
 >
->    * Vizualição dos protudos em locais de apanha caixa, em locais certos e errados, com disponibilidade de baixar os dados dos mesmo em excel.
+>    * Vizualição dos protudos em locais de apanha caixa, em locais certos e errados, com disponibilidade de baixar os dados em excel.
 
 ---
 
@@ -104,7 +102,7 @@ Como o projeto esta estruturado?
 
     * `.\pages\Ocupação` mostra uma visão geral do estoque e seus locais.
 
-* A pasta `.\mapa_estoque` contem a planilha com dados dos locais e localidades de endereços (fracinado, [prateleiras e flowrack] e caixas fechadadas), que foram pensados baseados na construção do estoque da empresa e como a organização do mesmo está disposta, isso, justamente em relação aos processos operacionais da empresa, visando uma melhor disposição das mercadorias.
+* O arquivo `.\mapa_estoque\orientacao.xlxs` contem a planilha com dados dos locais e localidades de endereços (fracinado, [prateleiras e flowrack] e caixas fechadadas), que foram pensados baseados na construção do estoque da empresa e como a organização do mesmo está disposta, isso, justamente em relação aos processos operacionais da empresa, visando uma melhor disposição das mercadorias.
 
     * > 📝 **NOTA:** Essa informação faz mas sentido com o conhecimento físico do estoque, e dos processos operacionais que envolvem o mesmo. A planilha é usada para consulta dentro do processo, e é a base para a lógica do projeto.
 
