@@ -126,9 +126,7 @@ df_local_not_na = situacao_final[~situacao_final['local'].isna()]
 df_local_not_na.fillna('-',inplace=True)
 
 #itens de 'ponta' no local errado
-selecao_local_ponta_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
-                             (df_local_not_na['Permite Frac.'] == 'Não') & \
-                             (df_local_not_na['Tipo'] == 'Ponta De G') & \
+selecao_local_ponta_mudar = ((df_local_not_na['Tipo'] == 'Ponta De G') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'ponta') & \
                              (df_local_not_na['local'] != 'pallet')
