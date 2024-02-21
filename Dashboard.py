@@ -164,51 +164,51 @@ mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
 #No local de 'prateleira', os itens certos e errados
 local_prateleira = situacao_local(['prateleira'], 'A')
 
-#itens de 'fech_a' no local errado
-selecao_local_fech_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
+#itens de 'apanha_a' no local errado
+selecao_local_apanha_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                              (df_local_not_na['Permite Frac.'] == 'Não') & \
                              (df_local_not_na['Tipo'] == 'Flowrack') & \
                              (df_local_not_na['local'] != 'controlado') & \
-                             (df_local_not_na['local'] != 'fech_a') & \
+                             (df_local_not_na['local'] != 'apanha_a') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pallet') & \
                              (df_local_not_na['local'] != 'amostra') & \
                              (df_local_not_na['local'] != 'flowrack')
                              )
-mudar_para_fech_a = df_local_not_na[selecao_local_fech_a_mudar]
+mudar_para_apanha_a = df_local_not_na[selecao_local_apanha_a_mudar]
 
-#No local de 'fech_a', os itens certos e errados
-local_fechada_a = situacao_local(['pallet', 'fech_a', 'flowrack'], 'A')
+#No local de 'apanha_a', os itens certos e errados
+local_fechada_a = situacao_local(['pallet', 'apanha_a'], 'A')
 
-#itens de 'aberta_b' no local errado
-selecao_local_aberta_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
+#itens de 'apanha_b' no local errado
+selecao_local_apanha_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
                              (df_local_not_na['Permite Frac.'] == 'Sim') & \
                              (df_local_not_na['Tipo'] == 'Prateleira') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
                              (df_local_not_na['local'] != 'fd') & \
-                             (df_local_not_na['local'] != 'aberta_b')
+                             (df_local_not_na['local'] != 'apanha_b')
                              )
-mudar_para_aberta_b = df_local_not_na[selecao_local_aberta_b_mudar]
+mudar_para_apanha_b = df_local_not_na[selecao_local_apanha_b_mudar]
 
-#No local de 'aberta_b', os itens certos e errados
-local_aberta_b = situacao_local(['aberta_b'], 'B')
+#No local de 'apanha_b', os itens certos e errados
+local_apanha_b = situacao_local(['apanha_b'], 'B')
 
-#itens de 'aberta_c' no local errado
-selecao_local_aberta_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
+#itens de 'apanha_c' no local errado
+selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
                              (df_local_not_na['Permite Frac.'] == 'Sim') & \
                              (df_local_not_na['Tipo'] == 'Prateleira') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'fd') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
-                             (df_local_not_na['local'] != 'aberta_c')
+                             (df_local_not_na['local'] != 'apanha_c')
                              )
-mudar_para_aberta_c = df_local_not_na[selecao_local_aberta_c_mudar]
+mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
 
-#No local de 'aberta_c', os itens certos e errados
-local_aberta_c = situacao_local(['aberta_c'], 'C')
+#No local de 'apanha_c', os itens certos e errados
+local_apanha_c = situacao_local(['apanha_c'], 'C')
 
 #itens de 'antibiotico' no local errado
 selecao_local_am_mudar = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
@@ -246,7 +246,7 @@ selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\
                                 )
 mudar_para_fech_b_c = df_local_not_na[selecao_local_fech_b_c_mudar]
 
-#No local de 'aberta_b', os itens certos e errados
+#No local de 'apanha_b', os itens certos e errados
 local_fech_bc = situacao_local(['fech_bc'], 'B|C')
 
 ### Tabelas - Apanha Fracionado
@@ -505,23 +505,21 @@ with aba2:
 #Apanha Caixa
 
 with aba3:
-    locais = ['Ponta', 'Prateleira', 'Apanha A', 'Aberta B', 'Aberta C', 'Apanha AM', 'Fechada B/C']
+    locais = ['Ponta', 'Prateleira', 'Apanha A', 'Apanha B', 'Apanha C', 'Apanha AM']
 
     dfs_locais_valores = {'Ponta' : [local_ponta_total_certo, local_ponta_total_errado],
                         'Prateleira' : [local_prateleira[1], local_prateleira[2]],
                         'Apanha A' : [local_fechada_a[1], local_fechada_a[2]],
-                        'Aberta B' : [local_aberta_b[1], local_aberta_b[2]],
-                        'Aberta C' : [local_aberta_c[1], local_aberta_c[2]],
+                        'Apanha B' : [local_apanha_b[1], local_apanha_b[2]],
+                        'Apanha C' : [local_apanha_c[1], local_apanha_c[2]],
                         'Apanha AM' : [local_total_certo_am, local_total_errado_am],
-                        'Fechada B/C' : [local_fech_bc[1], local_fech_bc[2]],
                         }
     dfs_locais_tabelas = {'Ponta' : [local_ponta_certo, local_ponta_errado],
                         'Prateleira' : [local_prateleira[3], local_prateleira[4]],
                         'Apanha A' : [local_fechada_a[3], local_fechada_a[4]],
-                        'Aberta B' : [local_aberta_b[3], local_aberta_b[4]],
-                        'Aberta C' : [local_aberta_c[3], local_aberta_c[4]],
+                        'Apanha B' : [local_apanha_b[3], local_apanha_b[4]],
+                        'Apanha C' : [local_apanha_c[3], local_apanha_c[4]],
                         'Apanha AM' : [local_certo_am, local_errado_am],
-                        'Fechada B/C' : [local_fech_bc[3], local_fech_bc[4]],
                         }
 
     st.write('## Situação por local')
@@ -544,9 +542,9 @@ with aba3:
         #Selecionar o df
         dfs_locais_errados = {'Ponta' : mudar_para_ponta,
                               'Prateleira' : mudar_para_prateleira,
-                              'Apanha A' : mudar_para_fech_a,
-                              'Aberta B' : mudar_para_aberta_b,
-                              'Aberta C' : mudar_para_aberta_c,
+                              'Apanha A' : mudar_para_apanha_a,
+                              'Apanha B' : mudar_para_apanha_b,
+                              'Apanha C' : mudar_para_apanha_c,
                               'Apanha AM' : mudar_para_am,
                               'Fechada B/C' : mudar_para_fech_b_c,
                               }
