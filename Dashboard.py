@@ -132,24 +132,29 @@ selecao_local_ponta_mudar = ((df_local_not_na['Tipo'] == 'Ponta De G') & \
                              (df_local_not_na['local'] != 'pallet')
                              )
 mudar_para_ponta = df_local_not_na[selecao_local_ponta_mudar]
-#No local de 'ponta', os itens certos e errados
+#itens de 'ponta' no local errado
 #Certo
-selecao_local_ponta_certo = ((df_local_not_na['Tipo'] == 'Ponta De G') & \
-                             (df_local_not_na['local'] == 'ponta') | \
-                             (df_local_not_na['Tipo'] == 'Prateleira') & \
-                             (df_local_not_na['Curva Frac'] == 'A')
+selecao_ok_ponta_no_local_de_ponta = ((situacao_final['local'] == 'ponta') & \
+                              (situacao_final['Tipo'] == 'Ponta De G')
                              )
-local_ponta_certo = df_local_not_na[selecao_local_ponta_certo]
+
+selecao_ok_prateleira_no_local_de_ponta = ((situacao_final['local'] == 'ponta') & \
+                              (situacao_final['Tipo'] == 'Prateleira') & \
+                              (situacao_final['Curva Frac'] == 'A')
+                             )
+
+selecao_local_ponta_certo = selecao_ok_ponta_no_local_de_ponta | selecao_ok_prateleira_no_local_de_ponta
+
+local_ponta_certo = situacao_final[selecao_local_ponta_certo]
 local_ponta_total_certo = local_ponta_certo.shape[0]
 
 #Errado
-selecao_local_ponta_errado = ((df_local_not_na['Tipo'] != 'Ponta De G') & \
-                             (df_local_not_na['local'] == 'ponta') | \
-                             (df_local_not_na['Tipo'] != 'Prateleira') & \
-                             (df_local_not_na['local'] == 'ponta') & \
-                             (df_local_not_na['Curva Frac'] != 'A')
-                             )
-local_ponta_errado = df_local_not_na[selecao_local_ponta_errado]
+selecao_todos_intes_no_local_ponta = situacao_final['local'] == 'ponta'
+todos_intes_no_local_ponta = situacao_final[selecao_todos_intes_no_local_ponta]
+
+selecao_itens_errados_no_local_ponta = ~todos_intes_no_local_ponta.index.isin(local_ponta_certo.index)
+
+local_ponta_errado = todos_intes_no_local_ponta[selecao_itens_errados_no_local_ponta]
 local_ponta_total_errado = local_ponta_errado.shape[0]
 
 #Total
