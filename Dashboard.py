@@ -152,10 +152,11 @@ local_ponta_total = local_ponta_total_certo + local_ponta_total_errado
 
 #itens de 'prateleira' no local errado
 selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
-                             (df_local_not_na['Tipo'] == 'Prateleira') & \
-                             (df_local_not_na['local'] != 'controlado') & \
-                             (df_local_not_na['local'] != 'prateleira')
-                             )
+                                  (~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
+                                  (df_local_not_na['Tipo'] == 'Prateleira') & \
+                                  (df_local_not_na['local'] != 'controlado') & \
+                                  (df_local_not_na['local'] != 'prateleira')
+                                 )
 mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
 
 #No local de 'prateleira', os itens certos e errados
