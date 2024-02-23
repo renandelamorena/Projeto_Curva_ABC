@@ -144,7 +144,9 @@ local_ponta_total_certo = local_ponta_certo.shape[0]
 
 #Errado
 selecao_local_ponta_errado = ((df_local_not_na['Tipo'] != 'Ponta De G') & \
-                             (df_local_not_na['local'] == 'ponta')
+                             (df_local_not_na['local'] == 'ponta') | \
+                             (df_local_not_na['Tipo'] != 'Prateleira') & \
+                             (df_local_not_na['Curva Frac'] != 'A')
                              )
 local_ponta_errado = df_local_not_na[selecao_local_ponta_errado]
 local_ponta_total_errado = local_ponta_errado.shape[0]
