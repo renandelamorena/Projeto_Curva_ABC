@@ -169,7 +169,7 @@ selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                                   (df_local_not_na['local'] != 'prateleira') & \
                                   (df_local_not_na['local'] != 'ponta') & \
                                   (df_local_not_na['local'] != 'fd') & \
-                                  (~df_local_not_na['Descrição'].str.contains('PIRAQUE|LINEA'))
+                                  (df_local_not_na['local'] != 'alimento')
                                  )
 mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
 
@@ -216,7 +216,7 @@ selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
                              (df_local_not_na['local'] != 'apanha_c') & \
-                             (~df_local_not_na['Descrição'].str.contains('PIRAQUE|LINEA'))
+                             (df_local_not_na['local'] != 'alimento')
                              )
 
 mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
