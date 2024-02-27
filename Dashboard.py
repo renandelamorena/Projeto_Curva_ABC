@@ -192,23 +192,34 @@ mudar_para_apanha_a = df_local_not_na[selecao_local_apanha_a_mudar]
 local_fechada_a = situacao_local(['pallet', 'apanha_a'], 'A')
 
 #itens de 'apanha_b' no local errado
-selecao_local_apanha_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
-                             (df_local_not_na['Tipo'] == 'Prateleira') & \
-                             (df_local_not_na['local'] != 'controlado') & \
-                             (df_local_not_na['local'] != 'antibiotico') & \
-                             (df_local_not_na['local'] != 'pet') & \
-                             (df_local_not_na['local'] != 'fd') & \
-                             (df_local_not_na['local'] != 'apanha_b') & \
-                             (df_local_not_na['local'] != 'alimento')
-                             )
-mudar_para_apanha_b = df_local_not_na[selecao_local_apanha_b_mudar]
+#itens de 'apanha_b' no local errado
+maiores_ressupr_frac = situacao_final.sort_values(by='Ativ.Ressupr.Frac', ascending=False)
+
+selecao_curvas_b_maiores_ressupr_frac = (maiores_ressupr_frac['Curva Frac'] == 'B') & \
+                                        (maiores_ressupr_frac['local'] != 'fd') & \
+                                        (maiores_ressupr_frac['local'] != 'controlado') & \
+                                        (maiores_ressupr_frac['Tipo'] != 'Ponta De G')
+
+curvas_b_maiores_ressupr_frac = maiores_ressupr_frac[selecao_curvas_b_maiores_ressupr_frac][:300]
+
+mudar_para_apanha_b = curvas_b_maiores_ressupr_frac[curvas_b_maiores_ressupr_frac['local'] != 'apanha_b']
 
 #No local de 'apanha_b', os itens certos e errados
-local_apanha_b = situacao_local(['apanha_b'], 'B')
+local_apanha_b = situacao_final[situacao_final['local'] == 'apanha_b']
+
+# Certo
+certo_apanha_b = local_apanha_b[local_apanha_b['Código'].isin(curvas_b_maiores_ressupr_frac['Código'])]
+local_apanha_b_total_certo = certo_apanha_b.shape[0]
+
+# Errado
+errado_apanha_b = local_apanha_b[~local_apanha_b['Código'].isin(curvas_b_maiores_ressupr_frac['Código'])]
+local_apanha_b_total_errado = errado_apanha_b.shape[0]
+
+# Total
+local_apanha_b_total = local_apanha_b_total_certo + local_apanha_b_total_errado
 
 #itens de 'apanha_c' no local errado
 selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
-                             (df_local_not_na['Tipo'] == 'Prateleira') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'fd') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
@@ -506,14 +517,14 @@ with aba3:
     dfs_locais_valores = {'Ponta' : [local_ponta_total_certo, local_ponta_total_errado],
                         'Prateleira' : [local_prateleira[1], local_prateleira[2]],
                         'Apanha A' : [local_fechada_a[1], local_fechada_a[2]],
-                        'Apanha B' : [local_apanha_b[1], local_apanha_b[2]],
+                        'Apanha B' : [local_apanha_b_total_certo, local_apanha_b_total_errado],
                         'Apanha C' : [local_apanha_c[1], local_apanha_c[2]],
                         'Apanha AM' : [local_total_certo_am, local_total_errado_am],
                         }
     dfs_locais_tabelas = {'Ponta' : [local_ponta_certo, local_ponta_errado],
                         'Prateleira' : [local_prateleira[3], local_prateleira[4]],
                         'Apanha A' : [local_fechada_a[3], local_fechada_a[4]],
-                        'Apanha B' : [local_apanha_b[3], local_apanha_b[4]],
+                        'Apanha B' : [certo_apanha_b, errado_apanha_b],
                         'Apanha C' : [local_apanha_c[3], local_apanha_c[4]],
                         'Apanha AM' : [local_certo_am, local_errado_am],
                         }
