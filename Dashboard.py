@@ -245,21 +245,6 @@ local_total_errado_am = local_errado_am.shape[0]
 #Total
 local_total = local_total_certo_am + local_total_errado_am
 
-#itens de 'fech_bc' no local errado
-selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
-                                (df_local_not_na['Tipo'] == 'Prateleira') & \
-                                (df_local_not_na['local'] != 'controlado') & \
-                                (df_local_not_na['local'] != 'amostra') & \
-                                (df_local_not_na['local'] != 'pet') & \
-                                (df_local_not_na['local'] != 'fech_bc') & \
-                                (df_local_not_na['local'] != 'fd') & \
-                                (df_local_not_na['Curva Frac'].str.contains('B|C'))
-                                )
-mudar_para_fech_b_c = df_local_not_na[selecao_local_fech_b_c_mudar]
-
-#No local de 'apanha_b', os itens certos e errados
-local_fech_bc = situacao_local(['fech_bc'], 'B|C')
-
 ### Tabelas - Apanha Fracionado
 
 total_curva_frac = pd.DataFrame(situacao_final['Curva Frac'].value_counts()).reset_index().rename(columns={'Curva Frac':'Curva', 'count':'Total'})
@@ -556,8 +541,7 @@ with aba3:
                               'Apanha A' : mudar_para_apanha_a,
                               'Apanha B' : mudar_para_apanha_b,
                               'Apanha C' : mudar_para_apanha_c,
-                              'Apanha AM' : mudar_para_am,
-                              'Fechada B/C' : mudar_para_fech_b_c,
+                              'Apanha AM' : mudar_para_am
                               }
 
         st.session_state.horizontal = True
