@@ -222,7 +222,7 @@ selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
 mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
 
 #No local de 'apanha_c', os itens certos e errados
-local_apanha_c = situacao_local(['apanha_c'], 'C')
+local_apanha_c = situacao_local(['apanha_c'], 'C|-')
 
 #itens de 'antibiotico' no local errado
 selecao_local_am_mudar = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
