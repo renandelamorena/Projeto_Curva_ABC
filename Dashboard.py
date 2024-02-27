@@ -129,6 +129,7 @@ df_local_not_na.fillna('-',inplace=True)
 selecao_local_ponta_mudar = ((df_local_not_na['Tipo'] == 'Ponta De G') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'ponta') & \
+                             (df_local_not_na['local'] != 'pet') & \
                              (df_local_not_na['local'] != 'pallet')
                              )
 mudar_para_ponta = df_local_not_na[selecao_local_ponta_mudar]
@@ -165,7 +166,8 @@ selecao_local_prateleira_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
                                   (~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
                                   (df_local_not_na['Tipo'] == 'Prateleira') & \
                                   (df_local_not_na['local'] != 'controlado') & \
-                                  (df_local_not_na['local'] != 'prateleira')
+                                  (df_local_not_na['local'] != 'prateleira') & \
+                                  (~df_local_not_na['Descrição'].str.contains('PIRAQUE|LINEA'))
                                  )
 mudar_para_prateleira = df_local_not_na[selecao_local_prateleira_mudar]
 
