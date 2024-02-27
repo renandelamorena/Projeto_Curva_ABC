@@ -178,7 +178,6 @@ local_prateleira = situacao_local(['prateleira'], 'A')
 
 #itens de 'apanha_a' no local errado
 selecao_local_apanha_a_mudar = ((df_local_not_na['Curva Frac'] == 'A') & \
-                             (df_local_not_na['Permite Frac.'] == 'Não') & \
                              (df_local_not_na['Tipo'] == 'Flowrack') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'apanha_a') & \
@@ -194,13 +193,13 @@ local_fechada_a = situacao_local(['pallet', 'apanha_a'], 'A')
 
 #itens de 'apanha_b' no local errado
 selecao_local_apanha_b_mudar = ((df_local_not_na['Curva Frac'] == 'B') & \
-                             (df_local_not_na['Permite Frac.'] == 'Sim') & \
                              (df_local_not_na['Tipo'] == 'Prateleira') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
                              (df_local_not_na['local'] != 'fd') & \
-                             (df_local_not_na['local'] != 'apanha_b')
+                             (df_local_not_na['local'] != 'apanha_b') & \
+                             (df_local_not_na['local'] != 'alimento')
                              )
 mudar_para_apanha_b = df_local_not_na[selecao_local_apanha_b_mudar]
 
@@ -209,7 +208,6 @@ local_apanha_b = situacao_local(['apanha_b'], 'B')
 
 #itens de 'apanha_c' no local errado
 selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
-                             (df_local_not_na['Permite Frac.'] == 'Sim') & \
                              (df_local_not_na['Tipo'] == 'Prateleira') & \
                              (df_local_not_na['local'] != 'controlado') & \
                              (df_local_not_na['local'] != 'fd') & \
@@ -249,7 +247,6 @@ local_total = local_total_certo_am + local_total_errado_am
 
 #itens de 'fech_bc' no local errado
 selecao_local_fech_b_c_mudar = ((~df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
-                                (df_local_not_na['Permite Frac.'] == 'Não') & \
                                 (df_local_not_na['Tipo'] == 'Prateleira') & \
                                 (df_local_not_na['local'] != 'controlado') & \
                                 (df_local_not_na['local'] != 'amostra') & \
