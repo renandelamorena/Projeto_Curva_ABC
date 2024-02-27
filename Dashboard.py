@@ -211,8 +211,10 @@ selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
                              (df_local_not_na['local'] != 'fd') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
-                             (df_local_not_na['local'] != 'apanha_c')
+                             (df_local_not_na['local'] != 'apanha_c') & \
+                             (~df_local_not_na['Descrição'].str.contains('PIRAQUE|LINEA'))
                              )
+
 mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
 
 #No local de 'apanha_c', os itens certos e errados
