@@ -192,16 +192,19 @@ mudar_para_apanha_a = df_local_not_na[selecao_local_apanha_a_mudar]
 local_fechada_a = situacao_local(['pallet', 'apanha_a'], 'A')
 
 #itens de 'apanha_b' no local errado
-#itens de 'apanha_b' no local errado
 maiores_ressupr_frac = situacao_final.sort_values(by='Ativ.Ressupr.Frac', ascending=False)
 
 selecao_curvas_b_maiores_ressupr_frac = (maiores_ressupr_frac['Curva Frac'] == 'B') & \
+                                        (~maiores_ressupr_frac['Descrição'].str.contains('\(AM\)')) & \
                                         (maiores_ressupr_frac['local'] != 'fd') & \
                                         (maiores_ressupr_frac['local'] != 'controlado') & \
-                                        (maiores_ressupr_frac['Tipo'] != 'Ponta De G')
+                                        (maiores_ressupr_frac['local'] != 'pet') & \
+                                        (maiores_ressupr_frac['local'] != 'alimento') & \
+                                        (maiores_ressupr_frac['local'] != 'amostra') & \
+                                        (maiores_ressupr_frac['Tipo'] != 'Ponta De G') & \
+                                        (~maiores_ressupr_frac['local'].isna())
 
-curvas_b_maiores_ressupr_frac = maiores_ressupr_frac[selecao_curvas_b_maiores_ressupr_frac][:300]
-
+curvas_b_maiores_ressupr_frac = maiores_ressupr_frac[selecao_curvas_b_maiores_ressupr_frac][:400]
 mudar_para_apanha_b = curvas_b_maiores_ressupr_frac[curvas_b_maiores_ressupr_frac['local'] != 'apanha_b']
 
 #No local de 'apanha_b', os itens certos e errados
@@ -219,21 +222,32 @@ local_apanha_b_total_errado = errado_apanha_b.shape[0]
 local_apanha_b_total = local_apanha_b_total_certo + local_apanha_b_total_errado
 
 #itens de 'apanha_c' no local errado
-selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
-                             (df_local_not_na['local'] != 'controlado') & \
-                             (df_local_not_na['local'] != 'fd') & \
-                             (df_local_not_na['local'] != 'antibiotico') & \
-                             (df_local_not_na['local'] != 'pet') & \
-                             (df_local_not_na['local'] != 'apanha_c') & \
-                             (df_local_not_na['local'] != 'alimento') & \
-                             (df_local_not_na['local'] != 'ponta') & \
-                             (df_local_not_na['local'] != 'amostra')
-                             )
+selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'] == 'C') | \
+                                (maiores_ressupr_frac['Curva Frac'].isna()) & \
+                                (maiores_ressupr_frac['local'] != 'controlado') & \
+                                (maiores_ressupr_frac['local'] != 'fd') & \
+                                (maiores_ressupr_frac['local'] != 'antibiotico') & \
+                                (maiores_ressupr_frac['local'] != 'pet') & \
+                                (maiores_ressupr_frac['local'] != 'alimento')
+                               )
 
-mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
+curvas_b_maiores_ressupr_frac_apos_400 = maiores_ressupr_frac[selecao_curvas_b_maiores_ressupr_frac][400:]
+
+mudar_para_apanha_c = pd.concat([curvas_b_maiores_ressupr_frac_apos_400, maiores_ressupr_frac[selecao_local_apanha_c_mudar]])
 
 #No local de 'apanha_c', os itens certos e errados
-local_apanha_c = situacao_local(['apanha_c'], 'C|-')
+local_apanha_c = situacao_final[situacao_final['local'] == 'apanha_c']
+
+# Certo
+certo_apanha_c = local_apanha_c[local_apanha_c['Código'].isin(mudar_para_apanha_c['Código'])]
+local_apanha_c_total_certo = certo_apanha_c.shape[0]
+
+# Errado
+errado_apanha_c = local_apanha_c[~local_apanha_c['Código'].isin(mudar_para_apanha_c['Código'])]
+local_apanha_c_total_errado = errado_apanha_c.shape[0]
+
+# Total
+local_apanha_c_total = local_apanha_c_total_certo + local_apanha_c_total_errado
 
 #itens de 'antibiotico' no local errado
 selecao_local_am_mudar = ((df_local_not_na['Descrição'].str.contains('\(AM\)')) & \
