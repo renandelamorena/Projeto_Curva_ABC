@@ -193,6 +193,7 @@ local_fechada_a = situacao_local(['pallet', 'apanha_a'], 'A')
 
 #itens de 'apanha_b' no local errado
 maiores_ressupr_frac = situacao_final.sort_values(by='Ativ.Ressupr.Frac', ascending=False)
+maiores_ressupr_frac['Curva Frac'].fillna('-',inplace=True)
 
 selecao_curvas_b_maiores_ressupr_frac = (maiores_ressupr_frac['Curva Frac'] == 'B') & \
                                         (~maiores_ressupr_frac['Descrição'].str.contains('\(AM\)')) & \
@@ -222,12 +223,14 @@ local_apanha_b_total_errado = errado_apanha_b.shape[0]
 local_apanha_b_total = local_apanha_b_total_certo + local_apanha_b_total_errado
 
 #itens de 'apanha_c' no local errado
-selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'] == 'C') | (maiores_ressupr_frac['Curva Frac'].isna()) & \
+selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'].str.contains('C|-')) & \
                                 (~maiores_ressupr_frac['local'].isna()) & \
                                 (maiores_ressupr_frac['local'] != 'controlado') & \
                                 (maiores_ressupr_frac['local'] != 'fd') & \
                                 (maiores_ressupr_frac['local'] != 'antibiotico') & \
                                 (maiores_ressupr_frac['local'] != 'pet') & \
+                                (maiores_ressupr_frac['local'] != 'apanha_c') & \
+                                (maiores_ressupr_frac['local'] != 'amostra') & \
                                 (maiores_ressupr_frac['local'] != 'alimento')
                                )
 
@@ -534,7 +537,7 @@ with aba3:
                         'Prateleira' : [local_prateleira[1], local_prateleira[2]],
                         'Apanha A' : [local_fechada_a[1], local_fechada_a[2]],
                         'Apanha B' : [local_apanha_b_total_certo, local_apanha_b_total_errado],
-                        'Apanha C' : [local_apanha_c_total_certo, local_apanha_c_total_certo],
+                        'Apanha C' : [local_apanha_c_total_certo, local_apanha_c_total_errado],
                         'Apanha AM' : [local_total_certo_am, local_total_errado_am],
                         }
     dfs_locais_tabelas = {'Ponta' : [local_ponta_certo, local_ponta_errado],
