@@ -478,55 +478,55 @@ with aba1:
 
 #Apanha Fracionado
 with aba2:
+    with st.expander('Flowrack'):
+        coluna1, coluna2, coluna3 = st.columns(3)
+        with coluna1:
+            st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
+            botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
+        with coluna2:
+            st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
+            botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
+        with coluna3:
+            st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
+            botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
 
-    coluna1, coluna2, coluna3 = st.columns(3)
-    with coluna1:
-        st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
-        botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
-    with coluna2:
-        st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
-        botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
-    with coluna3:
-        st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
-        botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
+        coluna1, coluna2 = st.columns(2)
+        with coluna1:
+            st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
 
-    coluna1, coluna2 = st.columns(2)
-    with coluna1:
-        st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
+            st.markdown('# Filtrar Saída pela Classe')
 
-        st.markdown('# Filtrar Saída pela Classe')
+            #Filtro por modulo
+            modulos_escolhidos = st.multiselect('Selecione os modulos:', modulos_escolhidos, default = modulos_escolhidos)
 
-        #Filtro por modulo
-        modulos_escolhidos = st.multiselect('Selecione os modulos:', modulos_escolhidos, default = modulos_escolhidos)
+            #Filtro por local
+            classes_frac = ['AA', 'AB', 'AC', 'XPE']
+            selecao_locais = st.selectbox('Selecione os locais:', classes_frac)
 
-        #Filtro por local
-        classes_frac = ['AA', 'AB', 'AC', 'XPE']
-        selecao_locais = st.selectbox('Selecione os locais:', classes_frac)
+            #Tabela de saido por local/classe
+            produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            local_frac['Ender.Fracionado'] = local_frac['Ender.Fracionado'].astype(str)
+            saida_por_local_frac = pd.merge(local_frac, produto_flowrack, on='Ender.Fracionado',  how = 'left')
 
-        #Tabela de saido por local/classe
-        produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
-        local_frac['Ender.Fracionado'] = local_frac['Ender.Fracionado'].astype(str)
-        saida_por_local_frac = pd.merge(local_frac, produto_flowrack, on='Ender.Fracionado',  how = 'left')
+            #Selecionar o(s) modulo(s)
+            selecao_modulo = saida_por_local_frac['modulo'].isin(modulos_escolhidos)
+            saida_por_local_frac_modulo = saida_por_local_frac[selecao_modulo]
 
-        #Selecionar o(s) modulo(s)
-        selecao_modulo = saida_por_local_frac['modulo'].isin(modulos_escolhidos)
-        saida_por_local_frac_modulo = saida_por_local_frac[selecao_modulo]
+            #Selecionar o(s) local(is)
+            selecao_local = saida_por_local_frac_modulo['local'] == selecao_locais
+            tabela_saida_por_local = saida_por_local_frac_modulo[selecao_local]    
 
-        #Selecionar o(s) local(is)
-        selecao_local = saida_por_local_frac_modulo['local'] == selecao_locais
-        tabela_saida_por_local = saida_por_local_frac_modulo[selecao_local]    
+            fig_saida_por_classe = px.bar(tabela_saida_por_local,
+                                x='modulo',
+                                y='Qtde Venda Frac',
+                                text_auto=True,
+                                title='Saída X Classe'
+                                )
+            
+        with coluna2:
+            st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
 
-        fig_saida_por_classe = px.bar(tabela_saida_por_local,
-                               x='modulo',
-                               y='Qtde Venda Frac',
-                               text_auto=True,
-                               title='Saída X Classe'
-                               )
-        
-    with coluna2:
-        st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
-
-        st.plotly_chart(fig_saida_por_classe, use_container_width=True)
+            st.plotly_chart(fig_saida_por_classe, use_container_width=True)
 
 #Apanha Caixa
 
