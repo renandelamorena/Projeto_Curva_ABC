@@ -222,8 +222,8 @@ local_apanha_b_total_errado = errado_apanha_b.shape[0]
 local_apanha_b_total = local_apanha_b_total_certo + local_apanha_b_total_errado
 
 #itens de 'apanha_c' no local errado
-selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'] == 'C') | \
-                                (maiores_ressupr_frac['Curva Frac'].isna()) & \
+selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'] == 'C') | (maiores_ressupr_frac['Curva Frac'].isna()) & \
+                                (~maiores_ressupr_frac['local'].isna()) & \
                                 (maiores_ressupr_frac['local'] != 'controlado') & \
                                 (maiores_ressupr_frac['local'] != 'fd') & \
                                 (maiores_ressupr_frac['local'] != 'antibiotico') & \
