@@ -229,24 +229,24 @@ selecao_local_apanha_c_mudar = ((maiores_ressupr_frac['Curva Frac'].str.contains
                                 (maiores_ressupr_frac['local'] != 'fd') & \
                                 (maiores_ressupr_frac['local'] != 'antibiotico') & \
                                 (maiores_ressupr_frac['local'] != 'pet') & \
-                                (maiores_ressupr_frac['local'] != 'apanha_c') & \
                                 (maiores_ressupr_frac['local'] != 'amostra') & \
                                 (maiores_ressupr_frac['local'] != 'alimento')
                                )
 
 curvas_b_maiores_ressupr_frac_apos_400 = maiores_ressupr_frac[selecao_curvas_b_maiores_ressupr_frac][400:]
+produtos_para_apanha_c = pd.concat([curvas_b_maiores_ressupr_frac_apos_400, maiores_ressupr_frac[selecao_local_apanha_c_mudar]])
 
-mudar_para_apanha_c = pd.concat([curvas_b_maiores_ressupr_frac_apos_400, maiores_ressupr_frac[selecao_local_apanha_c_mudar]])
+mudar_para_apanha_c = produtos_para_apanha_c[produtos_para_apanha_c['local'] != 'apanha_c']
 
 #No local de 'apanha_c', os itens certos e errados
 local_apanha_c = situacao_final[situacao_final['local'] == 'apanha_c']
 
 # Certo
-certo_apanha_c = local_apanha_c[local_apanha_c['Código'].isin(mudar_para_apanha_c['Código'])]
+certo_apanha_c = local_apanha_c[local_apanha_c['Código'].isin(produtos_para_apanha_c['Código'])]
 local_apanha_c_total_certo = certo_apanha_c.shape[0]
 
 # Errado
-errado_apanha_c = local_apanha_c[~local_apanha_c['Código'].isin(mudar_para_apanha_c['Código'])]
+errado_apanha_c = local_apanha_c[~local_apanha_c['Código'].isin(produtos_para_apanha_c['Código'])]
 local_apanha_c_total_errado = errado_apanha_c.shape[0]
 
 # Total
