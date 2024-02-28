@@ -336,7 +336,7 @@ selecao_curva_a_normal_flowrack_para_prateleira = (situacao_final['Tipo'] == 'Fl
 
 curva_a_normal_flowrack_para_prateleira = situacao_final[selecao_curva_a_normal_flowrack_para_prateleira]
 
-total_curva_a_normal_prateleira_para_flowrack = curva_a_normal_flowrack_para_prateleira.shape[0]
+total_curva_a_normal_flowrack_para_prateleira = curva_a_normal_flowrack_para_prateleira.shape[0]
 
 #### Tabela saída por modulo (Unidade)
 
@@ -484,7 +484,7 @@ with aba2:
         st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
         botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
     with coluna2:
-        st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_prateleira_para_flowrack)
+        st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
         botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
     with coluna3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
