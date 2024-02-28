@@ -534,14 +534,14 @@ with aba3:
                         'Prateleira' : [local_prateleira[1], local_prateleira[2]],
                         'Apanha A' : [local_fechada_a[1], local_fechada_a[2]],
                         'Apanha B' : [local_apanha_b_total_certo, local_apanha_b_total_errado],
-                        'Apanha C' : [local_apanha_c[1], local_apanha_c[2]],
+                        'Apanha C' : [local_apanha_c_total_certo, local_apanha_c_total_certo],
                         'Apanha AM' : [local_total_certo_am, local_total_errado_am],
                         }
     dfs_locais_tabelas = {'Ponta' : [local_ponta_certo, local_ponta_errado],
                         'Prateleira' : [local_prateleira[3], local_prateleira[4]],
                         'Apanha A' : [local_fechada_a[3], local_fechada_a[4]],
                         'Apanha B' : [certo_apanha_b, errado_apanha_b],
-                        'Apanha C' : [local_apanha_c[3], local_apanha_c[4]],
+                        'Apanha C' : [certo_apanha_c, errado_apanha_c],
                         'Apanha AM' : [local_certo_am, local_errado_am],
                         }
 
