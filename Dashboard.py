@@ -225,7 +225,9 @@ selecao_local_apanha_c_mudar = ((df_local_not_na['Curva Frac'] == 'C') & \
                              (df_local_not_na['local'] != 'antibiotico') & \
                              (df_local_not_na['local'] != 'pet') & \
                              (df_local_not_na['local'] != 'apanha_c') & \
-                             (df_local_not_na['local'] != 'alimento')
+                             (df_local_not_na['local'] != 'alimento') & \
+                             (df_local_not_na['local'] != 'ponta') & \
+                             (df_local_not_na['local'] != 'amostra')
                              )
 
 mudar_para_apanha_c = df_local_not_na[selecao_local_apanha_c_mudar]
