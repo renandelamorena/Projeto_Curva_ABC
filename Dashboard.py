@@ -107,7 +107,7 @@ with st.sidebar:
 
     total_enderecos_mosdulo = AC + AB + AA
 
-    numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=6, max_value=6)
+    numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=5, max_value=6)
 
     total_enderecos_molulos = numero_modulos * total_enderecos_mosdulo
     total_enderecos_aa = numero_modulos * AA
