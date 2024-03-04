@@ -8,6 +8,8 @@ import pandas as pd
 import plotly.express as px
 from io import BytesIO
 import os
+from itertools import combinations
+from decimal import Decimal
 
 st.set_page_config(
     page_title='Projeto Curva ABC',
@@ -456,78 +458,169 @@ with aba1:
     coluna1_aba1, coluna2_aba1 = st.columns(2)
 
     with coluna1_aba1:
-        with st.expander('Fracionado'):
-            st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
-            st.metric('Curva A "medicamento"', formata_numero(somente_med_A.shape[0]))
+        st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
+        st.metric('Curva A "medicamento"', formata_numero(somente_med_A.shape[0]))
 
-            coluna1, coluna2 = st.columns(2)
-            with coluna1:
-                st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
-            with coluna2:
-                botao_donwload(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
+        coluna1, coluna2 = st.columns(2)
+        with coluna1:
+            st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
+        with coluna2:
+            botao_donwload(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
 
     with coluna2_aba1:
-        with st.expander('Caixa Fechada'):
-            st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
+        st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
 
-            coluna1, coluna2 = st.columns(2)
-            with coluna1:
-                st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
-            with coluna2:
-                botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
+        coluna1, coluna2 = st.columns(2)
+        with coluna1:
+            st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
+        with coluna2:
+            botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
+    coluna1, coluna2, coluna3 = st.columns(3)
+    with coluna1:
+        st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
+        botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
+    with coluna2:
+        st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
+        botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
+    with coluna3:
+        st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
+        botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
+        
     with st.expander('Flowrack'):
-        coluna1, coluna2, coluna3 = st.columns(3)
-        with coluna1:
-            st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
-            botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
-        with coluna2:
-            st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
-            botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
-        with coluna3:
-            st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
-            botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
-
         coluna1, coluna2 = st.columns(2)
         with coluna1:
             st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
 
-            st.markdown('# Filtrar Saída pela Classe')
-
-            #Filtro por modulo
-            modulos_escolhidos = st.multiselect('Selecione os modulos:', modulos_escolhidos, default = modulos_escolhidos)
+            st.markdown('# Filtrar Saída pelo local:')
 
             #Filtro por local
             classes_frac = ['AA', 'AB', 'AC', 'XPE']
-            selecao_locais = st.selectbox('Selecione os locais:', classes_frac)
+            selecao_locais = st.selectbox('Selecione o local:', classes_frac)
 
             #Tabela de saido por local/classe
             produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
-            local_frac['Ender.Fracionado'] = local_frac['Ender.Fracionado'].astype(str)
-            saida_por_local_frac = pd.merge(local_frac, produto_flowrack, on='Ender.Fracionado',  how = 'left')
+            local_flowrack = local_frac
+            local_flowrack['Ender.Fracionado'] = local_flowrack['Ender.Fracionado'].astype(str)
+            saida_por_local_flowrack = pd.merge(local_flowrack, produto_flowrack, on='Ender.Fracionado',  how = 'left')
 
             #Selecionar o(s) modulo(s)
-            selecao_modulo = saida_por_local_frac['modulo'].isin(modulos_escolhidos)
-            saida_por_local_frac_modulo = saida_por_local_frac[selecao_modulo]
+            selecao_modulo = saida_por_local_flowrack['modulo'].isin(modulos_escolhidos)
+            saida_por_local_flowrack_modulo = saida_por_local_flowrack[selecao_modulo]
 
             #Selecionar o(s) local(is)
-            selecao_local = saida_por_local_frac_modulo['local'] == selecao_locais
-            tabela_saida_por_local = saida_por_local_frac_modulo[selecao_local]    
+            selecao_local = saida_por_local_flowrack_modulo['local'] == selecao_locais
+            tabela_saida_por_local = saida_por_local_flowrack_modulo[selecao_local]    
 
             fig_saida_por_classe = px.bar(tabela_saida_por_local,
                                 x='modulo',
                                 y='Qtde Venda Frac',
                                 text_auto=True,
-                                title='Saída X Classe'
+                                title='Saída X Local'
                                 )
+            
+            st.plotly_chart(fig_saida_por_classe, use_container_width=True)
+            
+
             
         with coluna2:
             st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
 
-            st.plotly_chart(fig_saida_por_classe, use_container_width=True)
+            selecao_local_flowrack = (local_frac['local'] == selecao_locais)
+            local_flowrakc_selecionado = local_frac[selecao_local_flowrack]
+            enderecos_local_flowrack_selecionado = local_flowrakc_selecionado['Ender.Fracionado'].astype(float)
 
+            def selecionar_florack(corredores):    
+                selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
+                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[0])) | \
+                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[1]))
+                                                )
+                                                )
+                flowrack_corredores = situacao_final[selecao_flowrack_corredordes]
+                return flowrack_corredores
+
+            def saida_flowrack_no_modulo_pela_classe(modulo):
+                flowrack_do_modulo = selecionar_florack(modulos[modulo])
+
+                selecao_flowrack_modulo_X_classe = flowrack_do_modulo['Ender.Fracionado'].isin(enderecos_local_flowrack_selecionado)
+
+                flowrack_modulo_X_classe = flowrack_do_modulo[selecao_flowrack_modulo_X_classe]
+
+                saida_flowrack_modulo_classe = flowrack_modulo_X_classe['Qtde Venda Frac'].tolist()
+
+                return saida_flowrack_modulo_classe
+            
+            saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(1),
+                                saida_flowrack_no_modulo_pela_classe(2),
+                                saida_flowrack_no_modulo_pela_classe(3),
+                                saida_flowrack_no_modulo_pela_classe(4),
+                                saida_flowrack_no_modulo_pela_classe(5),
+                                saida_flowrack_no_modulo_pela_classe(6),
+                                ]
+
+            saida_dos_modulos = saida_dos_modulos[:numero_modulos]
+
+            soma_total = 0
+            for lista in saida_dos_modulos:
+                for valor in lista:
+                    soma_total += valor
+                    
+            media_saida_modulo = round(soma_total / len(saida_dos_modulos), 1)
+
+            saidas_list = []
+            for i in range(len(saida_dos_modulos)):
+                sum_lista_i = round(sum(saida_dos_modulos[i]), 1)
+                saida_dif_sum_lista_i = round((sum_lista_i - media_saida_modulo), 1)
+                saidas_list.append(Decimal(str(saida_dif_sum_lista_i)))
+            
+            st.write('# Situação do local:')
+            
+            st.write(f' #### Média definida para cada módulo: {formata_numero(round(media_saida_modulo))}')
+                       
+            col1, col2, col3, col4, col5 = st.columns(5)
+            with st.container(border=True):
+                st.metric('1° Módulo', formata_numero(sum(saida_dos_modulos[0])), (str(saidas_list[0])))
+                st.metric('2° Módulo', formata_numero(sum(saida_dos_modulos[1])), str(saidas_list[1]))
+                st.metric('3° Módulo', formata_numero(sum(saida_dos_modulos[2])), str(saidas_list[2]))
+                st.metric('4° Módulo', formata_numero(sum(saida_dos_modulos[3])), str(saidas_list[3]))
+                st.metric('5° Módulo', formata_numero(sum(saida_dos_modulos[4])), str(saidas_list[4]))
+                
+        def encontrar_combinacao(lista, alvo):
+            for i in range(1, len(lista) + 1):
+                for comb in combinations(lista, i):
+                    if sum(comb) == alvo:
+                        return list(comb)
+            return None
+        
+        st.write('# Realocar produtos')
+
+        # Lista de números
+        modulo_escolhido = st.selectbox('Selecione o modulo:', tuple(lista_modulos))
+        modulo = saida_dos_modulos[modulo_escolhido]
+
+        # Número alvo
+        total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=None, step=1)
+        total_de_saida_desejada = total_saida
+
+        # Encontrar combinação
+        comb = encontrar_combinacao(modulo, total_de_saida_desejada)
+
+        if comb:
+            st.write('Itens para realocamento:')
+            i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+            realocar = situacao_final[situacao_final.index.isin(i)]
+            st.dataframe(realocar)
+            
+        else:
+            st.write("Não foi possível encontrar uma combinação.")
+            
+    with st.expander('Prateleiras'):
+        ''
+    with st.expander('Ponta de Gôndola'):
+        ''
+    
 #Apanha Caixa
 
 with aba3:
