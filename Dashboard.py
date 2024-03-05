@@ -611,8 +611,8 @@ with aba2:
 
             if comb:
                 st.write('Itens para realocamento:')
-                i = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[saida_flowrack_no_modulo_pela_classe(modulo_escolhido)['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
-                realocar = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[saida_flowrack_no_modulo_pela_classe(modulo_escolhido).index.isin(i)]
+                i = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1][saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1]['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1][saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1].index.isin(i)]
                 st.dataframe(realocar)
                 
             else:
