@@ -318,7 +318,8 @@ total_curva_bc_flowrack = curva_bc_flowrack.shape[0]
 selecao_med_normal = (~situacao_final['Descrição'].str.contains('xpe|susp|sol|elixir', case=False)) & \
                      (~situacao_final['Descrição'].str.contains('SPRAYZIIN|escova|ABS|DENTAL|TOALHAS|AG ABSORVENTE|COMPRESSA|AG MULTIFRAL|AG PANTS|FITA|MASCARA|ATADURA|CERA ORTODONTICA|ESPARADRAPO', case=False)) & \
                      (situacao_final['Ender.Fracionado'] > 12.999) & \
-                     (situacao_final['Curva Frac'] == 'A')
+                     (situacao_final['Curva Frac'] == 'A') & \
+                     (situacao_final['local'] != 'alimento')
 
 somente_med_A = situacao_final[selecao_med_normal]
 total_somente_med_A = somente_med_A.shape[0]
@@ -336,16 +337,18 @@ else:
 total_produtos_para_flowrack = produtos_para_flowrack.shape[0]
 
 #Medicamentos curva A normais que estão na prateleira e devem ir para o flowrack
-selecao_curva_a_normal_prateleira_para_flowrack = (situacao_final['Tipo'] == 'Prateleira').isin(produtos_para_flowrack)
+produtos_na_prateleira = situacao_final[situacao_final['Tipo'] == 'Prateleira']
+selecao_curva_a_normal_prateleira_para_flowrack = (produtos_na_prateleira['Código']).isin(produtos_para_flowrack['Código'])
 
-curva_a_normal_prateleira_para_flowrack = situacao_final[selecao_curva_a_normal_prateleira_para_flowrack]
+curva_a_normal_prateleira_para_flowrack = produtos_na_prateleira[selecao_curva_a_normal_prateleira_para_flowrack]
 
 total_curva_a_normal_prateleira_para_flowrack = curva_a_normal_prateleira_para_flowrack.shape[0]
 
 #Medicamentos curva A normais que estão no flowrack e devem ir para a prateleira
-selecao_curva_a_normal_flowrack_para_prateleira = (situacao_final['Tipo'] == 'Flowrack').isin(linhas_excluidas)
+produtos_no_flowrack = situacao_final[situacao_final['Tipo'] == 'Flowrack']
+selecao_curva_a_normal_flowrack_para_prateleira = (produtos_no_flowrack['Código']).isin(linhas_excluidas['Código'])
 
-curva_a_normal_flowrack_para_prateleira = situacao_final[selecao_curva_a_normal_flowrack_para_prateleira]
+curva_a_normal_flowrack_para_prateleira = produtos_no_flowrack[selecao_curva_a_normal_flowrack_para_prateleira]
 
 total_curva_a_normal_flowrack_para_prateleira = curva_a_normal_flowrack_para_prateleira.shape[0]
 
