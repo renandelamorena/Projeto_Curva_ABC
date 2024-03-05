@@ -526,8 +526,6 @@ with aba2:
             
             st.plotly_chart(fig_saida_por_classe, use_container_width=True)
             
-
-            
         with coluna2:
             st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
 
@@ -601,7 +599,7 @@ with aba2:
 
         # Lista de números
         modulo_escolhido = st.selectbox('Selecione o modulo:', tuple(lista_modulos))
-        modulo = saida_dos_modulos[modulo_escolhido]
+        modulo = saida_dos_modulos[modulo_escolhido - 1]
 
         # Número alvo
         total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
