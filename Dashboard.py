@@ -533,16 +533,24 @@ with aba2:
             local_flowrakc_selecionado = local_frac[selecao_local_flowrack]
             enderecos_local_flowrack_selecionado = local_flowrakc_selecionado['Ender.Fracionado'].astype(float)
 
-            def saida_flowrack_no_modulo_pela_classe(modulo):
-
+            def selecionar_florack(corredores):    
                 selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
                                                 (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[0])) | \
                                                 situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[1]))
                                                 )
                                                 )
                 selecionar_florack = situacao_final[selecao_flowrack_corredordes]
+                return selecionar_florack
 
-                flowrack_do_modulo = selecionar_florack(modulos[modulo])
+            def saida_flowrack_no_modulo_pela_classe(modulo):
+
+                selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
+                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(modulo[0])) | \
+                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(modulo[1]))
+                                                )
+                                                )
+                
+                flowrack_do_modulo = situacao_final[selecao_flowrack_corredordes]
 
                 selecao_flowrack_modulo_X_classe = flowrack_do_modulo['Ender.Fracionado'].isin(enderecos_local_flowrack_selecionado)
 
@@ -550,8 +558,8 @@ with aba2:
 
                 saida_flowrack_modulo_classe = flowrack_modulo_X_classe['Qtde Venda Frac'].tolist()
 
-                return saida_flowrack_modulo_classe, flowrack_modulo_X_classe
-                        
+                return saida_flowrack_modulo_classe, flowrack_modulo_X_classe 
+            
             saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(1)[0],
                                 saida_flowrack_no_modulo_pela_classe(2)[0],
                                 saida_flowrack_no_modulo_pela_classe(3)[0],
@@ -598,7 +606,7 @@ with aba2:
 
         # Lista de números
         modulo_escolhido = st.selectbox('Selecione o modulo:', tuple(lista_modulos))
-        saida_modulo = saida_dos_modulos[modulo_escolhido - 1]
+        modulo = saida_dos_modulos[modulo_escolhido - 1]
 
         # Número alvo
         total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
@@ -606,14 +614,14 @@ with aba2:
 
         if total_de_saida_desejada != 0:
             # Encontrar combinação
-            comb = encontrar_combinacao(saida_modulo, total_de_saida_desejada)
+            comb = encontrar_combinacao(modulo, total_de_saida_desejada)
 
             modulo_e_classe_selc = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1]
 
             if comb:
                 st.write('Itens para realocamento:')
-                i = modulo_e_classe_selc[modulo_e_classe_selc['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
-                realocar = modulo_e_classe_selc[modulo_e_classe_selc.index.isin(i)]
+                i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = situacao_final[situacao_final.index.isin(i)]
                 st.dataframe(realocar)
                 
             else:
