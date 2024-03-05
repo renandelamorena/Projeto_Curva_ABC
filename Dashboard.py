@@ -604,20 +604,21 @@ with aba2:
         modulo = saida_dos_modulos[modulo_escolhido]
 
         # Número alvo
-        total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=None, step=1)
+        total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
         total_de_saida_desejada = total_saida
 
-        # Encontrar combinação
-        comb = encontrar_combinacao(modulo, total_de_saida_desejada)
+        if total_de_saida_desejada == 0:
+            # Encontrar combinação
+            comb = encontrar_combinacao(modulo, total_de_saida_desejada)
 
-        if comb:
-            st.write('Itens para realocamento:')
-            i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
-            realocar = situacao_final[situacao_final.index.isin(i)]
-            st.dataframe(realocar)
-            
-        else:
-            st.write("Não foi possível encontrar uma combinação.")
+            if comb:
+                st.write('Itens para realocamento:')
+                i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = situacao_final[situacao_final.index.isin(i)]
+                st.dataframe(realocar)
+                
+            else:
+                st.write("Não foi possível encontrar uma combinação.")
             
     with st.expander('Prateleiras'):
         ''
