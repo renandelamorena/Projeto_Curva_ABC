@@ -620,8 +620,8 @@ with aba2:
 
             if comb:
                 st.write('Itens para realocamento:')
-                i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
-                realocar = situacao_final[situacao_final.index.isin(i)]
+                i = modulo_e_classe_selc[modulo_e_classe_selc['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = modulo_e_classe_selc[modulo_e_classe_selc.index.isin(i)]
                 st.dataframe(realocar)
                 
             else:
