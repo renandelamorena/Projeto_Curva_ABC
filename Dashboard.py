@@ -549,16 +549,16 @@ with aba2:
 
                 flowrack_modulo_X_classe = flowrack_do_modulo[selecao_flowrack_modulo_X_classe]
 
-                saida_flowrack_modulo_classe = flowrack_modulo_X_classe['Qtde Venda Frac'].tolist()
+                # saida_flowrack_modulo_classe = flowrack_modulo_X_classe['Qtde Venda Frac'].tolist()
 
-                return saida_flowrack_modulo_classe
+                return flowrack_modulo_X_classe
             
-            saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(1),
-                                saida_flowrack_no_modulo_pela_classe(2),
-                                saida_flowrack_no_modulo_pela_classe(3),
-                                saida_flowrack_no_modulo_pela_classe(4),
-                                saida_flowrack_no_modulo_pela_classe(5),
-                                saida_flowrack_no_modulo_pela_classe(6),
+            saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(1)['Qtde Venda Frac'].tolist(),
+                                saida_flowrack_no_modulo_pela_classe(2)['Qtde Venda Frac'].tolist(),
+                                saida_flowrack_no_modulo_pela_classe(3)['Qtde Venda Frac'].tolist(),
+                                saida_flowrack_no_modulo_pela_classe(4)['Qtde Venda Frac'].tolist(),
+                                saida_flowrack_no_modulo_pela_classe(5)['Qtde Venda Frac'].tolist(),
+                                saida_flowrack_no_modulo_pela_classe(6)['Qtde Venda Frac'].tolist(),
                                 ]
 
             saida_dos_modulos = saida_dos_modulos[:numero_modulos]
@@ -599,7 +599,7 @@ with aba2:
 
         # Lista de números
         modulo_escolhido = st.selectbox('Selecione o modulo:', tuple(lista_modulos))
-        modulo = saida_dos_modulos[modulo_escolhido - 1]
+        modulo = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)
 
         # Número alvo
         total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
