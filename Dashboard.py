@@ -599,7 +599,7 @@ with aba2:
 
         # Lista de números
         modulo_escolhido = st.selectbox('Selecione o modulo:', tuple(lista_modulos))
-        modulo = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1]
+        modulo = saida_dos_modulos[modulo_escolhido - 1]
 
         # Número alvo
         total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
@@ -611,8 +611,8 @@ with aba2:
 
             if comb:
                 st.write('Itens para realocamento:')
-                i = situacao_final[situacao_final['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
-                realocar = situacao_final[situacao_final.index.isin(i)]
+                i = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[saida_flowrack_no_modulo_pela_classe(modulo_escolhido)['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[saida_flowrack_no_modulo_pela_classe(modulo_escolhido).index.isin(i)]
                 st.dataframe(realocar)
                 
             else:
