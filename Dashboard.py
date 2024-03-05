@@ -607,7 +607,7 @@ with aba2:
         total_saida = st.number_input('Insira o total de saída que deseja realocar:', value=0, step=1)
         total_de_saida_desejada = total_saida
 
-        if total_de_saida_desejada == 0:
+        if total_de_saida_desejada != 0:
             # Encontrar combinação
             comb = encontrar_combinacao(modulo, total_de_saida_desejada)
 
