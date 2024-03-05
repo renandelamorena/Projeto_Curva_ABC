@@ -542,11 +542,11 @@ with aba2:
                 selecionar_florack = situacao_final[selecao_flowrack_corredordes]
                 return selecionar_florack
 
-            def saida_flowrack_no_modulo_pela_classe(modulo):
+            def saida_flowrack_no_modulo_pela_classe(corredores):
 
                 selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
-                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(modulo[0])) | \
-                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(modulo[1]))
+                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[0])) | \
+                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[1]))
                                                 )
                                                 )
                 
@@ -560,12 +560,12 @@ with aba2:
 
                 return saida_flowrack_modulo_classe, flowrack_modulo_X_classe 
             
-            saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(1)[0],
-                                saida_flowrack_no_modulo_pela_classe(2)[0],
-                                saida_flowrack_no_modulo_pela_classe(3)[0],
-                                saida_flowrack_no_modulo_pela_classe(4)[0],
-                                saida_flowrack_no_modulo_pela_classe(5)[0],
-                                saida_flowrack_no_modulo_pela_classe(6)[0],
+            saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(modulos[1])[0],
+                                saida_flowrack_no_modulo_pela_classe(modulos[2])[0],
+                                saida_flowrack_no_modulo_pela_classe(modulos[3])[0],
+                                saida_flowrack_no_modulo_pela_classe(modulos[4])[0],
+                                saida_flowrack_no_modulo_pela_classe(modulos[5])[0],
+                                saida_flowrack_no_modulo_pela_classe(modulos[6])[0],
                                 ]
 
             saida_dos_modulos = saida_dos_modulos[:numero_modulos]
@@ -616,7 +616,7 @@ with aba2:
             # Encontrar combinação
             comb = encontrar_combinacao(modulo, total_de_saida_desejada)
 
-            modulo_e_classe_selc = saida_flowrack_no_modulo_pela_classe(modulo_escolhido)[1]
+            modulo_e_classe_selc = saida_flowrack_no_modulo_pela_classe(modulos[modulo_escolhido])[1]
 
             if comb:
                 st.write('Itens para realocamento:')
