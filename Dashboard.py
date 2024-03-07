@@ -491,7 +491,7 @@ with aba2:
     with coluna3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
         botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
-        
+
     with st.expander('Flowrack'):
         coluna1, coluna2 = st.columns(2)
         with coluna1:
@@ -626,6 +626,44 @@ with aba2:
                 
             else:
                 st.write("Não foi possível encontrar uma combinação.")
+
+        st.write('# Realocar Classes - Flowrack')
+
+        produtos_para_classe_AA = produtos_para_flowrack[0 : (total_enderecos_aa)]
+        produtos_para_classe_AB = produtos_para_flowrack[total_enderecos_aa: (total_enderecos_aa + total_enderecos_ab)]
+        produtos_para_classe_AC = produtos_para_flowrack[(total_enderecos_aa + total_enderecos_ab) : (total_enderecos_aa + total_enderecos_ab + total_enderecos_ac)]
+
+        def produtos_para_realocar_de_classe(local, produtos_destinados_para_local):
+
+            selecao_do_local = local_frac['local'] == local
+
+            endereco_local_selec = local_frac[selecao_do_local]['Ender.Fracionado']
+
+            selecao_produtos_enderecado_no_local_selec = produtos_destinados_para_local['Ender.Fracionado'].isin(endereco_local_selec)
+
+            produtos_enderecado_no_local_selec_errado = produtos_destinados_para_local[~selecao_produtos_enderecado_no_local_selec]
+
+            return produtos_enderecado_no_local_selec_errado
+
+        colocar_local_AA = produtos_para_realocar_de_classe('AA', produtos_para_classe_AA)
+        total_colocar_local_AA = len(colocar_local_AA)
+
+        colocar_local_AB = produtos_para_realocar_de_classe('AB', produtos_para_classe_AB)
+        total_colocar_local_AB = len(colocar_local_AB)
+
+        colocar_local_AC = produtos_para_realocar_de_classe('AC', produtos_para_classe_AC)
+        total_colocar_local_AC = len(colocar_local_AC)
+
+        coluna1, coluna2, coluna3 = st.columns(3)
+        with coluna1:
+            st.metric('Realocar para Classe AA no Flowrack', total_colocar_local_AA)
+            botao_donwload(produtos_para_classe_AA, 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
+        with coluna2:
+            st.metric('Realocar para Classe AB no Flowrack', total_colocar_local_AB)
+            botao_donwload(produtos_para_classe_AB, 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
+        with coluna3:
+            st.metric('Realocar para Classe AC no Flowrack', total_colocar_local_AC)
+            botao_donwload(produtos_para_classe_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
             
     with st.expander('Prateleiras'):
         ''
