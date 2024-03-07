@@ -654,7 +654,7 @@ with aba2:
         colocar_local_AC = produtos_para_realocar_de_classe('AC', produtos_para_classe_AC)
         total_colocar_local_AC = len(colocar_local_AC)
 
-        print(local_frac.info())
+        st.write(local_frac.info())
 
         coluna1, coluna2, coluna3 = st.columns(3)
         with coluna1:
