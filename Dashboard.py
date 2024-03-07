@@ -639,7 +639,7 @@ with aba2:
 
             endereco_local_selec = local_frac[selecao_do_local]['Ender.Fracionado']
 
-            selecao_produtos_enderecado_no_local_selec = produtos_destinados_para_local['Ender.Fracionado'].isin(endereco_local_selec)
+            selecao_produtos_enderecado_no_local_selec = produtos_destinados_para_local['Ender.Fracionado'].astype(str).isin(endereco_local_selec)
 
             produtos_enderecado_no_local_selec_errado = produtos_destinados_para_local[~selecao_produtos_enderecado_no_local_selec]
 
