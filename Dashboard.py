@@ -657,13 +657,13 @@ with aba2:
         coluna1, coluna2, coluna3 = st.columns(3)
         with coluna1:
             st.metric('Realocar para Classe AA no Flowrack', total_colocar_local_AA)
-            botao_donwload(produtos_para_classe_AA, 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
+            botao_donwload(colocar_local_AA, 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
         with coluna2:
             st.metric('Realocar para Classe AB no Flowrack', total_colocar_local_AB)
-            botao_donwload(produtos_para_classe_AB, 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
+            botao_donwload(colocar_local_AB, 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
         with coluna3:
             st.metric('Realocar para Classe AC no Flowrack', total_colocar_local_AC)
-            botao_donwload(produtos_para_classe_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
+            botao_donwload(colocar_local_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
             
     with st.expander('Prateleiras'):
         ''
