@@ -128,8 +128,8 @@ with aba1:
     # Fracionado
     st.write('# Situação apanha fracionado')
 
-    corredor = st.multiselect('Selecione os corredores:', ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'],
-                            ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
+    corredores = st.multiselect('Selecione os corredores:', ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'],
+                               ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
 
     col1, col2, col3 = st.columns(3)
 
@@ -148,7 +148,7 @@ with aba1:
     # Armazenagem
     st.write('# Situação armazenagem')
     rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
-                       ['10', '12', '14', '15', '16', '17', '18'])
+                        ['10', '12', '14', '15', '16', '17', '18'])
 
     col1, col2, col3 = st.columns(3)
 
@@ -211,7 +211,7 @@ with aba3:
         st.plotly_chart(chart, use_container_width=False)
 
     else:
-        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'))
+        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
@@ -231,7 +231,7 @@ with aba4:
 
     else:
 
-        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'))
+        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
