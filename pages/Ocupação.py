@@ -124,11 +124,13 @@ st.title('Ocupação do estoque')
 
 aba1, aba2, aba3, aba4 = st.tabs(['Métricas', 'Caixa Fechada', 'Flowrack', 'Prateleira'])
 
+corredores_frac = ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',)
+
 with aba1:
     # Fracionado
     st.write('# Situação apanha fracionado')
 
-    corredores = st.multiselect('Selecione os corredores:', ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'],
+    corredores = st.multiselect('Selecione os corredores:', list(corredores_frac),
                                ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
 
     col1, col2, col3 = st.columns(3)
@@ -211,7 +213,7 @@ with aba3:
         st.plotly_chart(chart, use_container_width=False)
 
     else:
-        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
+        corredor = st.selectbox('Selecione os corredores:', corredores_frac)
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
@@ -231,7 +233,7 @@ with aba4:
 
     else:
 
-        corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
+        corredor = st.selectbox('Selecione os corredores:', corredores_frac)
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
