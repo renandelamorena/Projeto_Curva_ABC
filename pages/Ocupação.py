@@ -128,8 +128,8 @@ with aba1:
     # Fracionado
     st.write('# Situação apanha fracionado')
 
-    corredor = st.selectbox('Selecione os corredores:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'),
-                            index=('20', '21', '22', '23', '24', '25', '26', '27','28', '29'))
+    corredor = st.multiselect('Selecione os corredores:', ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29'],
+                            ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
 
     col1, col2, col3 = st.columns(3)
 
@@ -147,8 +147,8 @@ with aba1:
 
     # Armazenagem
     st.write('# Situação armazenagem')
-    rua = st.selectbox('Selecione as ruas:', ('10', '12', '14', '15', '16', '17', '18', '100'),
-                       index=('10', '12', '14', '15', '16', '17', '18'))
+    rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
+                       ['10', '12', '14', '15', '16', '17', '18'])
 
     col1, col2, col3 = st.columns(3)
 
