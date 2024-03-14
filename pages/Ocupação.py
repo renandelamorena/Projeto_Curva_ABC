@@ -147,6 +147,8 @@ with aba1:
 
         st.metric('Total de endereços utilizáveis', '?')
 
+    st.write('## Situação das apanhas utilizáveis')
+
     # Armazenagem
     st.write('# Situação armazenagem')
     rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
@@ -165,6 +167,14 @@ with aba1:
     with col3:
 
         st.metric('Total de armazenagens utilizáveis', '?')
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.write('## Situação dos porta pallets utilizáveis')
+
+    with col2:
+        st.write('## Situação dos porta pallets em uso')
 
 with aba2:
 
@@ -213,7 +223,7 @@ with aba3:
         st.plotly_chart(chart, use_container_width=False)
 
     else:
-        corredor = st.selectbox('Selecione o corredor do flowrack:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
+        corredor = st.selectbox('Selecione o corredor do flowrack:', corredores_frac)
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
@@ -232,7 +242,7 @@ with aba4:
         st.plotly_chart(chart, use_container_width=True)
 
     else:
-        corredor = st.selectbox('Selecione o corredor das prateleiras:', ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',))
+        corredor = st.selectbox('Selecione o corredor das prateleiras:', corredores_frac)
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
