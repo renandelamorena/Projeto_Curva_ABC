@@ -213,7 +213,7 @@ with aba3:
         st.plotly_chart(chart, use_container_width=False)
 
     else:
-        corredor = st.selectbox('Selecione os corredores:', corredores_frac)
+        corredor = st.selectbox('Selecione os corredores do flowrack:', corredores_frac)
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
@@ -232,9 +232,7 @@ with aba4:
         st.plotly_chart(chart, use_container_width=True)
 
     else:
-        corredor = st.selectbox('Selecione os corredores:',
-                                corredores_frac,
-                                index=corredores_frac[-3])
+        corredor = st.selectbox('Selecione os corredores da prateleira:', corredores_frac, index=corredores_frac[-3])
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
