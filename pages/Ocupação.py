@@ -232,7 +232,9 @@ with aba4:
         st.plotly_chart(chart, use_container_width=True)
 
     else:
-        corredor = 10
+        corredor = st.selectbox('Selecione os corredores:',
+                                corredores_frac,
+                                index=corredores_frac[-3])
 
         chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
 
