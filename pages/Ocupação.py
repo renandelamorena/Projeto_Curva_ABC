@@ -127,7 +127,6 @@ aba1, aba2, aba3, aba4 = st.tabs(['Métricas', 'Caixa Fechada', 'Flowrack', 'Pra
 corredores_frac = ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',)
 
 with aba1:
-    # Fracionado
     with st.expander('Fracionado'):
 
         st.write('# Situação apanha fracionado')
@@ -149,12 +148,12 @@ with aba1:
 
             st.metric('Total de endereços utilizáveis', '?')
 
-        st.write('## Situação das apanhas utilizáveis')
+        st.write('#### Situação das apanhas utilizáveis')
 
     with st.expander('Armazenagem'):
 
         st.write('# Situação armazenagem')
-        
+
         rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
                             ['10', '12', '14', '15', '16', '17', '18'])
 
@@ -162,7 +161,7 @@ with aba1:
 
         with col1:
 
-            st.metric('Total de porta pallets', '?')
+            st.metric('Total de porta-pallets', '?')
 
         with col2:
 
@@ -175,10 +174,10 @@ with aba1:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.write('## Situação dos porta pallets utilizáveis')
+            st.write('#### Situação dos porta-pallets utilizáveis')
 
         with col2:
-            st.write('## Situação dos porta pallets em uso')
+            st.write('#### Situação dos porta-pallets em uso')
 
 with aba2:
 
