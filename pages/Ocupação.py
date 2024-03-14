@@ -128,53 +128,57 @@ corredores_frac = ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '
 
 with aba1:
     # Fracionado
-    st.write('# Situação apanha fracionado')
+    with st.expander('Fracionado'):
 
-    corredores = st.multiselect('Selecione os corredores:', list(corredores_frac),
-                               ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
+        st.write('# Situação apanha fracionado')
 
-    col1, col2, col3 = st.columns(3)
+        corredores = st.multiselect('Selecione os corredores:', list(corredores_frac),
+                                ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
 
-    with col1:
+        col1, col2, col3 = st.columns(3)
 
-        st.metric('Total de endereços', '?')
+        with col1:
 
-    with col2:
+            st.metric('Total de endereços', '?')
 
-        st.metric('Total de endereços bloqueados', '?')
+        with col2:
 
-    with col3:
+            st.metric('Total de endereços bloqueados', '?')
 
-        st.metric('Total de endereços utilizáveis', '?')
+        with col3:
 
-    st.write('## Situação das apanhas utilizáveis')
+            st.metric('Total de endereços utilizáveis', '?')
 
-    # Armazenagem
-    st.write('# Situação armazenagem')
-    rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
-                        ['10', '12', '14', '15', '16', '17', '18'])
+        st.write('## Situação das apanhas utilizáveis')
 
-    col1, col2, col3 = st.columns(3)
+    with st.expander('Armazenagem'):
 
-    with col1:
+        st.write('# Situação armazenagem')
+        
+        rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
+                            ['10', '12', '14', '15', '16', '17', '18'])
 
-        st.metric('Total de porta pallets', '?')
+        col1, col2, col3 = st.columns(3)
 
-    with col2:
+        with col1:
 
-        st.metric('Total de armazenagens bloqueadas', '?')
+            st.metric('Total de porta pallets', '?')
 
-    with col3:
+        with col2:
 
-        st.metric('Total de armazenagens utilizáveis', '?')
+            st.metric('Total de armazenagens bloqueadas', '?')
 
-    col1, col2 = st.columns(2)
+        with col3:
 
-    with col1:
-        st.write('## Situação dos porta pallets utilizáveis')
+            st.metric('Total de armazenagens utilizáveis', '?')
 
-    with col2:
-        st.write('## Situação dos porta pallets em uso')
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write('## Situação dos porta pallets utilizáveis')
+
+        with col2:
+            st.write('## Situação dos porta pallets em uso')
 
 with aba2:
 
