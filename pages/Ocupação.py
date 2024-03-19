@@ -37,6 +37,7 @@ mapa_flowrack = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_flowrack_orien
 
 armazenagens = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens.xlsx'))
 armazenagens_estoque = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens_estoque.xlsx'))
+armazenagens_estoque.fillna('-', inplace=True)
 
 def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
     
@@ -255,8 +256,40 @@ with aba1:
 
         with col3:
             st.write('#### Situação dos porta-pallets em uso')
-            'graf'
+            
+            condicao = False
+            for rua in ruas_selec:
+                condicao |= armazenagens_estoque['Endereço'].str.startswith(rua)
 
+            arm_selec = armazenagens_estoque['Endereço'][condicao]
+
+            df = pd.DataFrame()
+
+            for endereco in armazenagens_estoque['Endereço']:
+                
+                if endereco in arm_selec.values:
+                                        
+                    i_linha_atual = armazenagens_estoque['Endereço'][armazenagens_estoque['Endereço'] == endereco].index
+                
+                    e_fd = armazenagens_estoque['Motivo Bloq.Ender.'].iloc[i_linha_atual[0] + 2].startswith('FD')
+                
+                    if e_fd:
+                        tipo = 'FD'
+                    else:
+                        tipo = 'Outros'
+                
+                    linha = pd.DataFrame({'End' : [endereco], 'Tipo': [tipo]})
+                    df = pd.concat([df, linha], ignore_index=True)
+                                
+            relacao_em_uso = pd.DataFrame(df['Tipo'].value_counts()).reset_index().rename(columns={'count' : 'Quantidade'})
+
+            fig = px.pie(relacao_em_uso, values='Quantidade', names='Tipo', color='Tipo', 
+                        color_discrete_map={'FD':'lightgrey',
+                                            'Outros':'mediumblue'})
+
+            situacao_em_uso_graf_pizza = fig.update_traces(textposition='outside', textinfo='percent+label')
+            st.plotly_chart(situacao_em_uso_graf_pizza, use_container_width=True)
+    
 with aba2:
 
     tipo_de_visualizacao = st.radio('Selecione o tipo de vizualização:',
