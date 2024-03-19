@@ -35,6 +35,9 @@ mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx')).fill
 mapa_prateleira = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_prateleira_orientacao.xlsx'), sheet_name=None)
 mapa_flowrack = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_flowrack_orientacao.xlsx'), sheet_name=None)
 
+armazenagens = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens.xlsx'))
+armazenagens_estoque = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens_estoque.xlsx'))
+
 def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
     
     if len(mapa.index) * 20 < 500:
@@ -151,33 +154,108 @@ with aba1:
         st.write('#### Situação das apanhas utilizáveis')
 
     with st.expander('Armazenagem'):
-
+        
         st.write('# Situação armazenagem')
 
-        rua = st.multiselect('Selecione as ruas:', ['10', '12', '14', '15', '16', '17', '18', '100'],
-                            ['10', '12', '14', '15', '16', '17', '18'])
+        ruas_selec = st.multiselect('Selecione as ruas:', ['010', '012', '014', '015', '016', '017', '018', '100'],
+                            ['010', '012', '014', '015', '016', '017', '018'])
+        
+        colunas = ['Dep.',
+                    'Apelido',
+                    'Situação',
+                    'Motivo Bloqueio',
+                    ]
+        
+        todas_armazenagens = armazenagens[colunas]
+        todas_armazenagens['Motivo Bloqueio'].fillna('-', inplace=True)
+
+        condicao = False
+        for rua in ruas_selec:
+            condicao |= todas_armazenagens['Apelido'].str.startswith(rua)
+
+        todas_armazenagens = todas_armazenagens[condicao]
+        
+        selecao_porta_pallets = (todas_armazenagens['Dep.'] == 1) & \
+                            (todas_armazenagens['Situação'] != 'Inativo') & \
+                            (~todas_armazenagens['Motivo Bloqueio'].str.contains('NÃO EXISTE', case=False)) & \
+                            (~todas_armazenagens['Motivo Bloqueio'].str.contains('AGREGADO', case=False))
+
+        porta_pallets = todas_armazenagens[selecao_porta_pallets]
+        total_porta_pallets = len(porta_pallets)
+        
+        selecao_porta_pallets_bloq = (porta_pallets['Situação'] == 'Bloqueado')
+
+        porta_pallets_bloq = porta_pallets[selecao_porta_pallets_bloq]
+
+        total_porta_pallets_bloq = len(porta_pallets_bloq)
+
+        motivos_bloq = porta_pallets_bloq['Motivo Bloqueio'].value_counts()
+        motivos_bloq = pd.DataFrame(motivos_bloq).reset_index()
+        motivos_bloq['Motivo Bloqueio'] = motivos_bloq['Motivo Bloqueio'].str.lstrip('.')
+        motivos_bloq.rename(columns={'count':'N° Armazenagens'}, inplace=True)
+        
+        selecao_porta_pallet_dif_bloq = ~porta_pallets['Apelido'].isin(porta_pallets_bloq['Apelido'])
+
+        porta_pallet_dif_bloq = porta_pallets[selecao_porta_pallet_dif_bloq]
+
+        total_porta_pallet_dif_bloq = len(porta_pallet_dif_bloq)
+        
+        situacao_utilizaveis = porta_pallet_dif_bloq['Situação'].value_counts()
+        situacao_utilizaveis = pd.DataFrame(situacao_utilizaveis).reset_index()
+        situacao_utilizaveis['Situação'] = situacao_utilizaveis['Situação'].str.lstrip('.')
+        situacao_utilizaveis.rename(columns={'count':'Quantidade'}, inplace=True)
+        
+        valores_situacao_utilizaveis = situacao_utilizaveis['Situação'].values
+
+        if 'Uso' in valores_situacao_utilizaveis:
+            total_uso = situacao_utilizaveis['Quantidade'][situacao_utilizaveis['Situação'] == 'Uso'].iloc[0]
+        else:
+            total_uso = 0
+
+        if 'Bloq.Invent.' in valores_situacao_utilizaveis:
+            total_inv = situacao_utilizaveis['Quantidade'][situacao_utilizaveis['Situação'] == 'Bloq.Invent.'].iloc[0]
+        else:
+            total_inv = 0
+        
+        if 'lib' in valores_situacao_utilizaveis:
+            total_lib = situacao_utilizaveis['Quantidade'][situacao_utilizaveis['Situação'] == 'lib'].iloc[0] # Aqui
+        else:
+            total_lib = 0
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
 
-            st.metric('Total de porta-pallets', '?')
+            st.metric('Total de porta-pallets', total_porta_pallets)
 
         with col2:
 
-            st.metric('Total de armazenagens bloqueadas', '?')
+            st.metric('Total de armazenagens bloqueadas', total_porta_pallets_bloq)
 
         with col3:
 
-            st.metric('Total de armazenagens utilizáveis', '?')
-
-        col1, col2 = st.columns(2)
-
+            st.metric('Total de armazenagens utilizáveis', total_porta_pallet_dif_bloq)
+                    
         with col1:
-            st.write('#### Situação dos porta-pallets utilizáveis')
+            st.write('#### Motivo bloqueado')
+            st.dataframe(motivos_bloq)
 
         with col2:
+            st.write('#### Situação dos porta-pallets utilizáveis')
+            
+            arm_uso = pd.DataFrame({'Situação' : ['Liberado', 'Em uso'],
+                    'Quantidade' : [(total_inv + total_lib), (total_uso)]})
+
+            fig = px.pie(arm_uso, values='Quantidade', names='Situação', color='Situação', 
+                         color_discrete_map={'Em uso':'lightgrey',
+                                             'Liberado':'mediumblue'})
+
+            situacao_utilizaveis_graf_pizza = fig.update_traces(textposition='outside', textinfo='percent+label')
+            st.plotly_chart(situacao_utilizaveis_graf_pizza, use_container_width=True)
+
+        with col3:
             st.write('#### Situação dos porta-pallets em uso')
+            'graf'
 
 with aba2:
 
