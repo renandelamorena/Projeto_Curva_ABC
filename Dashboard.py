@@ -450,7 +450,6 @@ fig_saida_por_corredor = px.bar(tabela_saida_modulo,
                               title='Saída X Corredor'
                               )
 
-
 ## Vizualização
 
 aba1, aba2, aba3 = st.tabs(['Métricas', 'Apanha Fracionado', 'Apanha Caixa'])
@@ -532,15 +531,6 @@ with aba2:
             selecao_local_flowrack = (local_frac['local'] == selecao_locais)
             local_flowrakc_selecionado = local_frac[selecao_local_flowrack]
             enderecos_local_flowrack_selecionado = local_flowrakc_selecionado['Ender.Fracionado'].astype(float)
-
-            def selecionar_florack(corredores):    
-                selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
-                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[0])) | \
-                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[1]))
-                                                )
-                                                )
-                selecionar_florack = situacao_final[selecao_flowrack_corredordes]
-                return selecionar_florack
 
             def saida_flowrack_no_modulo_pela_classe(corredores):
 
@@ -727,5 +717,3 @@ with aba3:
         botao_donwload(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
         
         st.dataframe(df_selec)
-
-#Ideia - Mapa de calor com a saida por endereço do flowrack
