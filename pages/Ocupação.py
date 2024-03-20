@@ -219,7 +219,7 @@ with aba1:
             total_inv = 0
         
         if 'lib' in valores_situacao_utilizaveis:
-            total_lib = situacao_utilizaveis['Quantidade'][situacao_utilizaveis['Situação'] == 'lib'].iloc[0] # Aqui
+            total_lib = situacao_utilizaveis['Quantidade'][situacao_utilizaveis['Situação'] == 'Liberado'].iloc[0]
         else:
             total_lib = 0
 
