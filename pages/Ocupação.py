@@ -209,7 +209,7 @@ with aba1:
 
             fig = px.pie(frac_uso, values='Quantidade', names='Situação', color='Situação', 
                         color_discrete_map={'Em uso':'lightgrey',
-                                            'Liberado e castrado':'lightblue',
+                                            'Liberado e castrado':'dodgerblue',
                                             'Liberado sem cadastro' : 'mediumblue'})
 
             situacao_frac_utilizaveis_graf_pizza = fig.update_traces(textposition='outside', textinfo='percent+label')
