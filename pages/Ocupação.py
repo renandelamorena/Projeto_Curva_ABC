@@ -39,6 +39,8 @@ armazenagens = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dataset
 armazenagens_estoque = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens_estoque.xlsx'))
 armazenagens_estoque.fillna('-', inplace=True)
 
+fracionado = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/fracionado.xlsx'))
+
 def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
     
     if len(mapa.index) * 20 < 500:
@@ -128,38 +130,98 @@ st.title('Ocupação do estoque')
 
 aba1, aba2, aba3, aba4 = st.tabs(['Métricas', 'Caixa Fechada', 'Flowrack', 'Prateleira'])
 
-corredores_frac = ('10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',)
-
 with aba1:
     with st.expander('Fracionado'):
 
         st.write('# Situação apanha fracionado')
-
-        corredores = st.multiselect('Selecione os corredores:', list(corredores_frac),
+        
+        corredores_frac = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27','28', '29',]
+        
+        selec_corredores = st.multiselect('Selecione os corredores:', corredores_frac,
                                 ['20', '21', '22', '23', '24', '25', '26', '27','28', '29'])
+        
+        fracionado['Motivo Bloqueio'].fillna('-', inplace=True)
+
+        selecao_fracinados = (fracionado['Situação'] != 'Inativo') & \
+                            (~fracionado['Motivo Bloqueio'].str.contains('NÃO EXISTE', case=False)) & \
+                            (~fracionado['Motivo Bloqueio'].str.contains('AGREGADO', case=False))
+
+        fracionado_selec = fracionado[selecao_fracinados]
+        fracionado_selec['Apelido'] = fracionado_selec['Apelido'].astype(str)
+
+        condicao = False
+        for corredor in selec_corredores:
+            condicao |= fracionado_selec['Apelido'].str.startswith(corredor)
+
+        fracionado_selec = fracionado_selec[condicao]
+
+        total_fracionado_selec = len(fracionado_selec)
+
+        selecao_fracionado_bloq = (fracionado_selec['Situação'] == 'Bloqueado')
+
+        fracionado_bloq = fracionado_selec[selecao_fracionado_bloq]
+        
+        motivos_bloq_frac = fracionado_bloq['Motivo Bloqueio'].value_counts()
+        motivos_bloq_frac = pd.DataFrame(motivos_bloq_frac).reset_index()
+        motivos_bloq_frac['Motivo Bloqueio'] = motivos_bloq_frac['Motivo Bloqueio'].str.lstrip('.')
+        motivos_bloq_frac.rename(columns={'count':'N° Armazenagens'}, inplace=True)
+
+        total_fracionado_bloq = len(fracionado_bloq)
+
+        selecao_fracionado_livre = (fracionado_selec['Situação'] == 'Liberado') | \
+                                   (fracionado_selec['Situação'] == 'Bloq.Invent.')
+
+        fracionado_livre = fracionado_selec[selecao_fracionado_livre]
+
+        total_fracionado_livre = len(fracionado_livre)
+
+        total_fracionado_livre_sem_cadastro = len(fracionado_livre[fracionado_livre['Função'] == 'Apanha Frac.'])
+
+        total_fracionado_livre_cadastro = len(fracionado_livre[fracionado_livre['Função'] == 'Apanha'])
+
+        total_fracionado_uso = len(fracionado_selec[fracionado_selec['Situação'] == 'Uso'])
+
+        total_fracionado_utilizavel = total_fracionado_uso + total_fracionado_livre_cadastro + total_fracionado_livre_sem_cadastro
 
         col1, col2, col3 = st.columns(3)
 
         with col1:
-
-            st.metric('Total de endereços', '?')
+            st.metric('Total de endereços', total_fracionado_selec)
 
         with col2:
-
-            st.metric('Total de endereços bloqueados', '?')
+            st.metric('Total de endereços bloqueados', total_fracionado_bloq)
 
         with col3:
+            st.metric('Total de endereços utilizáveis', total_fracionado_utilizavel)
+            
+        col1, col2 = st.columns(2)
 
-            st.metric('Total de endereços utilizáveis', '?')
+        with col1:
+            st.write('#### Motivo do bloqueio')
+            
+            st.dataframe(motivos_bloq_frac)
+            
+        with col2:
+            st.write('#### Situação das apanhas utilizáveis')
+            
+            frac_uso = pd.DataFrame({'Situação' : ['Liberado e castrado', 'Liberado sem cadastro', 'Em uso'],
+                        'Quantidade' : [total_fracionado_livre_cadastro, total_fracionado_livre_sem_cadastro, total_fracionado_uso]})
 
-        st.write('#### Situação das apanhas utilizáveis')
+            fig = px.pie(frac_uso, values='Quantidade', names='Situação', color='Situação', 
+                        color_discrete_map={'Em uso':'lightgrey',
+                                            'Liberado e castrado':'dodgerblue',
+                                            'Liberado sem cadastro' : 'mediumblue'})
+
+            situacao_frac_utilizaveis_graf_pizza = fig.update_traces(textposition='outside', textinfo='percent+label')
+            st.plotly_chart(situacao_frac_utilizaveis_graf_pizza, use_container_width=True)            
 
     with st.expander('Armazenagem'):
         
         st.write('# Situação armazenagem')
 
-        ruas_selec = st.multiselect('Selecione as ruas:', ['010', '012', '014', '015', '016', '017', '018', '100'],
-                            ['010', '012', '014', '015', '016', '017', '018'])
+        ruas_selec = st.multiselect('Selecione as ruas:',
+                                    ['010', '012', '014', '015', '016', '017', '018', '100'],
+                                    ['010', '012', '014', '015', '016', '017', '018'])
         
         colunas = ['Dep.',
                     'Apelido',
@@ -238,7 +300,7 @@ with aba1:
             st.metric('Total de armazenagens utilizáveis', total_porta_pallet_dif_bloq)
                     
         with col1:
-            st.write('#### Motivo bloqueado')
+            st.write('#### Motivo do bloqueio')
             st.dataframe(motivos_bloq)
 
         with col2:
