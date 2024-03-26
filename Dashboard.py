@@ -363,10 +363,10 @@ somente_flowrack = situacao_final[selecao_somente_flowrack]
 #df somente prateira
 selecao_somente_prateleira = (situacao_final['Tipo'] == 'Prateleira')
 
-somente_prateira = situacao_final[selecao_somente_prateleira]
+somente_prateleira = situacao_final[selecao_somente_prateleira]
 
 # df somente ponta de gondola
-selecao_somente_ponta_de_gondola = (situacao_final['Tipo'] == 'Ponta de G.')
+selecao_somente_ponta_de_gondola = (situacao_final['Tipo'] == 'Ponta De G')
 
 somente_ponta_de_gondola = situacao_final[selecao_somente_ponta_de_gondola]
 
@@ -405,27 +405,6 @@ corredor_x_modulos = {  29 : 1,
                         18 : 6,
                         }
 
-somente_flowrack['Ender.Fracionado'] = somente_flowrack['Ender.Fracionado'].astype(str)
-
-#Df vazio
-tabela_saida_modulo = pd.DataFrame()
-
-for corredor in corredores:
-
-    corredor_atual = somente_flowrack['Ender.Fracionado'].str.startswith(str(corredor))
-
-    saida_corredor_atual = somente_flowrack[somente_flowrack['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].sum()
-
-    qnt_item_corredor_atual = somente_flowrack[somente_flowrack['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].shape[0]
-
-    nova_linha = pd.Series({'Modulo': corredor_x_modulos[corredor],
-                            'Corredor': corredor,
-                            'Saída': saida_corredor_atual,
-                            'Quanidade itens' : qnt_item_corredor_atual
-                            })
-
-    tabela_saida_modulo = pd.concat([tabela_saida_modulo, nova_linha.to_frame().T], ignore_index=True)
-
 #### Seleção e tabela de produtos com endereço de caixa fechada sem endereço de fracionado
 
 com_apanha_caixa_sem_apanha_frac = ((situacao_final['Ender.Cx.Fechada'].notna()) & \
@@ -445,20 +424,6 @@ fig_total_curva_frac = px.bar(total_curva_frac,
                               y='Total', 
                               text_auto=True,
                               title='Total de curvas (Fraciondo)'
-                              )
-
-fig_saida_por_modulo = px.bar(tabela_saida_modulo,
-                              x='Modulo',
-                              y='Saída', 
-                              text_auto=True,
-                              title='Saída X Modulo'
-                              )
-
-fig_saida_por_corredor = px.bar(tabela_saida_modulo,
-                              x='Corredor',
-                              y='Saída', 
-                              text_auto=True,
-                              title='Saída X Corredor'
                               )
 
 ## Vizualização
@@ -503,20 +468,72 @@ with aba2:
         botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
         
     st.markdown('# Comparação das Saídas Fracionadas')
-    
-    selec_tipo_view_saida = st.radio('Selecione o tipo de comparação', ['Por Módulos', 'Por Corredorres'])
-    
+        
     selec_tipo_end_saida = st.radio('Selecione o tipo de endereço fracionado', ['Flowrack', 'Prateleira', 'Ponta De Gôndola'])
+       
+    somente_flowrack['Ender.Fracionado'] = somente_flowrack['Ender.Fracionado'].astype(str)
+    somente_prateleira['Ender.Fracionado'] = somente_prateleira['Ender.Fracionado'].astype(str)
+    somente_ponta_de_gondola['Ender.Fracionado'] = somente_ponta_de_gondola['Ender.Fracionado'].astype(str)
+
+    if selec_tipo_end_saida == 'Flowrack':
+        df = somente_flowrack
+        
+    elif selec_tipo_end_saida == 'Prateleira':
+        df = somente_prateleira
+        
+    elif selec_tipo_end_saida == 'Ponta De Gôndola':
+        df = somente_ponta_de_gondola
+
+    #Df vazio
+    tabela_saida = pd.DataFrame()
+
+    for corredor in corredores:
+
+        saida_corredor_atual = df[df['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].sum()
+
+        qnt_item_corredor_atual = df[df['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].shape[0]
+
+        nova_linha = pd.Series({'Modulo': corredor_x_modulos[corredor],
+                                'Corredor': corredor,
+                                'Saída': saida_corredor_atual,
+                                'Quanidade itens' : qnt_item_corredor_atual
+                                })
+
+        tabela_saida = pd.concat([tabela_saida, nova_linha.to_frame().T], ignore_index=True)
+        
+    col1, col2 = st.columns(2)
     
+    with col1:
+
+        st.markdown('### Comparação de Saída por Módulo')  
+        
+        fig_saida_por_modulo = px.bar(tabela_saida,
+                              x='Modulo',
+                              y='Saída', 
+                              text_auto=True,
+                              title='Saída X Modulo'
+                              )
+        
+        st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
+             
+    with col2:
     
-    # st.plotly_chart()
+        st.markdown('### Comparação de Saída por Corredor')
+           
+        fig_saida_por_corredor = px.bar(tabela_saida,
+                                    x='Corredor',
+                                    y='Saída', 
+                                    text_auto=True,
+                                    title='Saída X Corredor'
+                                    )
+        
+        st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
     
     st.markdown('# Divisão das Saídas Fracionadas')
 
     with st.expander('Flowrack'):
         coluna1, coluna2 = st.columns(2)
         with coluna1:
-            st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
 
             st.markdown('# Filtrar Saída pela classe')
 
@@ -548,7 +565,6 @@ with aba2:
             st.plotly_chart(fig_saida_por_classe, use_container_width=True)
             
         with coluna2:
-            st.plotly_chart(fig_saida_por_corredor, use_container_width=True)
 
             selecao_local_flowrack = (local_frac['local'] == selecao_locais)
             local_flowrakc_selecionado = local_frac[selecao_local_flowrack]
