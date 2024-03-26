@@ -354,10 +354,21 @@ total_curva_a_normal_flowrack_para_prateleira = curva_a_normal_flowrack_para_pra
 
 #### Tabela saída por modulo (Unidade)
 
+#df somente flowrack
 selecao_somente_flowrack = (situacao_final['Tipo'] == 'Flowrack') & \
                            (situacao_final['Ender.Fracionado'] != 9010.000)
 
 somente_flowrack = situacao_final[selecao_somente_flowrack]
+
+#df somente prateira
+selecao_somente_prateleira = (situacao_final['Tipo'] == 'Prateleira')
+
+somente_prateira = situacao_final[selecao_somente_prateleira]
+
+# df somente ponta de gondola
+selecao_somente_ponta_de_gondola = (situacao_final['Tipo'] == 'Ponta de G.')
+
+somente_ponta_de_gondola = situacao_final[selecao_somente_ponta_de_gondola]
 
 modulos = {1:[29, 28],
            2:[27, 26],
@@ -490,13 +501,24 @@ with aba2:
     with coluna3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
         botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
+        
+    st.markdown('# Comparação das Saídas Fracionadas')
+    
+    selec_tipo_view_saida = st.radio('Selecione o tipo de comparação', ['Por Módulos', 'Por Corredorres'])
+    
+    selec_tipo_end_saida = st.radio('Selecione o tipo de endereço fracionado', ['Flowrack', 'Prateleira', 'Ponta De Gôndola'])
+    
+    
+    # st.plotly_chart()
+    
+    st.markdown('# Divisão das Saídas Fracionadas')
 
     with st.expander('Flowrack'):
         coluna1, coluna2 = st.columns(2)
         with coluna1:
             st.plotly_chart(fig_saida_por_modulo, use_container_width=True)
 
-            st.markdown('# Filtrar Saída pelo local:')
+            st.markdown('# Filtrar Saída pela classe')
 
             #Filtro por local
             classes_frac = ['AA', 'AB', 'AC', 'XPE']
@@ -573,7 +595,7 @@ with aba2:
                 saida_dif_sum_lista_i = round((sum_lista_i - media_saida_modulo), 1)
                 saidas_list.append(Decimal(str(saida_dif_sum_lista_i)))
             
-            st.write('# Situação do local:')
+            st.write('# Situação da classe')
             
             st.write(f' #### Média definida para cada módulo: {formata_numero(round(media_saida_modulo))}')
                        
