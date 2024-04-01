@@ -711,10 +711,10 @@ with aba2:
                 tipo_prateleira_selec = comeco_modulo
 
             #Tabela de saida por prateleira(final/comeco)
-            produto_prateleira = somente_prateleira[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            produto_ponta = somente_prateleira[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
                         
-            selecao_do_tipo_de_prateleira = produto_prateleira['Ender.Fracionado'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
-            saida_por_pratileira_selecionada = produto_prateleira[selecao_do_tipo_de_prateleira]
+            selecao_do_tipo_de_prateleira = produto_ponta['Ender.Fracionado'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
+            saida_por_pratileira_selecionada = produto_ponta[selecao_do_tipo_de_prateleira]
             
             def encontrar_modulo(endereco):
                 
@@ -784,7 +784,91 @@ with aba2:
                 st.write("Não foi possível encontrar uma combinação.")
         
     with st.expander('Ponta de Gôndola'):
-        ''
+                
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown('# Saída por Ponta De Gôndola')
+
+            #Tabela de saida por prateleira(final/comeco)
+            produto_ponta = somente_ponta_de_gondola[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            
+            modulos_ponta = {1:[29],
+                            2:[28, 27],
+                            3:[26, 25],
+                            4:[23, 22],
+                            5:[21],
+                            6:[20, 19],
+                            }
+            
+            def encontrar_modulo(endereco):
+                
+                dois_primeiros_digitos = int(str(endereco)[:2])
+                
+                for modulo, numeros in modulos_ponta.items():
+                    if dois_primeiros_digitos in numeros:
+                        return modulo
+                return "Erro"
+
+            produto_ponta['modulo'] = produto_ponta['Ender.Fracionado'].apply(encontrar_modulo)
+                
+            #Selecionar o(s) modulo(s)
+            selecao_modulo = produto_ponta['modulo'].isin(modulos_escolhidos)
+            produto_ponta_modulo = produto_ponta[selecao_modulo]
+                        
+            fig_saida_por_classe = px.bar(produto_ponta_modulo,
+                    x='modulo',
+                    y='Qtde Venda Frac',
+                    text_auto=True,
+                    title='Saída X Modulo das prateleiras Selecionadas'
+                    )
+            
+            st.plotly_chart(fig_saida_por_classe, use_container_width=True)
+        
+        with col2:
+            st.markdown('# Situação das Pontas De Gôndola')
+                        
+            saida_da_prateleira = produto_ponta_modulo['Qtde Venda Frac']
+            
+            media_saida_prateleira_por_modulo = round(saida_da_prateleira.sum() / 5)
+            
+            dif_modulos_prateleiras = [saida_da_prateleira[produto_ponta_modulo['modulo'] == 1].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[produto_ponta_modulo['modulo'] == 2].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[produto_ponta_modulo['modulo'] == 3].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[produto_ponta_modulo['modulo'] == 4].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[produto_ponta_modulo['modulo'] == 5].sum() - media_saida_prateleira_por_modulo]
+            
+            st.write(f'#### Média definida para cada módulo: {formata_numero(media_saida_prateleira_por_modulo)}')
+                       
+            with st.container(border=True):
+                st.metric('1° Módulo', formata_numero(saida_da_prateleira[produto_ponta_modulo['modulo'] == 1].sum()), dif_modulos_prateleiras[0])
+                st.metric('2° Módulo', formata_numero(saida_da_prateleira[produto_ponta_modulo['modulo'] == 2].sum()), dif_modulos_prateleiras[1])
+                st.metric('3° Módulo', formata_numero(saida_da_prateleira[produto_ponta_modulo['modulo'] == 3].sum()), dif_modulos_prateleiras[2])
+                st.metric('4° Módulo', formata_numero(saida_da_prateleira[produto_ponta_modulo['modulo'] == 4].sum()), dif_modulos_prateleiras[3])
+                st.metric('5° Módulo', formata_numero(saida_da_prateleira[produto_ponta_modulo['modulo'] == 5].sum()), dif_modulos_prateleiras[4])
+                
+        st.write('# Realocar produtos')
+        
+        # Lista de números
+        modulo_escolhido = st.selectbox('Selecione o modulo para as pontas:', (1, 2, 3, 4, 5))
+        modulo = saida_da_prateleira[produto_ponta_modulo['modulo'] == modulo_escolhido]
+
+        # Número alvo
+        total_saida_prateleira = st.number_input('Insira o total de saída que deseja realocar nas pontas:', value=0, step=1)
+        total_de_saida_desejada = total_saida_prateleira
+
+        if total_de_saida_desejada != 0:
+            # Encontrar combinação
+            comb = encontrar_combinacao(modulo, total_de_saida_desejada)
+
+            if comb:
+                st.write('Itens para realocamento:')
+                i = produto_ponta_modulo[produto_ponta_modulo['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = produto_ponta_modulo[produto_ponta_modulo.index.isin(i)]
+                st.dataframe(realocar)
+                
+            else:
+                st.write("Não foi possível encontrar uma combinação.")
     
 #Apanha Caixa
 
