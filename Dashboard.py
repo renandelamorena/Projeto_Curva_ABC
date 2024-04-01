@@ -541,7 +541,7 @@ with aba2:
             classes_frac = ['AA', 'AB', 'AC', 'XPE']
             selecao_locais = st.selectbox('Selecione o local:', classes_frac)
 
-            #Tabela de saido por local/classe
+            #Tabela de saida por classe
             produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
             local_flowrack = local_frac
             local_flowrack['Ender.Fracionado'] = local_flowrack['Ender.Fracionado'].astype(str)
@@ -586,7 +586,7 @@ with aba2:
 
                 saida_flowrack_modulo_classe = flowrack_modulo_X_classe['Qtde Venda Frac'].tolist()
 
-                return saida_flowrack_modulo_classe, flowrack_modulo_X_classe 
+                return saida_flowrack_modulo_classe, flowrack_modulo_X_classe
             
             saida_dos_modulos = [saida_flowrack_no_modulo_pela_classe(modulos[1])[0],
                                 saida_flowrack_no_modulo_pela_classe(modulos[2])[0],
@@ -611,11 +611,10 @@ with aba2:
                 saida_dif_sum_lista_i = round((sum_lista_i - media_saida_modulo), 1)
                 saidas_list.append(Decimal(str(saida_dif_sum_lista_i)))
             
-            st.write('# Situação da classe')
+            st.markdown('# Situação da classe')
             
             st.write(f' #### Média definida para cada módulo: {formata_numero(round(media_saida_modulo))}')
                        
-            col1, col2, col3, col4, col5 = st.columns(5)
             with st.container(border=True):
                 st.metric('1° Módulo', formata_numero(sum(saida_dos_modulos[0])), (str(saidas_list[0])))
                 st.metric('2° Módulo', formata_numero(sum(saida_dos_modulos[1])), str(saidas_list[1]))
@@ -694,7 +693,96 @@ with aba2:
             botao_donwload(colocar_local_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
             
     with st.expander('Prateleiras'):
-        ''
+        
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.markdown('# Filtrar Saída por Pratelerias')
+
+            #Filtro por tipo das prateleiras
+            final_modulo = ['21', '22', '25', '26']
+            comeco_modulo = ['20', '23', '24', '27']
+            
+            tipo_das_prateleiras = st.radio('Seleciona e tipo da prateleira:', ['Final dos Módulos', 'Começo dos Módulos'])
+            
+            if tipo_das_prateleiras == 'Final dos Módulos':
+                tipo_prateleira_selec = final_modulo
+            else:
+                tipo_prateleira_selec = comeco_modulo
+
+            #Tabela de saida por prateleira(final/comeco)
+            produto_prateleira = somente_prateleira[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+                        
+            selecao_do_tipo_de_prateleira = produto_prateleira['Ender.Fracionado'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
+            saida_por_pratileira_selecionada = produto_prateleira[selecao_do_tipo_de_prateleira]
+            
+            def encontrar_modulo(endereco):
+                
+                dois_primeiros_digitos = int(str(endereco)[:2])
+                
+                for modulo, numeros in modulos.items():
+                    if dois_primeiros_digitos in numeros:
+                        return modulo
+                return "Erro"
+
+            saida_por_pratileira_selecionada['modulo'] = saida_por_pratileira_selecionada['Ender.Fracionado'].apply(encontrar_modulo)
+                
+            #Selecionar o(s) modulo(s)
+            selecao_modulo = saida_por_pratileira_selecionada['modulo'].isin(modulos_escolhidos)
+            saida_por_pratileira_selecionada_modulo = saida_por_pratileira_selecionada[selecao_modulo]
+                        
+            fig_saida_por_classe = px.bar(saida_por_pratileira_selecionada_modulo,
+                    x='modulo',
+                    y='Qtde Venda Frac',
+                    text_auto=True,
+                    title='Saída X Modulo das prateleiras Selecionadas'
+                    )
+            
+            st.plotly_chart(fig_saida_por_classe, use_container_width=True)
+        
+        with col2:
+            st.markdown('# Situação das Prateleiras')
+                        
+            saida_da_prateleira = saida_por_pratileira_selecionada_modulo['Qtde Venda Frac']
+            
+            media_saida_prateleira_por_modulo = round(saida_da_prateleira.sum() / 4)
+            
+            dif_modulos_prateleiras = [saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 2].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 3].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 4].sum() - media_saida_prateleira_por_modulo,
+                                        saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 5].sum() - media_saida_prateleira_por_modulo]
+            
+            st.write(f'#### Média definida para cada módulo: {formata_numero(media_saida_prateleira_por_modulo)}')
+                       
+            with st.container(border=True):
+                st.metric('2° Módulo', formata_numero(saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 2].sum()), dif_modulos_prateleiras[0])
+                st.metric('3° Módulo', formata_numero(saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 3].sum()), dif_modulos_prateleiras[1])
+                st.metric('4° Módulo', formata_numero(saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 4].sum()), dif_modulos_prateleiras[2])
+                st.metric('5° Módulo', formata_numero(saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == 5].sum()), dif_modulos_prateleiras[3])
+                
+        st.write('# Realocar produtos')
+        
+        # Lista de números
+        modulo_escolhido = st.selectbox('Selecione o modulo:', (2, 3, 4, 5))
+        modulo = saida_da_prateleira[saida_por_pratileira_selecionada_modulo['modulo'] == modulo_escolhido]
+
+        # Número alvo
+        total_saida_prateleira = st.number_input('Insira o total de saída que deseja realocar nas prateleiras:', value=0, step=1)
+        total_de_saida_desejada = total_saida_prateleira
+
+        if total_de_saida_desejada != 0:
+            # Encontrar combinação
+            comb = encontrar_combinacao(modulo, total_de_saida_desejada)
+
+            if comb:
+                st.write('Itens para realocamento:')
+                i = saida_por_pratileira_selecionada_modulo[saida_por_pratileira_selecionada_modulo['Qtde Venda Frac'].isin(comb)]['Qtde Venda Frac'].drop_duplicates().index
+                realocar = saida_por_pratileira_selecionada_modulo[saida_por_pratileira_selecionada_modulo.index.isin(i)]
+                st.dataframe(realocar)
+                
+            else:
+                st.write("Não foi possível encontrar uma combinação.")
+        
     with st.expander('Ponta de Gôndola'):
         ''
     
@@ -723,8 +811,7 @@ with aba3:
     coluna1, coluna2 = st.columns(2)
     with coluna1:
         st.session_state.horizontal = False
-        opcao_local_grafico = st.radio('Selecione o local:', locais,
-                                    horizontal = st.session_state.horizontal)
+        opcao_local_grafico = st.radio('Selecione o local:', locais)
 
         botao_donwload(dfs_locais_tabelas[opcao_local_grafico][0], 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
         botao_donwload(dfs_locais_tabelas[opcao_local_grafico][1], 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
@@ -746,7 +833,7 @@ with aba3:
 
         st.session_state.horizontal = True
         local_selec = st.radio('Selecione o local:', locais,
-                                horizontal = st.session_state.horizontal)
+                                horizontal = True)
         
         df_selec = dfs_locais_errados[local_selec]
         total_trocar = df_selec.shape[0]
