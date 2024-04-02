@@ -354,7 +354,7 @@ with aba1:
     
 with aba2:
 
-    tipo_de_visualizacao = st.radio('Selecione o tipo de vizualização:',
+    tipo_de_visualizacao = st.radio('Selecione o tipo de visualização:',
                                     ['Cadastro', 'Saída'],
                                     captions=['Produtos com estoque ou vinculados por endereços', 'Saídas por atividades e vendas'])
 
@@ -391,17 +391,24 @@ with aba2:
 with aba3:
     mapa_geral_flowrack = pd.concat(mapa_flowrack.values(), axis=1)
 
-    radio_selecao_visao_flowrack = st.radio('Selecione o tipo de vizualização do flowrack:', ['Por corredor', 'Geral'])
+    radio_selecao_visao_flowrack = st.radio('Selecione o tipo de visualização do Flowrack:', ['Por corredor', 'Geral'])
+    
+    radio_selecao_saida_flowrack = st.radio('Selecione o tipo de saída do Flowrack:', ['Por Venda (UND)', 'Por Ressuprimento (FRAC)'])
+    
+    if radio_selecao_saida_flowrack == 'Por Venda (UND)':
+        tipo_saida = 'Qtde Venda Frac'
+    else:
+        tipo_saida = 'Ativ.Ressupr.Frac'
 
     if radio_selecao_visao_flowrack == 'Geral':
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_flowrack, 'Mapa de calor geral do flowrack')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_geral_flowrack, 'Mapa de calor geral do flowrack')
 
         st.plotly_chart(chart, use_container_width=False)
 
     else:
         corredor = st.selectbox('Selecione o corredor do flowrack:', corredores_frac)
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_flowrack[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_flowrack[f'{corredor}'], f'Mapa de calor {radio_selecao_saida_flowrack} do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)
     
@@ -409,17 +416,24 @@ with aba4:
     mapa_geral_plateleiras = pd.concat(mapa_prateleira)
     refatorar_indece(mapa_geral_plateleiras, None)
 
-    radio_selecao_visao_prateleiras = st.radio('Selecione o tipo de vizualização das prateleiras:', ['Por corredor', 'Geral'])
+    radio_selecao_visao_prateleiras = st.radio('Selecione o tipo de vizualização das Prateleiras:', ['Por corredor', 'Geral'])
+    
+    radio_selecao_saida_prateleira = st.radio('Selecione o tipo de saída da Prateleira:', ['Por Venda (UND)', 'Por Ressuprimento (FRAC)'])
+    
+    if radio_selecao_saida_prateleira == 'Por Venda (UND)':
+        tipo_saida = 'Qtde Venda Frac'
+    else:
+        tipo_saida = 'Ativ.Ressupr.Frac'
 
     if radio_selecao_visao_prateleiras == 'Geral':
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_geral_plateleiras, 'Mapa de calor geral das prateleiras')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_geral_plateleiras, 'Mapa de calor geral das prateleiras')
 
         st.plotly_chart(chart, use_container_width=True)
 
     else:
         corredor = st.selectbox('Selecione o corredor das prateleiras:', corredores_frac)
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', 'Qtde Venda Frac', mapa_prateleira[f'{corredor}'], f'Mapa de calor de saída do corredor {corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_prateleira[f'{corredor}'], f'Mapa de calor {tipo_saida} do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)
