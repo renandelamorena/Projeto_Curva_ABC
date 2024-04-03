@@ -26,7 +26,7 @@ def formata_numero(valor, prefixo = ''):
         valor /= 1000
     return f'{prefixo} {valor} milhões'
 
-def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
+def botao_download(tabela_excel, nome_do_botao, nome_do_arquivo):
     #Criar um DataFrame
     df = pd.DataFrame(tabela_excel)
 
@@ -443,7 +443,7 @@ with aba1:
         with coluna1:
             st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
         with coluna2:
-            botao_donwload(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
+            botao_download(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
 
     with coluna2_aba1:
         st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
@@ -452,20 +452,20 @@ with aba1:
         with coluna1:
             st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
         with coluna2:
-            botao_donwload(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
+            botao_download(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
     coluna1, coluna2, coluna3 = st.columns(3)
     with coluna1:
         st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
-        botao_donwload(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
+        botao_download(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
     with coluna2:
         st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
-        botao_donwload(curva_a_normal_flowrack_para_prateleira,'Donwload A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
+        botao_download(curva_a_normal_flowrack_para_prateleira,'Download A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
     with coluna3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
-        botao_donwload(curva_a_normal_prateleira_para_flowrack,'Donwload A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
+        botao_download(curva_a_normal_prateleira_para_flowrack,'Download A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
         
     st.markdown('# Comparação das Saídas Fracionadas')
         
@@ -561,6 +561,8 @@ with aba2:
                                 text_auto=True,
                                 title='Saída X Local'
                                 )
+            
+            # print(tabela_saida_por_local[['Código', 'modulo', 'Qtde Venda Frac']])
             
             st.plotly_chart(fig_saida_por_classe, use_container_width=True)
             
@@ -684,13 +686,13 @@ with aba2:
         coluna1, coluna2, coluna3 = st.columns(3)
         with coluna1:
             st.metric('Realocar para Classe AA no Flowrack', total_colocar_local_AA)
-            botao_donwload(colocar_local_AA, 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
+            botao_download(colocar_local_AA, 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
         with coluna2:
             st.metric('Realocar para Classe AB no Flowrack', total_colocar_local_AB)
-            botao_donwload(colocar_local_AB, 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
+            botao_download(colocar_local_AB, 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
         with coluna3:
             st.metric('Realocar para Classe AC no Flowrack', total_colocar_local_AC)
-            botao_donwload(colocar_local_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
+            botao_download(colocar_local_AC, 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
             
     with st.expander('Prateleiras'):
         
@@ -897,8 +899,8 @@ with aba3:
         st.session_state.horizontal = False
         opcao_local_grafico = st.radio('Selecione o local:', locais)
 
-        botao_donwload(dfs_locais_tabelas[opcao_local_grafico][0], 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
-        botao_donwload(dfs_locais_tabelas[opcao_local_grafico][1], 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
+        botao_download(dfs_locais_tabelas[opcao_local_grafico][0], 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
+        botao_download(dfs_locais_tabelas[opcao_local_grafico][1], 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
 
     with coluna2:
         chart = criar_grafico_pizza(dfs_locais_valores[opcao_local_grafico])
@@ -923,6 +925,77 @@ with aba3:
         total_trocar = df_selec.shape[0]
 
         st.metric('Total:', total_trocar)
-        botao_donwload(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
+        botao_download(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
         
         st.dataframe(df_selec)
+        
+st.write('# Realocar Fracionado por saídas')
+
+tipo_divisao = st.selectbox('Selecione o por onde deseja realocar:', 
+                            ('Flowrack na classe selecionada acima',
+                            'Prateleiras da orientação do módulo selecionado acima',
+                            ))
+
+if tipo_divisao == 'Flowrack na classe selecionada acima':
+    df = tabela_saida_por_local
+else:
+    df = saida_por_pratileira_selecionada_modulo
+
+# Calculando a média de saída desejada
+media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
+
+# Calculando a variação permitida de 2% para mais ou para menos
+variação_permitida = media_saida * 0.02
+
+# Calculando a soma de saída por módulo
+soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
+
+# Identificando os módulos que estão fora da faixa de tolerância
+fora_da_faixa = soma_saida_por_modulo[(soma_saida_por_modulo < media_saida - variação_permitida) | 
+                                      (soma_saida_por_modulo > media_saida + variação_permitida)]
+
+# media_saida, variação_permitida, soma_saida_por_modulo, fora_da_faixa
+
+def ajustar_saidas_modulos(df):
+    trocas = []
+    while True:
+        media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
+        variação_permitida = media_saida * 0.02
+        soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
+        
+        # Definindo módulos acima e abaixo da média
+        modulos_abaixo = soma_saida_por_modulo[soma_saida_por_modulo < (media_saida - variação_permitida)].index.tolist()
+        modulos_acima = soma_saida_por_modulo[soma_saida_por_modulo > (media_saida + variação_permitida)].index.tolist()
+        
+        # Verificando se ainda há módulos fora da faixa de tolerância
+        if not modulos_acima and not modulos_abaixo:
+            break  # Todos os módulos estão dentro da tolerância
+        
+        # Realizando trocas
+        for modulo_abaixo in modulos_abaixo:
+            for modulo_acima in modulos_acima:
+                # Produto com menor saída no módulo abaixo da média
+                produto_min = df[df['modulo'] == modulo_abaixo].nsmallest(1, 'Qtde Venda Frac')
+                diferenca_para_media = media_saida - soma_saida_por_modulo[modulo_abaixo]
+                
+                # Produto no módulo acima da média que melhor ajusta a diferença
+                df_modulo_acima = df[df['modulo'] == modulo_acima]
+                produto_troca = df_modulo_acima.iloc[(df_modulo_acima['Qtde Venda Frac'] - (diferenca_para_media + produto_min['Qtde Venda Frac'].values[0])).abs().argsort()[:1]]
+                
+                # Realizando a troca
+                if not produto_troca.empty and not produto_min.empty:
+                    df.loc[produto_min.index, 'modulo'] = modulo_acima
+                    df.loc[produto_troca.index, 'modulo'] = modulo_abaixo
+                    trocas.append((produto_min['Código'].values[0], modulo_acima, produto_troca['Código'].values[0], modulo_abaixo))
+                    break  # Realizar uma troca por iteração
+            
+        # Recalcular as somas após a troca
+        soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
+
+    return df, trocas
+
+df_ajustado, lista_trocas = ajustar_saidas_modulos(df.copy())
+trocas = pd.DataFrame(lista_trocas)
+trocas
+
+botao_download(trocas, 'Download tabela para realocar', 'Cadas linha é uma troca a ser feita.xlsx')
