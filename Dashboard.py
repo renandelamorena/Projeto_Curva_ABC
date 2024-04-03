@@ -929,6 +929,8 @@ with aba3:
         
         st.dataframe(df_selec)
         
+with aba2:
+        
     st.write('# Realocar Fracionado por saídas')
 
     tipo_divisao = st.selectbox('Selecione o por onde deseja realocar:', 
