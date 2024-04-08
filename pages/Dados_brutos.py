@@ -163,10 +163,10 @@ commit_message = st.text_input("Mensagem do commit", value="Atualização dos da
 
 # Definir arquivos padrão e suas respectivas primeiras linhas desejadas
 default_files = {
-    "Curva fracionada" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_frac.xlsx'),
-    "Curva de Caixa" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_cx.xlsx'),
-    "Curva Geral" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_geral.xlsx'),
-    "Cadastro de Produtos" : caminho_absoluto('data/tratamento_curva_abc/datasets/produtos.xlsx'),
+    "curva_frac" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_frac.xlsx'),
+    "curva_cx" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_cx.xlsx'),
+    "curva_geral" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_geral.xlsx'),
+    "produtos" : caminho_absoluto('data/tratamento_curva_abc/datasets/produtos.xlsx'),
 }
 
 # Carregar arquivos .xlsx
