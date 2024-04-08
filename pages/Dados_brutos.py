@@ -3,6 +3,7 @@ import pandas as pd
 from io import BytesIO
 import os
 import requests
+import base64
 
 st.set_page_config(
     page_title='Dados Brutos',
@@ -127,6 +128,9 @@ def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_comm
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/"
     
     for file_path, file_content in files_to_commit.items():
+        # Codificar o conteúdo do arquivo em Base64
+        encoded_content = base64.b64encode(file_content.encode()).decode()
+
         # Verificar se o arquivo já existe no repositório
         response = requests.get(url + file_path, headers=headers)
         
@@ -134,22 +138,21 @@ def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_comm
             # Atualizar o arquivo existente
             file_data = {
                 "message": commit_message,
-                "content": file_content,
+                "content": encoded_content,
                 "sha": response.json()["sha"]
             }
         else:
             # Criar um novo arquivo
             file_data = {
                 "message": commit_message,
-                "content": file_content
+                "content": encoded_content
             }
         
         # Fazer a requisição para criar ou atualizar o arquivo
         response = requests.put(url + file_path, headers=headers, json=file_data)
         
-        if response.status_code != 200 and response.status_code != 201:
-
-            return f"Erro ao enviar arquivo {file_path} para o GitHub. código de erro {response.status_code}"
+        if response.status_code not in [200, 201]:
+            return f"Erro ao enviar arquivo {file_path} para o GitHub. Código de erro: {response.status_code}"
     
     return "Arquivos enviados com sucesso para o GitHub!"
 
