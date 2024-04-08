@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from io import BytesIO
 import os
+import requests
 
 st.set_page_config(
     page_title='Dados Brutos',
@@ -84,4 +85,109 @@ situacao_final = situacao_final[selec_tipo]
 selec_local = situacao_final['local'].isin(opcoes_local)
 situacao_final = situacao_final[selec_local]
 
-st.dataframe(situacao_final)
+with st.expander('Situação final - Dados Brutos'):
+    st.dataframe(situacao_final)
+
+# Função para verificar se os arquivos carregados correspondem aos arquivos padrões
+def check_files(uploaded_files):
+    for uploaded_file in uploaded_files:
+        file_name = uploaded_file.name
+        
+        # Identificar o tipo do arquivo carregado com base no nome
+        file_type = None
+        for key, value in default_files.items():
+            if key.lower() in file_name.lower():
+                file_type = key
+                break
+        
+        # Se o tipo do arquivo for identificado
+        if file_type:
+            # Ler o arquivo .xlsx carregado
+            uploaded_df = pd.read_excel(uploaded_file)
+            
+            # Ler o arquivo padrão correspondente
+            default_file_path = default_files[file_type]
+            default_df = pd.read_excel(default_file_path)
+            
+            # Verificar se a primeira linha do arquivo carregado é igual à do arquivo padrão
+            if not uploaded_df.iloc[0].equals(default_df.iloc[0]):
+                return f"Arquivo {file_name} não corresponde ao arquivo padrão {file_type} ou sua primeira linha está incorreta."
+        else:
+            return f"Tipo de arquivo {file_name} não reconhecido."
+    
+    return None
+
+# Função para autenticar e fazer commit no GitHub
+def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_commit):
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/contents/"
+    
+    for file_path, file_content in files_to_commit.items():
+        # Verificar se o arquivo já existe no repositório
+        response = requests.get(url + file_path, headers=headers)
+        
+        if response.status_code == 200:
+            # Atualizar o arquivo existente
+            file_data = {
+                "message": commit_message,
+                "content": file_content,
+                "sha": response.json()["sha"]
+            }
+        else:
+            # Criar um novo arquivo
+            file_data = {
+                "message": commit_message,
+                "content": file_content
+            }
+        
+        # Fazer a requisição para criar ou atualizar o arquivo
+        response = requests.put(url + file_path, headers=headers, json=file_data)
+        
+        if response.status_code != 200 and response.status_code != 201:
+            return f"Erro ao enviar arquivo {file_path} para o GitHub."
+    
+    return "Arquivos enviados com sucesso para o GitHub!"
+
+# Interface Streamlit
+st.title("Atualização dos dados brutos")
+
+# Autenticação com o GitHub
+github_token = st.text_input("Token de acesso pessoal do GitHub", type="password")
+repo_owner = st.text_input("Proprietário do repositório (username)", value="renandelamorena")
+repo_name = st.text_input("Nome do repositório", value="projeto_curva_ABC")
+commit_message = st.text_input("Mensagem do commit", value="Atualização dos dados brutos de hoje")
+
+# Definir arquivos padrão e suas respectivas primeiras linhas desejadas
+default_files = {
+    "Curva fracionada" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_frac.xlsx'),
+    "Curva de Caixa" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_cx.xlsx'),
+    "Curva Geral" : caminho_absoluto('data/tratamento_curva_abc/datasets/curva_geral.xlsx'),
+    "Cadastro de Produtos" : caminho_absoluto('data/tratamento_curva_abc/datasets/produtos.xlsx'),
+}
+
+# Carregar arquivos .xlsx
+uploaded_files = st.file_uploader("Escolha os arquivos .xlsx para upload", type="xlsx", accept_multiple_files=True)
+
+if uploaded_files:
+    check_result = check_files(uploaded_files)
+    
+    if check_result is None:
+        st.success("Arquivos carregados correspondem aos arquivos padrões.")
+        
+        # Converter os DataFrames para formato de string para commit
+        files_to_commit = {}
+        for uploaded_file in uploaded_files:
+            file_name = uploaded_file.name
+            file_content = pd.read_excel(uploaded_file).to_csv(index=False)
+            files_to_commit[file_name] = file_content
+        
+        # Liberar botão para fazer o commit no GitHub
+        if st.button("Fazer Commit no GitHub"):
+            commit_status = commit_to_github(github_token, repo_owner, repo_name, commit_message, files_to_commit)
+            st.write(commit_status)
+    else:
+        st.error(check_result)
