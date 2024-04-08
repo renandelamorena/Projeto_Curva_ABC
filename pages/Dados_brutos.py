@@ -109,9 +109,9 @@ def check_files(uploaded_files):
             default_file_path = default_files[file_type]
             default_df = pd.read_excel(default_file_path)
             
-            # Verificar se a primeira linha do arquivo carregado é igual à do arquivo padrão
-            if not uploaded_df.iloc[0].equals(default_df.iloc[0]):
-                return f"Arquivo {file_name} não corresponde ao arquivo padrão {file_type} ou sua primeira linha está incorreta."
+            # Verificar se as colunas do arquivo carregado correspondem às do arquivo padrão
+            if not uploaded_df.columns.equals(default_df.columns):
+                return f"Arquivo {file_name} não corresponde ao arquivo padrão {file_type} ou suas colunas estão incorretas."
         else:
             return f"Tipo de arquivo {file_name} não reconhecido."
     
