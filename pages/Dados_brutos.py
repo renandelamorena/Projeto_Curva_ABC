@@ -130,30 +130,29 @@ def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_comm
     for file_path, file_content in files_to_commit.items():
         # Codificar o conteúdo do arquivo em Base64
         encoded_content = base64.b64encode(file_content.encode()).decode()
+        
+        # Construir o caminho completo incluindo a pasta de destino
+        full_path = f"{folder_path}{file_path}"
 
         # Verificar se o arquivo já existe no repositório
-        response = requests.get(url + file_path, headers=headers)
+        response = requests.get(url + full_path, headers=headers)
+        
+        # Preparar os dados do arquivo para a requisição
+        file_data = {
+            "message": commit_message,
+            "content": encoded_content,
+        }
         
         if response.status_code == 200:
-            # Atualizar o arquivo existente
-            file_data = {
-                "message": commit_message,
-                "content": encoded_content,
-                "sha": response.json()["sha"]
-            }
-        else:
-            # Criar um novo arquivo
-            file_data = {
-                "message": commit_message,
-                "content": encoded_content
-            }
+            # Se o arquivo existir, incluir o SHA para atualização
+            file_data["sha"] = response.json()["sha"]
         
-        # Fazer a requisição para criar ou atualizar o arquivo
-        response = requests.put(url + file_path, headers=headers, json=file_data)
+        # Fazer a requisição para criar ou atualizar o arquivo na pasta especificada
+        response = requests.put(url + full_path, headers=headers, json=file_data)
         
         if response.status_code not in [200, 201]:
-            return f"Erro ao enviar arquivo {file_path} para o GitHub. Código de erro: {response.status_code}"
-    
+            return f"Erro ao enviar arquivo {full_path} para o GitHub. Código de erro: {response.status_code}"
+
     return "Arquivos enviados com sucesso para o GitHub!"
 
 # Interface Streamlit
@@ -163,6 +162,7 @@ st.title("Atualização dos dados brutos")
 github_token = st.text_input("Token de acesso pessoal do GitHub", type="password")
 repo_owner = st.text_input("Proprietário do repositório (username)", value="renandelamorena")
 repo_name = st.text_input("Nome do repositório", value="projeto_curva_ABC")
+folder_path = st.text_input("Caminho da pasta no repositório", value="data/tratamento_curva_abc/datasets/")
 commit_message = st.text_input("Mensagem do commit", value="Atualização dos dados brutos de hoje")
 
 # Definir arquivos padrão e suas respectivas primeiras linhas desejadas
