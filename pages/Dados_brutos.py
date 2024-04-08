@@ -148,7 +148,8 @@ def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_comm
         response = requests.put(url + file_path, headers=headers, json=file_data)
         
         if response.status_code != 200 and response.status_code != 201:
-            return f"Erro ao enviar arquivo {file_path} para o GitHub."
+
+            return f"Erro ao enviar arquivo {file_path} para o GitHub. código de erro {response.status_code}"
     
     return "Arquivos enviados com sucesso para o GitHub!"
 
