@@ -425,7 +425,22 @@ if uploaded_files:
                 # Tratando NaN
                 situacao_final['Descrição'] = situacao_final['Descrição'].fillna('-')
                 
-                ####### Adicionar comparação das caixas
+                enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
+
+                locais = pd.read_excel(r'datasets/local_apanha_cx.xlsx').astype(str)
+
+                enderecos_x_locais = pd.merge(enderecos, locais)
+
+                total_enderecos_usados = enderecos.drop_duplicates()
+
+                item_com_end = ~(enderecos['Ender.Cx.Fechada'] == 'nan')
+
+                situacao_final = pd.merge(situacao_final, enderecos_x_locais, how = 'left')
+
+                situacao_final.drop_duplicates(inplace = True)
+                situacao_final.set_index('Ordem', inplace=True)
+                situacao_final.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
+                situacao_final = refatorar_indece(situacao_final, 'Ordem')
 
                 # Converter o DataFrame para CSV (em memória, sem salvar no disco)
                 csv_content = situacao_final.to_csv(index=False)
