@@ -427,7 +427,7 @@ if uploaded_files:
                 
                 enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
 
-                locais = pd.read_excel(r'datasets/local_apanha_cx.xlsx').astype(str)
+                locais = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_cx.xlsx')).astype(str)
 
                 enderecos_x_locais = pd.merge(enderecos, locais)
 
