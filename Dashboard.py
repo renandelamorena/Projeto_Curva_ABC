@@ -90,7 +90,7 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
     return caminho_absoluto
 
-situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
+situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv')).set_index('Ordem')
 local_frac = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_frac.xlsx'))
 
 ## Barra lateral com filtros

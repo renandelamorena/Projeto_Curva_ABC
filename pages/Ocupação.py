@@ -30,16 +30,16 @@ def refatorar_indece(df, nome_index):
     
     return df
 
-situacao_final = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/situacao_final.xlsx')).set_index('Ordem')
+situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv')).set_index('Ordem')
 mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx')).fillna('-').astype(str)
 mapa_prateleira = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_prateleira_orientacao.xlsx'), sheet_name=None)
 mapa_flowrack = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_flowrack_orientacao.xlsx'), sheet_name=None)
 
-armazenagens = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens.xlsx'))
-armazenagens_estoque = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens_estoque.xlsx'))
-armazenagens_estoque.fillna('-', inplace=True)
+armazenagens = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/datasets/csv/armazenagens.csv'))
+armazenagem_estoque = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/datasets/csv/armazenagem_estoque.csv'))
+armazenagem_estoque.fillna('-', inplace=True)
 
-fracionado = pd.read_excel(caminho_absoluto('data/tratamento_curva_abc/datasets/fracionado.xlsx'))
+fracionado = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/datasets/csv/fracionado.csv'))
 
 def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafico):
     
@@ -321,19 +321,19 @@ with aba1:
             
             condicao = False
             for rua in ruas_selec:
-                condicao |= armazenagens_estoque['Endereço'].str.startswith(rua)
+                condicao |= armazenagem_estoque['Endereço'].str.startswith(rua)
 
-            arm_selec = armazenagens_estoque['Endereço'][condicao]
+            arm_selec = armazenagem_estoque['Endereço'][condicao]
 
             df = pd.DataFrame()
 
-            for endereco in armazenagens_estoque['Endereço']:
+            for endereco in armazenagem_estoque['Endereço']:
                 
                 if endereco in arm_selec.values:
                                         
-                    i_linha_atual = armazenagens_estoque['Endereço'][armazenagens_estoque['Endereço'] == endereco].index
+                    i_linha_atual = armazenagem_estoque['Endereço'][armazenagem_estoque['Endereço'] == endereco].index
                 
-                    e_fd = armazenagens_estoque['Motivo Bloq.Ender.'].iloc[i_linha_atual[0] + 2].startswith('FD')
+                    e_fd = armazenagem_estoque['Motivo Bloq.Ender.'].iloc[i_linha_atual[0] + 2].startswith('FD')
                 
                     if e_fd:
                         tipo = 'FD'
