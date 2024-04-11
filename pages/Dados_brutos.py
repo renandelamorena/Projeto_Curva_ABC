@@ -229,7 +229,7 @@ if uploaded_files:
 
                     return df
 
-                def refatorar_indece(df, nome_index):
+                def refatorar_indice(df, nome_index):
                     
                     qnt_linha = df.shape[0] + 1
 
@@ -315,7 +315,7 @@ if uploaded_files:
                             }
 
                 curva_frac.rename(columns = renomear_frac, inplace = True)
-                # ### Caixa Fechada
+                # Caixa Fechada
 
                 # Excluir linhas vazias
                 curva_cx = curva_cx.dropna(how='all')
@@ -333,12 +333,12 @@ if uploaded_files:
                             }
 
                 curva_cx.rename(columns = renomear_cx, inplace = True)
-                # ## Tratando códigos
+                # Tratando códigos
 
                 dfs = [curva_geral, curva_frac, curva_cx, produtos]
                 tratar_codigos(dfs)
-                # ## Juntando as informações
-                # ### Fracionado
+                # Juntando as informações
+                # Fracionado
 
                 curva_abc_frac = pd.merge(curva_frac, produtos, on='Código', how='outer')
 
@@ -346,9 +346,9 @@ if uploaded_files:
 
                 curva_abc_frac['Ender.Fracionado'] = curva_abc_frac['Ender.Fracionado'].astype(str)
 
-                refatorar_indece(curva_abc_frac, 'Ordem')
+                refatorar_indice(curva_abc_frac, 'Ordem')
 
-                # ### Caixa Fechada
+                # Caixa Fechada
 
                 curva_abc_cx = pd.merge(curva_cx, produtos, on='Código', how='outer')
 
@@ -356,7 +356,7 @@ if uploaded_files:
 
                 curva_abc_cx['Ender.Fracionado'] = curva_abc_cx['Ender.Fracionado'].astype(str)
 
-                refatorar_indece(curva_abc_cx, 'Ordem')
+                refatorar_indice(curva_abc_cx, 'Ordem')
 
                 # ### Geral
 
@@ -366,7 +366,7 @@ if uploaded_files:
 
                 curva_abc_geral['Ender.Fracionado'] = curva_abc_geral['Ender.Fracionado'].astype(str)
 
-                refatorar_indece(curva_abc_geral, 'Ordem')
+                refatorar_indice(curva_abc_geral, 'Ordem')
 
                 # ### Situação Final
 
@@ -390,7 +390,7 @@ if uploaded_files:
 
                 situacao_final.drop_duplicates(subset=['Código'], keep='last', inplace=True)
 
-                refatorar_indece(situacao_final, 'Ordem')
+                refatorar_indice(situacao_final, 'Ordem')
 
                 # Organizar as colunas da situacao final
                 situacao_final = situacao_final[['Código', 
@@ -440,7 +440,7 @@ if uploaded_files:
                 situacao_final.drop_duplicates(inplace = True)
                 situacao_final.set_index('Ordem', inplace=True)
                 situacao_final.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
-                situacao_final = refatorar_indece(situacao_final, 'Ordem')
+                situacao_final = refatorar_indice(situacao_final, 'Ordem')
 
                 # Converter o DataFrame para CSV (em memória, sem salvar no disco)
                 csv_content = situacao_final.to_csv(index=False)
