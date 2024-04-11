@@ -5,6 +5,7 @@ import os
 import requests
 import base64
 import json
+from datetime import datetime
 
 st.set_page_config(
     page_title='Dados Brutos',
@@ -96,8 +97,11 @@ st.title('Atualização dos dados brutos')
 github_token = st.text_input('Token de acesso pessoal do GitHub', type='password')
 repo_owner = 'renandelamorena'
 repo_name = 'projeto_curva_ABC'
-folder_path = 'data/tratamento_curva_abc/datasets/'
-commit_message = 'Atualização dos dados brutos de hoje'
+folder_path = 'data/tratamento_curva_abc/datasets/csv/'
+
+horario = datetime.today().strftime('%d/%m/%Y - %H:%M')
+
+commit_message = f'Atualização dos dados brutos - {horario}'
 
 # Definir arquivos padrão e suas respectivas primeiras linhas desejadas
 default_files_curva_cadastro = {
@@ -110,7 +114,7 @@ default_files_curva_cadastro = {
 default_files_metricas = {
     'fracionado' : caminho_absoluto('data/tratamento_curva_abc/datasets/fracionado.xlsx'),
     'armazenagens' : caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens.xlsx'),
-    'armazenagens_estoque' : caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagens_estoque.xlsx'),
+    'armazenagem_estoque' : caminho_absoluto('data/tratamento_curva_abc/datasets/armazenagem_estoque.xlsx'),
 }
 
 # Função para verificar os arquivos carregados
@@ -190,8 +194,6 @@ def commit_to_github(token, repo_owner, repo_name, commit_message, files_to_comm
         
     st.success('Todos os arquivos foram enviados com sucesso para o GitHub!')
 
-st.write('## Atualização de Dados da Curva e Cadastro')
-
 selec_tipo_atualizacao_cadastro = st.radio('Selecione os Dados', ['Dados da curva e/ou cadastros', 'Dados das métricas'])
 
 uploaded_files = st.file_uploader('Escolha os arquivos .xlsx para upload', type='xlsx', accept_multiple_files=True)
@@ -203,16 +205,16 @@ if uploaded_files:
             st.error(error)
     else:
         if selec_tipo_atualizacao_cadastro == 'Dados da curva e/ou cadastros':
-            if st.button('Tratar dados'):
-                
+            if len(valid_files) == 4:
+                    
                 # Tratar os dados da curva e cadastro
-                produtos = pd.read_excel('datasets\produtos.xlsx')
+                produtos = pd.read_excel(valid_files[3])
 
-                curva_geral = pd.read_excel('datasets\curva_geral.xlsx')
+                curva_geral = pd.read_excel(valid_files[2])
 
-                curva_cx = pd.read_excel('datasets\curva_cx.xlsx')
+                curva_frac = pd.read_excel(valid_files[1])
 
-                curva_frac = pd.read_excel('datasets\curva_frac.xlsx')
+                curva_cx = pd.read_excel(valid_files[0])
                 # # Tratando Dados
                 # # Funções
 
@@ -248,7 +250,7 @@ if uploaded_files:
 
                 # Excluir linhas vazias
                 produtos = produtos.dropna(how='all')
-
+                
                 # Selecionando somente as principais colunas
                 produtos = produtos[['Código',
                                     'Descrição',
@@ -390,10 +392,7 @@ if uploaded_files:
 
                 refatorar_indece(situacao_final, 'Ordem')
 
-                # # Organizando colunas
-
                 # Organizar as colunas da situacao final
-
                 situacao_final = situacao_final[['Código', 
                                                 'Descrição', 
                                                 'Curva Frac',
@@ -423,12 +422,26 @@ if uploaded_files:
                                                 'Tipo',
                                                 'Qtde Desvio Picking',
                                                 ]]
-                # ### Tratando NaN
+                # Tratando NaN
                 situacao_final['Descrição'] = situacao_final['Descrição'].fillna('-')
+                
+                ####### Adicionar comparação das caixas
 
-                situacao_final.to_excel('dados_tratados\situacao_final.xlsx')
-                # Arquivos para commitar recebe situação final
-                files_to_commit = prepare_and_encode_files(situacao_final)
+                # Converter o DataFrame para CSV (em memória, sem salvar no disco)
+                csv_content = situacao_final.to_csv(index=False)
+                # Codificar o conteúdo CSV em Base64
+                encoded_content = base64.b64encode(csv_content.encode()).decode('utf-8')
+                    
+                files_to_commit = {'situacao_final' : encoded_content}
+                                
+                folder_path = 'data/tratamento_curva_abc/dados_tratados/csv/'
+                
+                st.success('Dados tratados!!!')
+                    
+            else:
+                files_to_commit = prepare_and_encode_files(valid_files)
+                st.error('Ainda há arquivos faltantes para trartar os dados!')            
+
         else:
             files_to_commit = prepare_and_encode_files(valid_files)
               
