@@ -431,8 +431,8 @@ if uploaded_files:
                 csv_content = situacao_final.to_csv(index=False)
                 # Codificar o conteúdo CSV em Base64
                 encoded_content = base64.b64encode(csv_content.encode()).decode('utf-8')
-                    
-                files_to_commit = {'situacao_final' : encoded_content}
+
+                files_to_commit = {'situacao_final.csv' : encoded_content}
                                 
                 folder_path = 'data/tratamento_curva_abc/dados_tratados/csv/'
                 
