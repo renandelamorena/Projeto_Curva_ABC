@@ -45,7 +45,7 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
 st.title('Dados brutos')
 
-situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv')).set_index('Ordem')
+situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
 
 # with st.sidebar:
 #     st.markdown('# Filtros')
@@ -390,8 +390,6 @@ if uploaded_files:
 
                 situacao_final.drop_duplicates(subset=['Código'], keep='last', inplace=True)
 
-                refatorar_indice(situacao_final, 'Ordem')
-
                 # Organizar as colunas da situacao final
                 situacao_final = situacao_final[['Código', 
                                                 'Descrição', 
@@ -438,8 +436,8 @@ if uploaded_files:
                 situacao_final = pd.merge(situacao_final, enderecos_x_locais, how = 'left')
 
                 situacao_final.drop_duplicates(inplace = True)
-                situacao_final.set_index('Ordem', inplace=True)
                 situacao_final.sort_values(by='Qtde Venda Frac', ascending=False, inplace=True)
+                
                 situacao_final = refatorar_indice(situacao_final, 'Ordem')
 
                 # Converter o DataFrame para CSV (em memória, sem salvar no disco)
