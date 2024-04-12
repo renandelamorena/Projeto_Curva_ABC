@@ -933,71 +933,75 @@ with aba2:
         
     st.write('# Realocar Fracionado por saídas')
 
-    tipo_divisao = st.selectbox('Selecione o por onde deseja realocar:', 
-                                ('Flowrack na classe selecionada acima',
-                                'Prateleiras da orientação do módulo selecionado acima',
-                                ))
+    on = st.toggle('Realocar')
 
-    if tipo_divisao == 'Flowrack na classe selecionada acima':
-        df = tabela_saida_por_local
-    else:
-        df = saida_por_pratileira_selecionada_modulo
+    if on:
 
-    # Calculando a média de saída desejada
-    media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
+        tipo_divisao = st.selectbox('Selecione o por onde deseja realocar:', 
+                                    ('Flowrack na classe selecionada acima',
+                                    'Prateleiras da orientação do módulo selecionado acima',
+                                    ))
 
-    # Calculando a variação permitida de 2% para mais ou para menos
-    variação_permitida = media_saida * 0.02
+        if tipo_divisao == 'Flowrack na classe selecionada acima':
+            df = tabela_saida_por_local
+        else:
+            df = saida_por_pratileira_selecionada_modulo
 
-    # Calculando a soma de saída por módulo
-    soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
+        # Calculando a média de saída desejada
+        media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
 
-    # Identificando os módulos que estão fora da faixa de tolerância
-    fora_da_faixa = soma_saida_por_modulo[(soma_saida_por_modulo < media_saida - variação_permitida) | 
-                                        (soma_saida_por_modulo > media_saida + variação_permitida)]
+        # Calculando a variação permitida de 2% para mais ou para menos
+        variação_permitida = media_saida * 0.02
 
-    # media_saida, variação_permitida, soma_saida_por_modulo, fora_da_faixa
+        # Calculando a soma de saída por módulo
+        soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
 
-    def ajustar_saidas_modulos(df):
-        trocas = []
-        while True:
-            media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
-            variação_permitida = media_saida * 0.02
-            soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
-            
-            # Definindo módulos acima e abaixo da média
-            modulos_abaixo = soma_saida_por_modulo[soma_saida_por_modulo < (media_saida - variação_permitida)].index.tolist()
-            modulos_acima = soma_saida_por_modulo[soma_saida_por_modulo > (media_saida + variação_permitida)].index.tolist()
-            
-            # Verificando se ainda há módulos fora da faixa de tolerância
-            if not modulos_acima and not modulos_abaixo:
-                break  # Todos os módulos estão dentro da tolerância
-            
-            # Realizando trocas
-            for modulo_abaixo in modulos_abaixo:
-                for modulo_acima in modulos_acima:
-                    # Produto com menor saída no módulo abaixo da média
-                    produto_min = df[df['modulo'] == modulo_abaixo].nsmallest(1, 'Qtde Venda Frac')
-                    diferenca_para_media = media_saida - soma_saida_por_modulo[modulo_abaixo]
-                    
-                    # Produto no módulo acima da média que melhor ajusta a diferença
-                    df_modulo_acima = df[df['modulo'] == modulo_acima]
-                    produto_troca = df_modulo_acima.iloc[(df_modulo_acima['Qtde Venda Frac'] - (diferenca_para_media + produto_min['Qtde Venda Frac'].values[0])).abs().argsort()[:1]]
-                    
-                    # Realizando a troca
-                    if not produto_troca.empty and not produto_min.empty:
-                        df.loc[produto_min.index, 'modulo'] = modulo_acima
-                        df.loc[produto_troca.index, 'modulo'] = modulo_abaixo
-                        trocas.append((produto_min['Código'].values[0], modulo_acima, produto_troca['Código'].values[0], modulo_abaixo))
-                        break  # Realizar uma troca por iteração
+        # Identificando os módulos que estão fora da faixa de tolerância
+        fora_da_faixa = soma_saida_por_modulo[(soma_saida_por_modulo < media_saida - variação_permitida) | 
+                                            (soma_saida_por_modulo > media_saida + variação_permitida)]
+
+        # media_saida, variação_permitida, soma_saida_por_modulo, fora_da_faixa
+
+        def ajustar_saidas_modulos(df):
+            trocas = []
+            while True:
+                media_saida = df['Qtde Venda Frac'].sum() / df['modulo'].nunique()
+                variação_permitida = media_saida * 0.02
+                soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
                 
-            # Recalcular as somas após a troca
-            soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
+                # Definindo módulos acima e abaixo da média
+                modulos_abaixo = soma_saida_por_modulo[soma_saida_por_modulo < (media_saida - variação_permitida)].index.tolist()
+                modulos_acima = soma_saida_por_modulo[soma_saida_por_modulo > (media_saida + variação_permitida)].index.tolist()
+                
+                # Verificando se ainda há módulos fora da faixa de tolerância
+                if not modulos_acima and not modulos_abaixo:
+                    break  # Todos os módulos estão dentro da tolerância
+                
+                # Realizando trocas
+                for modulo_abaixo in modulos_abaixo:
+                    for modulo_acima in modulos_acima:
+                        # Produto com menor saída no módulo abaixo da média
+                        produto_min = df[df['modulo'] == modulo_abaixo].nsmallest(1, 'Qtde Venda Frac')
+                        diferenca_para_media = media_saida - soma_saida_por_modulo[modulo_abaixo]
+                        
+                        # Produto no módulo acima da média que melhor ajusta a diferença
+                        df_modulo_acima = df[df['modulo'] == modulo_acima]
+                        produto_troca = df_modulo_acima.iloc[(df_modulo_acima['Qtde Venda Frac'] - (diferenca_para_media + produto_min['Qtde Venda Frac'].values[0])).abs().argsort()[:1]]
+                        
+                        # Realizando a troca
+                        if not produto_troca.empty and not produto_min.empty:
+                            df.loc[produto_min.index, 'modulo'] = modulo_acima
+                            df.loc[produto_troca.index, 'modulo'] = modulo_abaixo
+                            trocas.append((produto_min['Código'].values[0], modulo_acima, produto_troca['Código'].values[0], modulo_abaixo))
+                            break  # Realizar uma troca por iteração
+                    
+                # Recalcular as somas após a troca
+                soma_saida_por_modulo = df.groupby('modulo')['Qtde Venda Frac'].sum()
 
-        return df, trocas
+            return df, trocas
 
-    df_ajustado, lista_trocas = ajustar_saidas_modulos(df.copy())
-    trocas = pd.DataFrame(lista_trocas)
-    trocas
+        df_ajustado, lista_trocas = ajustar_saidas_modulos(df.copy())
+        trocas = pd.DataFrame(lista_trocas)
+        trocas
 
-    botao_download(trocas, 'Download tabela para realocar', 'Cadas linha é uma troca a ser feita.xlsx')
+        botao_download(trocas, 'Download tabela para realocar', 'Cadas linha é uma troca a ser feita.xlsx')
