@@ -106,25 +106,28 @@ with st.expander('Saída e Atividade'):
     
     if codigo != None and situacao_final['Código'].isin([codigo]).any():
 
-        if consultar_valor_situacao_final(f'Curva {selec}') != 'nan':
+        if str(consultar_valor_situacao_final(f'Curva {selec}')) != 'nan':
     
             col1, col2, col3, col4 = st.columns(4)
 
             col1.metric('Curva', consultar_valor_situacao_final(f'Curva {selec}'))
-            col2.metric('Venda', int(consultar_valor_situacao_final(f'Qtde Venda {selec}')))
-            col3.metric('Dias pedidos', int(consultar_valor_situacao_final(f'Dias Pedido {selec}')))
-            col4.metric('Atv Ressup.', int(consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}')))
+            col2.metric('Venda', consultar_valor_situacao_final(f'Qtde Venda {selec}'))
+            col3.metric('Dias pedidos', consultar_valor_situacao_final(f'Dias Pedido {selec}'))
+            col4.metric('Atv Ressup.', consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}'))
         
         else:
             st.info(f'Sem saída {selec}')
 
-        saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
-        saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
+        saida_frac = str(consultar_valor_situacao_final(f'Qtde Venda Frac'))
+        saida_und_cx = str(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
 
         if saida_frac != 'nan' and saida_und_cx != 'nan':
 
+            saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
+            saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
+
             df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
-                        'Quantidade' : [saida_frac, saida_und_cx]})
+                                'Quantidade' : [saida_frac, saida_und_cx]})
 
             fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
                     color_discrete_map={'Fracionado':'mediumblue',
