@@ -118,13 +118,14 @@ with st.expander('Saída e Atividade'):
 
         df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
                     'Quantidade' : [saida_frac, saida_und_cx]})
+        
+        if df['Quantidade'].sum > 0:
+            fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
+                    color_discrete_map={'Fracionado':'mediumblue',
+                                    'Caixa':'lightgrey'})
 
-        fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
-                color_discrete_map={'Fracionado':'mediumblue',
-                                'Caixa':'lightgrey'})
-
-        fig.update_traces(textposition='outside', textinfo='percent+label')
-        st.plotly_chart(fig, use_container_width=True)
+            fig.update_traces(textposition='outside', textinfo='percent+label')
+            st.plotly_chart(fig, use_container_width=True)
 
     else:
         col1, col2, col3, col4 = st.columns(4)
