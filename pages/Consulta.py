@@ -121,7 +121,7 @@ with st.expander('Saída e Atividade'):
         saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
         saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
 
-        if saida_frac != 'nan' & saida_und_cx != 'nan':
+        if saida_frac != 'nan' and saida_und_cx != 'nan':
 
             df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
                         'Quantidade' : [saida_frac, saida_und_cx]})
