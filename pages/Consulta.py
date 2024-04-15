@@ -119,7 +119,7 @@ with st.expander('Saída e Atividade'):
             st.info(f'Sem saída {selec}')
 
         saida_frac = str(consultar_valor_situacao_final(f'Qtde Venda Frac'))
-        saida_und_cx = str(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
+        saida_und_cx = str(consultar_valor_situacao_final(f'Qtde Venda Cx') * emb)
 
         if saida_frac != 'nan' and saida_und_cx != 'nan':
 
