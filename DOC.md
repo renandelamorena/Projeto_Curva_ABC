@@ -63,25 +63,54 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 
 ## **1. Dashboard**
 - **Métricas**
-    1. Produtos com endereço de fracionado ineficiente - Soma dos produtos com apanha fracionada errada
-    2. Curva A "medicamento” - Todos produtos que devem ir para o flowrack
-    3. Produtos sem endereço de fracionado
-    4. Produtos com endereço de caixa fechada ineficiente - Soma dos produtos com apanha caixa fechada errada
-    5. Produtos sem endereço de caixa fechado
+    1. <u>**Produtos com endereço de fracionado ineficiente:**</u> Soma dos produtos com apanha fracionada errada.
+    ---
+    2. <u>**Curva A "medicamento”:**</u> Todos produtos que devem ir para o flowrack.
+    ---
+    3. <u>**Produtos sem endereço de fracionado:**</u> Endereçar.
+    ---
+    4. <u>**Produtos com endereço de caixa fechada ineficiente:**</u> Soma dos produtos com apanha caixa fechada errada.
+    ---
+    5. <u>**Produtos sem endereço de caixa fechado:**</u> Endereçar.
     ---
 - **Apanha Fracionado**
-    1. Curvas B e C no Flowrack - Produtos para retirar do flowrack por conta da baixa saída
-    2. Curvas A da prateleira (No Flowrack) - Produtos para serem realocados para prateleira pois existem produtos com maior saída
-    3. Curvas A do Flowrack (Na prateleira) - Devem ser colocados no flowrack, pois tem alta saída e estão na prateleira
-    4. Comparação das Saídas Fracionadas
-    5. Divisão das Saídas Fracionadas
+    1. **Curvas B e C no Flowrack:** Produtos para retirar do flowrack por conta da baixa saída.
+    ---
+    2. **Curvas A da prateleira (No Flowrack):** Produtos para serem realocados para prateleira pois existem produtos com maior saída.
+    ---
+    3. **Curvas A do Flowrack (Na prateleira):** Devem ser colocados no flowrack, pois tem alta saída e estão na prateleira.
+    ---
+    4. **Comparação das Saídas Fracionadas:**
+        - Selecione o tipo de endereço fracionado: Para a vizualizar nos graficos abaixo, a quantidade de saída fracionada pelos modulos e corredores do tipo de endereço fracionado selecionado. 
+    ---
+    5. **Divisão das Saídas Fracionadas**
         1. Flowrack
+            - <u>Filtar Saída pela classe:</u> Vizualização das saídas da classe do Florack selecionada por módulos.
+            - <u>Situação da classe:</u> Comparação das saídas da classe selecionado por módulo.
+            ---
+            - **Realocar Produtos**: Retirar determinada quantidade de saída de produtos de um módulo.
+                - É retornado uma relação dos produtos para serem realocados. (Produtos, que juntos, correspornde exatamente a saída desejada)
+            ---
+            - **Realocar Classes - Flowrack**: Relação dos produtos que devem ir para determinadas classes.
+        ---
         2. Prateleira
+            - <u>Filtar Saída por prateleiras:</u> Vizualização das saídas das prateleiras pela localização delas no módulo.
+            - <u>Situação das prateleiras:</u> Comparação das saídas das prateleiras, do local selecionado, por módulo.
+            ---
+            - **Realocar Produtos**: Retirar determinada quantidade de saída de produtos de um módulo.
+                - É retornado uma relação dos produtos para serem realocados. (Produtos, que juntos, correspornde exatamente a saída desejada)
+        ---
         3. Ponta de Gôndola
+            - <u>Filtar Saída por Ponta de Gôndola:</u> Vizualização das saídas das pontas pelo módulo.
+            - <u>Situação das Pontas de Gôndolas:</u> Comparação das saídas das pontas, por módulo.
+            ---
+            - **Realocar Produtos**: Retirar determinada quantidade de saída de produtos de um módulo.
+                - É retornado uma relação dos produtos para serem realocados. (Produtos, que juntos, correspornde exatamente a saída desejada)
     ---
 - **Apanha Caixa**
-    1. Situação por local
-    2. Itens para colocar no local
+    1. **Situação por local:** O que está certo ou errado no local selecionado. (Se está certo ou errado no local).
+    ---
+    2. **Itens para colocar no local:** O que é destinado para o local selecionado. (O que deve ir para o local).
 
 ## **2. Consulta**
 - Consutar produtos em expecifico, curva, cadastros entre outros.
@@ -93,7 +122,7 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 ## **3. Dados Brutos**
 - **Atualização dos dados brutos**
     - Campo para token de acesso pessoal do Github - Credencial para a para atualização dos dados
-    ---
+    --- 
     - Seleção dos dados - Se são os dados da cuva/cadastro ou as metricas de ocupação
     ---
     - Upload dos arquivos - É verificado se os arquivos são correspondentes aos dados selecionados
@@ -181,10 +210,27 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 ---
 - **Flowrack**
     1. Selecione o tipo de visualização do Flowrack:
-
-
-    
+        - Por corredor: Somente o corredor que é selecionado.
+        ---
+        - Geral: Vizualição do Flowrack inteiro.
+    ---
     2. Selecione o tipo de saída do FLowrack:
+        - Por venda (UND): Quantidade de venda fracionada por endereço.
+        ---
+        - Por Ressuprimento (Frac): Quantidade de ressuprimento fracionado por endereço.
+    ---
+    3. Gráfico de calor dos endereços de fracionados, baseado nos filtros acima.
+
 ---
 - **Prateleira**
-    1. Selecione o tipo de visualização das prateleiras
+    1. Selecione o tipo de visualização do Prateleira:
+        - Por corredor: Somente o corredor que é selecionado.
+        ---
+        - Geral: Vizualição da Prateleira inteira.
+    ---
+    2. Selecione o tipo de saída da Prateleira:
+        - Por venda (UND): Quantidade de venda fracionada por endereço.
+        ---
+        - Por Ressuprimento (Frac): Quantidade de ressuprimento fracionado por endereço.
+    ---
+    3. Gráfico de calor dos endereços de fracionados, baseado nos filtros acima.
