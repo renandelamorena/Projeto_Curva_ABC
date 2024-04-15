@@ -59,64 +59,89 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 
 ---
 
-## Funcionalidades
+# Funcionalidades
 
-1. Dashboard
-    - Métricas
-        1. Produtos com endereço de fracionado ineficiente - Soma dos produtos com apanha fracionada errada
-        2. Curva A "medicamento” - Todos produtos que devem ir para o flowrack
-        3. Produtos sem endereço de fracionado
-        4. Produtos com endereço de caixa fechada ineficiente - Soma dos produtos com apanha caixa fechada errada
-        5. Produtos sem endereço de caixa fechado
-    - Apanha Fracionado
-        1. Curvas B e C no Flowrack - Produtos para retirar do flowrack por conta da baixa saída
-        2. Curvas A da prateleira (No Flowrack) - Produtos para serem realocados para prateleira pois existem produtos com maior saída
-        3. Curvas A do Flowrack (Na prateleira) - Devem ser colocados no flowrack, pois tem alta saída e estão na prateleira
-        4. **Comparação das Saídas Fracionadas**
-        5. **Divisão das Saídas Fracionadas**
-            1. Flowrack
-            2. Prateleira
-            3. Ponta de Gôndola
-    - Apanha Caixa
-        1. **Situação por local**
-        2. Itens para colocar no local
+## **1. Dashboard**
+- **Métricas**
+    1. Produtos com endereço de fracionado ineficiente - Soma dos produtos com apanha fracionada errada
+    2. Curva A "medicamento” - Todos produtos que devem ir para o flowrack
+    3. Produtos sem endereço de fracionado
+    4. Produtos com endereço de caixa fechada ineficiente - Soma dos produtos com apanha caixa fechada errada
+    5. Produtos sem endereço de caixa fechado
+    ---
+- **Apanha Fracionado**
+    1. Curvas B e C no Flowrack - Produtos para retirar do flowrack por conta da baixa saída
+    2. Curvas A da prateleira (No Flowrack) - Produtos para serem realocados para prateleira pois existem produtos com maior saída
+    3. Curvas A do Flowrack (Na prateleira) - Devem ser colocados no flowrack, pois tem alta saída e estão na prateleira
+    4. Comparação das Saídas Fracionadas
+    5. Divisão das Saídas Fracionadas
+        1. Flowrack
+        2. Prateleira
+        3. Ponta de Gôndola
+    ---
+- **Apanha Caixa**
+    1. Situação por local
+    2. Itens para colocar no local
 
----
-
-2. Consulta
-    - Consutar produtos em expecifico, curva, cadastros entre outros
-    1. Saída e Atividade
-        - Vizualização do tipo de curva, e informações de saída, filtrados
-
----
-
-3. Dados Brutos
-    - Atualização dos dados brutos
-        - Campo para token de acesso pessoal do Github - Credencial para a para atualização dos dados
-        - Seleção dos dados - Se são os dados da cuva/cadastro ou as metricas de ocupação
-        - Upload dos arquivos - É verificados se os arquivos são correspondentes aos dados selecionados
+## **2. Consulta**
+- Consutar produtos em expecifico, curva, cadastros entre outros
+1. Saída e Atividade
+    - Vizualização do tipo de curva, e informações de saída, filtrados
 
 ---
 
-4. Ocupação
-    - Métricas
-        1. Fracionado
-            1. Total de endereços
-            2. Total de endereços bloqueados
-            3. Total de endereços utilizáveis
-            4. **Motivo do bloqueio**
-            5. **Situação das apanhas utilizáveis**
-        2. Armazenagem
-            1. Total de porta-pallets
-            2. Total de armazenagens bloqueadas
-            3. Total de armazenagens utilizáveis
-            4. **Motivo do bloqueio**
-            5. **Situação dos porta-pallets utilizáveis**
-            6. **Situação dos porta-pallets em uso**
-    - Caixa Fechada
-        1. Selecione o tipo de visualização
-        2. Selecione o tipo de saída
-    - Flowrack
-        1. Selecione o tipo de visualização do Flowrack
-    - Prateleira
-        1. Selecione o tipo de visualização das prateleiras
+## **3. Dados Brutos**
+- **Atualização dos dados brutos**
+    - Campo para token de acesso pessoal do Github - Credencial para a para atualização dos dados
+    ---
+    - Seleção dos dados - Se são os dados da cuva/cadastro ou as metricas de ocupação
+    ---
+    - Upload dos arquivos - É verificado se os arquivos são correspondentes aos dados selecionados
+
+        - Dados da curva e/ou cadastros: Se for feito o upload de todos os arquivos corretamente, os dados são tratados automaticamente e será liberado o botão para enviar os dados, arquivos necessarios são - (curva_frac.xlsx, curva_cx.xlsx, curva_geral, produtos.xlsx). Caso contrario os arquivos seram enviados separadamente, não atualizando as informações em 'situação_final'.
+
+            > Fonte 'curva_frac':
+            >
+            > Fonte 'curva_cx':
+            >
+            > Fonte 'curva_geral':
+            >
+            > Fonte 'produtos':
+
+        - Dados das métricas: São os arquivos necessarios os arquivos: armazenagens.xlsx, armazenagem_estoque.xlsx e fracionado.xlsx.
+
+            > Fonte 'armazenagens': 
+            >
+            > Fonte 'armazenagem_estoque':
+            >
+            > Fonte 'fracionado':
+
+---
+
+## **4. Ocupação**
+
+- **Métricas**
+    1. Fracionado
+        1. Total de endereços
+        2. Total de endereços bloqueados
+        3. Total de endereços utilizáveis
+        4. Motivo do bloqueio
+        5. Situação das apanhas utilizáveis
+    ---
+    2. Armazenagem
+        1. Total de porta-pallets
+        2. Total de armazenagens bloqueadas
+        3. Total de armazenagens utilizáveis
+        4. Motivo do bloqueio
+        5. Situação dos porta-pallets utilizáveis
+        6. Situação dos porta-pallets em uso
+---
+- **Caixa Fechada**
+    1. Selecione o tipo de visualização
+    2. Selecione o tipo de saída
+---
+- **Flowrack**
+    1. Selecione o tipo de visualização do Flowrack
+---
+- **Prateleira**
+    1. Selecione o tipo de visualização das prateleiras
