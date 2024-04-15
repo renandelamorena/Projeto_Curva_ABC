@@ -84,9 +84,9 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
     2. Itens para colocar no local
 
 ## **2. Consulta**
-- Consutar produtos em expecifico, curva, cadastros entre outros
+- Consutar produtos em expecifico, curva, cadastros entre outros.
 1. Saída e Atividade
-    - Vizualização do tipo de curva, e informações de saída, filtrados
+    - Vizualização do tipo de curva, e informações de saída, etc.
 
 ---
 
@@ -100,21 +100,21 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 
         - Dados da curva e/ou cadastros: Se for feito o upload de todos os arquivos corretamente, os dados são tratados automaticamente e será liberado o botão para enviar os dados, arquivos necessarios são - (curva_frac.xlsx, curva_cx.xlsx, curva_geral, produtos.xlsx). Caso contrario os arquivos seram enviados separadamente, não atualizando as informações em 'situação_final'.
 
-            > Fonte 'curva_frac':
+            > Fonte 'curva_frac': wms; gerenciamento de estoque; consultas; curva; (1 ano atras, a partir de ontem); selecionar fracionado; filtrar; gerar excel.
             >
-            > Fonte 'curva_cx':
+            > Fonte 'curva_cx': wms; gerenciamento de estoque; consultas; curva; (1 ano atras, a partir de ontem); selecionar caixa fechada; filtrar; gerar excel.
             >
-            > Fonte 'curva_geral':
+            > Fonte 'curva_geral': wms; gerenciamento de estoque; consultas; curva; (1 ano atras, a partir de ontem); selecionar geral; filtrar; gerar excel.
             >
-            > Fonte 'produtos':
+            > Fonte 'produtos': wms; gerenciamento de estoque; consultas; cadastro de produtos; selecionar **todos** em todos dos flags; filtrar; gerar excel.
 
         - Dados das métricas: São os arquivos necessarios os arquivos: armazenagens.xlsx, armazenagem_estoque.xlsx e fracionado.xlsx.
 
-            > Fonte 'armazenagens': 
+            > Fonte 'armazenagens': wms; gerenciamento de estoque; no filtro "Função do endereço" - Armazegem; filtrar; gerar excel.
             >
-            > Fonte 'armazenagem_estoque':
+            > Fonte 'armazenagem_estoque': wms; gerenciamento de estoque; consultas; consulta por endereço; deixar selecionado somente "Armagenagens" .
             >
-            > Fonte 'fracionado':
+            > Fonte 'fracionado': wms; gerenciamento de estoque; no filtro "Rua" - 995; filtrar; gerar excel.
 
 ---
 
@@ -122,26 +122,69 @@ Analise de dados de produtos em relação ao seu armazenamento e saída, tendo e
 
 - **Métricas**
     1. Fracionado
-        1. Total de endereços
-        2. Total de endereços bloqueados
-        3. Total de endereços utilizáveis
-        4. Motivo do bloqueio
-        5. Situação das apanhas utilizáveis
+        1. Total de endereços:
+            - Total de endereços fracionados brutos.
+            ---
+        2. Total de endereços bloqueados:
+            - Total de endereços fracionados que estão 'bloqueados'.
+            ---
+        3. Total de endereços utilizáveis:
+            - Diferença entre total de endereços brutos e os que estão bloqueados "Tudo o que pode ser utilizado".
+            ---
+        4. Motivo do bloqueio:
+            - Os motivos de bloqueios de endereços fracionados e a quantidade de endereços bloqueados pelo motivo.
+            ---
+        5. Situação das apanhas utilizáveis:
+            - Dentro do que pode ser utilizado dos endereços, é o que se encontra em uso ou liberado, sendo liberado e com cadastro de produtos, ou liberado e sem produtos cadastrados no endereço
+            ---
+
+        > PARA ATUALIZAR AS INFORMAÇÕES DE MÉTRICAS: Página de 'Dados Brutos' -> Atualização dos dados brutos -> (Atualizar os dados das métricas)
+
     ---
     2. Armazenagem
-        1. Total de porta-pallets
-        2. Total de armazenagens bloqueadas
-        3. Total de armazenagens utilizáveis
-        4. Motivo do bloqueio
-        5. Situação dos porta-pallets utilizáveis
-        6. Situação dos porta-pallets em uso
+        1. Total de porta-pallets:
+            - Total de emdereços de armazenagens brutas.
+            ---
+        2. Total de armazenagens bloqueadas:
+            - Total de endereços de armazenagens que estão 'bloqueadas'.
+            --- 
+        3. Total de armazenagens utilizáveis:
+            - Diferença entre total de endereços de armazenagens brutas e as que estão bloqueadas "Tudo o que pode ser utilizado".
+            ---
+        4. Motivo do bloqueio:
+            - Os motivos de bloqueios de endereços de armazenagens e a quantidade de endereços bloqueados pelo motivo. (Motivo e total de endereços)
+            ---
+        5. Situação dos porta-pallets utilizáveis:
+            - Dentro do que pode ser utilizado dos endereços, é o que se encontra em uso ou liberado.
+            ---
+        6. Situação dos porta-pallets em uso:
+            - Dentro do que está em uso, os tipos dos produtos que estão armazenados
+            ---
+
+        > PARA ATUALIZAR AS INFORMAÇÕES DE MÉTRICAS: Página de 'Dados Brutos' -> Atualização dos dados brutos -> (Atualizar os dados das métricas)
+
 ---
 - **Caixa Fechada**
-    1. Selecione o tipo de visualização
-    2. Selecione o tipo de saída
+    1. Selecione o tipo de visualização:
+        - Cadastro: É a vizualização de ocupação dos endereços de caixa fechada pelo seu cadastro de produtos.
+        - Sáida: É a vizualização de ocupação dos endereços de caixa fechada por um tipo de saída determinada. 
+        ---
+    2. Selecione o tipo de saída:
+        - Cadastro selecionado:
+            - Produtos vinculados: Produtos vinculados por endereço.
+            - Produtos com estoque: Produtos com estoque por endereço.
+            ---
+        - Sáida: 'Tipo de saída selecionada' por endereço, por exemplo, ressuprimento fracionado por endereço.
+        ---
+    3. Gráfico de calor dos endereços de caixa fechada, baseado nos filtros acima.
+
 ---
 - **Flowrack**
-    1. Selecione o tipo de visualização do Flowrack
+    1. Selecione o tipo de visualização do Flowrack:
+
+
+    
+    2. Selecione o tipo de saída do FLowrack:
 ---
 - **Prateleira**
     1. Selecione o tipo de visualização das prateleiras
