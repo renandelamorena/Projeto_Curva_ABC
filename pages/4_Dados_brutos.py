@@ -9,7 +9,7 @@ from datetime import datetime
 
 st.set_page_config(
     page_title='Dados Brutos',
-    layout='wide',
+    layout='centered',
     page_icon=':bar-chart:'
     )
 def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
