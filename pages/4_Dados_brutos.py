@@ -41,10 +41,6 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
     return caminho_absoluto
 
-# Streamlit
-
-st.title('Dados brutos')
-
 situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
 
 # with st.sidebar:
@@ -91,7 +87,7 @@ situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_t
 # with st.expander('Situação final - Dados Brutos'):
 #     st.dataframe(situacao_final)
 
-st.title('Atualização dos dados brutos')
+st.title('Atualização dos Dados')
 
 # Autenticação com o GitHub
 github_token = st.text_input('Token de acesso pessoal do GitHub', type='password')
@@ -457,6 +453,6 @@ if uploaded_files:
 
         else:
             files_to_commit = prepare_and_encode_files(valid_files)
-              
+
         if st.button('Enviar Dados'):
             commit_to_github(github_token, repo_owner, repo_name, commit_message, files_to_commit)
