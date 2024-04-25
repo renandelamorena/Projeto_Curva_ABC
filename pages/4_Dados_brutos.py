@@ -253,12 +253,12 @@ if uploaded_files:
                                     'Estoque Armaz.',
                                     'Apanha',
                                     'Permite Frac.',
-                                    'Ender.Cx.Fechada',
+                                    'Ender.Cx.Fech.',
                                     'Embal.',
                                     'Capacidade',
                                     'Estoque',
                                     'Apanha.1',
-                                    'Ender.Fracionado',
+                                    'Ender.Frac.',
                                     'Tipo',
                                     'Capacidade.1',
                                     'Estoque.1'
@@ -340,7 +340,7 @@ if uploaded_files:
 
                 curva_abc_frac['Código'] = pd.to_numeric(curva_abc_frac['Código'])
 
-                curva_abc_frac['Ender.Fracionado'] = curva_abc_frac['Ender.Fracionado'].astype(str)
+                curva_abc_frac['Ender.Frac.'] = curva_abc_frac['Ender.Frac.'].astype(str)
 
                 refatorar_indice(curva_abc_frac, 'Ordem')
 
@@ -350,7 +350,7 @@ if uploaded_files:
 
                 curva_abc_cx['Código'] = pd.to_numeric(curva_abc_cx['Código'])
 
-                curva_abc_cx['Ender.Fracionado'] = curva_abc_cx['Ender.Fracionado'].astype(str)
+                curva_abc_cx['Ender.Frac.'] = curva_abc_cx['Ender.Frac.'].astype(str)
 
                 refatorar_indice(curva_abc_cx, 'Ordem')
 
@@ -360,7 +360,7 @@ if uploaded_files:
 
                 curva_abc_geral['Código'] = pd.to_numeric(curva_abc_geral['Código'])
 
-                curva_abc_geral['Ender.Fracionado'] = curva_abc_geral['Ender.Fracionado'].astype(str)
+                curva_abc_geral['Ender.Frac.'] = curva_abc_geral['Ender.Frac.'].astype(str)
 
                 refatorar_indice(curva_abc_geral, 'Ordem')
 
@@ -370,7 +370,7 @@ if uploaded_files:
 
                 situacao_final['Código'] = pd.to_numeric(situacao_final['Código'])
 
-                situacao_final['Ender.Fracionado'] = situacao_final['Ender.Fracionado'].astype(str)
+                situacao_final['Ender.Frac.'] = situacao_final['Ender.Frac.'].astype(str)
 
                 # Juntando a curva geral com a cx fech e fracionada
                 curva_cx_final = curva_cx[['Código', 'Curva Cx', 'Qtde Venda Cx', 'Dias Pedido Cx', 'Média por dia cx', 'Ativ.Ressupr.Cx']]
@@ -405,21 +405,21 @@ if uploaded_files:
                                                 'Média por dia cx',
                                                 'Média por dia geral',
                                                 'Estoque Armaz.',
-                                                'Ender.Cx.Fechada',
+                                                'Ender.Cx.Fech.',
                                                 'Estoque Cx',
                                                 'Capacidade Cx',
                                                 'Embal.',
                                                 'Estoque Frac',
                                                 'Capacidade Frac',
                                                 'Permite Frac.',
-                                                'Ender.Fracionado',
+                                                'Ender.Frac.',
                                                 'Tipo',
                                                 'Qtde Desvio Picking',
                                                 ]]
                 # Tratando NaN
                 situacao_final['Descrição'] = situacao_final['Descrição'].fillna('-')
                 
-                enderecos = situacao_final[['Ender.Cx.Fechada']].astype(str)
+                enderecos = situacao_final[['Ender.Cx.Fech.']].astype(str)
 
                 locais = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_cx.xlsx')).astype(str)
 
@@ -427,7 +427,7 @@ if uploaded_files:
 
                 total_enderecos_usados = enderecos.drop_duplicates()
 
-                item_com_end = ~(enderecos['Ender.Cx.Fechada'] == 'nan')
+                item_com_end = ~(enderecos['Ender.Cx.Fech.'] == 'nan')
 
                 situacao_final = pd.merge(situacao_final, enderecos_x_locais, how = 'left')
 
