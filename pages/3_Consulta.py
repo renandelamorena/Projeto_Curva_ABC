@@ -48,98 +48,123 @@ situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_t
 
 st.title('Consultas')
 
-coluna_1, coluna_2 = st.columns([1, 4])
+selec_tipo = st.radio('Tipo de consulta', ['Único', 'Varios'])
 
-with coluna_1:
-    codigo = st.number_input('Código Produto:', value=None, placeholder='Escreva o Código...', step=0)
-with coluna_2:
+if selec_tipo == 'Único':
 
-    if codigo != None and situacao_final['Código'].isin([codigo]).any():
-        linha_codigo = situacao_final.loc[situacao_final['Código'] == codigo]
+    coluna_1, coluna_2 = st.columns([1, 4])
 
-        descricao = linha_codigo['Descrição'].values[0]
+    with coluna_1:
+        codigo = st.number_input('Código Produto:', value=None, placeholder='Escreva o Código...', step=0)
+    with coluna_2:
 
-        end_frac = linha_codigo['Ender.Frac.'].values[0]
-        end_cx = linha_codigo['Ender.Cx.Fech.'].values[0]
+        if codigo != None and situacao_final['Código'].isin([codigo]).any():
+            linha_codigo = situacao_final.loc[situacao_final['Código'] == codigo]
 
-        flag = linha_codigo['Permite Frac.'].values[0]
-        emb = linha_codigo['Embal.'].values[0]
+            descricao = linha_codigo['Descrição'].values[0]
 
-        local_frac = 'Em teste'
-        local_cx_fech = linha_codigo['local'].values[0]
+            end_frac = linha_codigo['Ender.Frac.'].values[0]
+            end_cx = linha_codigo['Ender.Cx.Fech.'].values[0]
 
-    else:
-        ne = 'Não encontrado'
-        descricao = ne
+            flag = linha_codigo['Permite Frac.'].values[0]
+            emb = linha_codigo['Embal.'].values[0]
 
-        end_frac = ne
-        end_cx = ne
+            local_frac = 'Em teste'
+            local_cx_fech = linha_codigo['local'].values[0]
 
-        flag = ne
-        emb = ne
+        else:
+            ne = 'Não encontrado'
+            descricao = ne
 
-        local_frac = 'Teste'
-        local_cx_fech = ne
+            end_frac = ne
+            end_cx = ne
 
-    st.metric('Descrição:', descricao)
+            flag = ne
+            emb = ne
 
-coluna_1, coluna_2, coluna_3 = st.columns([5, 4, 3])
+            local_frac = 'Teste'
+            local_cx_fech = ne
 
-with coluna_1:    
-    st.metric('End. Fracionado:', end_frac)
-    st.metric('End. Cx. Fech:', end_cx)
+        st.metric('Descrição:', descricao)
 
-with coluna_2:
-    st.metric('Permite Frac:', flag)
-    st.metric('Embalagem:', emb)
+    coluna_1, coluna_2, coluna_3 = st.columns([5, 4, 3])
 
-with coluna_3:
-    st.metric('Local Frac:', local_frac)
-    st.metric('Local Cx:', local_cx_fech)
+    with coluna_1:    
+        st.metric('End. Fracionado:', end_frac)
+        st.metric('End. Cx. Fech:', end_cx)
 
-with st.expander('Saída e Atividade'):
-    
-    selec = st.radio('Selecionar Tipo da Curva:', 
-                        ['Frac', 'Cx', 'Geral'], 
-                        index=0, 
-                        horizontal=True)
-    
-    if codigo != None and situacao_final['Código'].isin([codigo]).any():
+    with coluna_2:
+        st.metric('Permite Frac:', flag)
+        st.metric('Embalagem:', emb)
 
-        if str(consultar_valor_situacao_final(f'Curva {selec}')) != 'nan':
-    
+    with coluna_3:
+        st.metric('Local Frac:', local_frac)
+        st.metric('Local Cx:', local_cx_fech)
+
+    with st.expander('Saída e Atividade'):
+        
+        selec = st.radio('Selecionar Tipo da Curva:', 
+                            ['Frac', 'Cx', 'Geral'], 
+                            index=0, 
+                            horizontal=True)
+        
+        if codigo != None and situacao_final['Código'].isin([codigo]).any():
+
+            if str(consultar_valor_situacao_final(f'Curva {selec}')) != 'nan':
+        
+                col1, col2, col3, col4 = st.columns(4)
+
+                col1.metric('Curva', consultar_valor_situacao_final(f'Curva {selec}'))
+                col2.metric('Venda', consultar_valor_situacao_final(f'Qtde Venda {selec}'))
+                col3.metric('Dias pedidos', consultar_valor_situacao_final(f'Dias Pedido {selec}'))
+                col4.metric('Atv Ressup.', consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}'))
+            
+            else:
+                st.info(f'Sem saída {selec}')
+
+            saida_frac = str(consultar_valor_situacao_final(f'Qtde Venda Frac'))
+            saida_und_cx = str(consultar_valor_situacao_final(f'Qtde Venda Cx') * emb)
+
+            if saida_frac != 'nan' and saida_und_cx != 'nan':
+
+                saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
+                saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
+
+                df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
+                                    'Quantidade' : [saida_frac, saida_und_cx]})
+
+                fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
+                        color_discrete_map={'Fracionado':'mediumblue',
+                                        'Caixa':'lightgrey'})
+
+                fig.update_traces(textposition='outside', textinfo='percent+label')
+                st.plotly_chart(fig, use_container_width=True)
+
+        else:
             col1, col2, col3, col4 = st.columns(4)
 
-            col1.metric('Curva', consultar_valor_situacao_final(f'Curva {selec}'))
-            col2.metric('Venda', consultar_valor_situacao_final(f'Qtde Venda {selec}'))
-            col3.metric('Dias pedidos', consultar_valor_situacao_final(f'Dias Pedido {selec}'))
-            col4.metric('Atv Ressup.', consultar_valor_situacao_final(f'Ativ.Ressupr.{selec}'))
+            col1.metric('Curva', ne)
+            col2.metric('Venda', ne)
+            col3.metric('Dias pedidos', ne)
+            col4.metric('Atv Ressup.', ne)
+
+else:
+    situacao_final = situacao_final[['Código', 'Descrição', 'Ender.Frac.', 'Ender.Cx.Fech.', 'Embal.', 'Permite Frac.', 'local', 'Curva Frac', 'Qtde Venda Frac', 'Dias Pedido Frac', 'Ativ.Ressupr.Frac']]
+    
+    codigos = st.text_area('Códigos')
+
+    if codigos != '':
+        valores_filtro = codigos.split('\n')
+        valores_filtro_int = [int(x) for x in valores_filtro]
+
+        situacao_final['Código'] = situacao_final['Código'].astype(int)
+
+        selecao_itens = situacao_final['Código'].isin(valores_filtro_int)
+        df_selecionado = situacao_final[selecao_itens]
+
+        # st.metric('Total de códigos', len(valores_filtro_int))
+        # st.metric('Itens encontrados', len(df_selecionado))
         
-        else:
-            st.info(f'Sem saída {selec}')
+        botao_donwload(df_selecionado, 'Excel', 'produtos_selecionados_consulta.xlsx')
 
-        saida_frac = str(consultar_valor_situacao_final(f'Qtde Venda Frac'))
-        saida_und_cx = str(consultar_valor_situacao_final(f'Qtde Venda Cx') * emb)
-
-        if saida_frac != 'nan' and saida_und_cx != 'nan':
-
-            saida_frac = int(consultar_valor_situacao_final(f'Qtde Venda Frac'))
-            saida_und_cx = int(consultar_valor_situacao_final(f'Qtde Venda Cx')) * emb
-
-            df = pd.DataFrame({'Situação' : ['Fracionado', 'Caixa'],
-                                'Quantidade' : [saida_frac, saida_und_cx]})
-
-            fig = px.pie(df, values='Quantidade', names='Situação', color='Situação', title='Comparação do tipo de Saída em unidades', 
-                    color_discrete_map={'Fracionado':'mediumblue',
-                                    'Caixa':'lightgrey'})
-
-            fig.update_traces(textposition='outside', textinfo='percent+label')
-            st.plotly_chart(fig, use_container_width=True)
-
-    else:
-        col1, col2, col3, col4 = st.columns(4)
-
-        col1.metric('Curva', ne)
-        col2.metric('Venda', ne)
-        col3.metric('Dias pedidos', ne)
-        col4.metric('Atv Ressup.', ne)
+        st.dataframe(df_selecionado, hide_index=True, use_container_width=True)
