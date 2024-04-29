@@ -59,8 +59,8 @@ with coluna_2:
 
         descricao = linha_codigo['Descrição'].values[0]
 
-        end_frac = linha_codigo['Ender.Fracionado'].values[0]
-        end_cx = linha_codigo['Ender.Cx.Fechada'].values[0]
+        end_frac = linha_codigo['Ender.Frac.'].values[0]
+        end_cx = linha_codigo['Ender.Cx.Fech.'].values[0]
 
         flag = linha_codigo['Permite Frac.'].values[0]
         emb = linha_codigo['Embal.'].values[0]

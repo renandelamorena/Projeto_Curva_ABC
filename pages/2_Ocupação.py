@@ -85,18 +85,18 @@ def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafi
 def criar_mapa_de_calor_cadastro(nome_do_grafico):
     ## Ocupação (Cadastro)
 
-    coluna_x_endereço = situacao_final[['Ender.Cx.Fechada', 'Código']]
+    coluna_x_endereço = situacao_final[['Ender.Cx.Fech.', 'Código']]
 
     if opcao_coluna == 'Produtos com estoque':
         selecao_armazenado = situacao_final['Estoque Cx'] != '0'
-        qnt_com_estoque_x_endereco = coluna_x_endereço[selecao_armazenado].groupby(['Ender.Cx.Fechada']).count().reset_index()
+        qnt_com_estoque_x_endereco = coluna_x_endereço[selecao_armazenado].groupby(['Ender.Cx.Fech.']).count().reset_index()
         # Cria um serie com os valores, para transformar em um dicionario
-        tipo_da_ocupacao = pd.Series(qnt_com_estoque_x_endereco['Código'].values, index = qnt_com_estoque_x_endereco['Ender.Cx.Fechada']).to_dict()
+        tipo_da_ocupacao = pd.Series(qnt_com_estoque_x_endereco['Código'].values, index = qnt_com_estoque_x_endereco['Ender.Cx.Fech.']).to_dict()
 
     else:
-        qnt_enderecado_x_endereco = coluna_x_endereço.groupby(['Ender.Cx.Fechada']).count().reset_index()
+        qnt_enderecado_x_endereco = coluna_x_endereço.groupby(['Ender.Cx.Fech.']).count().reset_index()
         # Cria um serie com os valores, para transformar em um dicionario
-        tipo_da_ocupacao = pd.Series(qnt_enderecado_x_endereco['Código'].values, index = qnt_enderecado_x_endereco['Ender.Cx.Fechada']).to_dict()
+        tipo_da_ocupacao = pd.Series(qnt_enderecado_x_endereco['Código'].values, index = qnt_enderecado_x_endereco['Ender.Cx.Fech.']).to_dict()
 
     # Mapeia as informações da coluna com os indereços
     coluna_por_enderco = mapa.replace(tipo_da_ocupacao)
@@ -384,7 +384,7 @@ with aba2:
         chart = criar_mapa_de_calor_cadastro(f'{opcao_coluna} por Endereço de Caixa Fechada')
 
     else:
-        chart = criar_mapa_de_calor_saida('Ender.Cx.Fechada', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa Fechada')
+        chart = criar_mapa_de_calor_saida('Ender.Cx.Fech.', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa Fechada')
 
     st.plotly_chart(chart, use_container_width=True)
     
@@ -401,14 +401,14 @@ with aba3:
         tipo_saida = 'Ativ.Ressupr.Frac'
 
     if radio_selecao_visao_flowrack == 'Geral':
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_geral_flowrack, 'Mapa de calor geral do flowrack')
+        chart = criar_mapa_de_calor_saida('Ender.Frac.', tipo_saida, mapa_geral_flowrack, 'Mapa de calor geral do flowrack')
 
         st.plotly_chart(chart, use_container_width=False)
 
     else:
         corredor = st.selectbox('Selecione o corredor do flowrack:', corredores_frac)
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_flowrack[f'{corredor}'], f'Mapa de calor {radio_selecao_saida_flowrack} do corredor {corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Frac.', tipo_saida, mapa_flowrack[f'{corredor}'], f'Mapa de calor {radio_selecao_saida_flowrack} do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)
     
@@ -427,13 +427,13 @@ with aba4:
 
     if radio_selecao_visao_prateleiras == 'Geral':
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_geral_plateleiras, 'Mapa de calor geral das prateleiras')
+        chart = criar_mapa_de_calor_saida('Ender.Frac.', tipo_saida, mapa_geral_plateleiras, 'Mapa de calor geral das prateleiras')
 
         st.plotly_chart(chart, use_container_width=True)
 
     else:
         corredor = st.selectbox('Selecione o corredor das prateleiras:', corredores_frac)
 
-        chart = criar_mapa_de_calor_saida('Ender.Fracionado', tipo_saida, mapa_prateleira[f'{corredor}'], f'Mapa de calor {tipo_saida} do corredor {corredor}')
+        chart = criar_mapa_de_calor_saida('Ender.Frac.', tipo_saida, mapa_prateleira[f'{corredor}'], f'Mapa de calor {tipo_saida} do corredor {corredor}')
 
         st.plotly_chart(chart, use_container_width=True)

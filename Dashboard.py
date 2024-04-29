@@ -129,7 +129,7 @@ with st.sidebar:
 
 ### Tabelas - Apanha Caixa
 
-sem_apanha_caixa = ((situacao_final['Ender.Cx.Fechada'].isna()) &\
+sem_apanha_caixa = ((situacao_final['Ender.Cx.Fech.'].isna()) &\
                     (situacao_final['Curva Frac'].notna()))
 enderecar_caixa = situacao_final[sem_apanha_caixa]
 
@@ -295,8 +295,8 @@ total_curva_frac = pd.DataFrame(situacao_final['Curva Frac'].value_counts()).res
 #Medicamentos curva b e c no flowrack que devem ir para a prateleira
 selecao_curva_bc_frac_errado = (situacao_final['Tipo'] == 'Flowrack') & \
                                (situacao_final['Curva Frac'].isin(['B', 'C'])) & \
-                               (situacao_final['Ender.Fracionado'] > 18.000) & \
-                               (situacao_final['Ender.Fracionado'] != 9010.000)
+                               (situacao_final['Ender.Frac.'] > 18.000) & \
+                               (situacao_final['Ender.Frac.'] != 9010.000)
 
 curva_bc_flowrack = situacao_final[selecao_curva_bc_frac_errado]
 curva_bc_flowrack = curva_bc_flowrack[['Código',
@@ -307,8 +307,8 @@ curva_bc_flowrack = curva_bc_flowrack[['Código',
                                         'Ativ.Ressupr.Frac',
                                         'Estoque Frac',
                                         'Embal.',
-                                        'Ender.Cx.Fechada',
-                                        'Ender.Fracionado',
+                                        'Ender.Cx.Fech.',
+                                        'Ender.Frac.',
                                         ]]
 total_curva_bc_flowrack = curva_bc_flowrack.shape[0]
 
@@ -317,7 +317,7 @@ total_curva_bc_flowrack = curva_bc_flowrack.shape[0]
 #Itens de curva A, que são medicamentos normais
 selecao_med_normal = (~situacao_final['Descrição'].str.contains('xpe|susp|sol|elixir', case=False)) & \
                      (~situacao_final['Descrição'].str.contains('SPRAYZIIN|escova|ABS|DENTAL|TOALHAS|AG ABSORVENTE|COMPRESSA|AG MULTIFRAL|AG PANTS|FITA|MASCARA|ATADURA|CERA ORTODONTICA|ESPARADRAPO', case=False)) & \
-                     (situacao_final['Ender.Fracionado'] > 12.999) & \
+                     (situacao_final['Ender.Frac.'] > 12.999) & \
                      (situacao_final['Curva Frac'] == 'A') & \
                      (situacao_final['local'] != 'alimento')
 
@@ -356,7 +356,7 @@ total_curva_a_normal_flowrack_para_prateleira = curva_a_normal_flowrack_para_pra
 
 #df somente flowrack
 selecao_somente_flowrack = (situacao_final['Tipo'] == 'Flowrack') & \
-                           (situacao_final['Ender.Fracionado'] != 9010.000)
+                           (situacao_final['Ender.Frac.'] != 9010.000)
 
 somente_flowrack = situacao_final[selecao_somente_flowrack]
 
@@ -407,8 +407,8 @@ corredor_x_modulos = {  29 : 1,
 
 #### Seleção e tabela de produtos com endereço de caixa fechada sem endereço de fracionado
 
-com_apanha_caixa_sem_apanha_frac = ((situacao_final['Ender.Cx.Fechada'].notna()) & \
-                                    (situacao_final['Ender.Fracionado'].isna())
+com_apanha_caixa_sem_apanha_frac = ((situacao_final['Ender.Cx.Fech.'].notna()) & \
+                                    (situacao_final['Ender.Frac.'].isna())
                                     )
 
 enderecar_frac = situacao_final[com_apanha_caixa_sem_apanha_frac]
@@ -471,9 +471,9 @@ with aba2:
         
     selec_tipo_end_saida = st.radio('Selecione o tipo de endereço fracionado', ['Flowrack', 'Prateleira', 'Ponta De Gôndola'])
        
-    somente_flowrack['Ender.Fracionado'] = somente_flowrack['Ender.Fracionado'].astype(str)
-    somente_prateleira['Ender.Fracionado'] = somente_prateleira['Ender.Fracionado'].astype(str)
-    somente_ponta_de_gondola['Ender.Fracionado'] = somente_ponta_de_gondola['Ender.Fracionado'].astype(str)
+    somente_flowrack['Ender.Frac.'] = somente_flowrack['Ender.Frac.'].astype(str)
+    somente_prateleira['Ender.Frac.'] = somente_prateleira['Ender.Frac.'].astype(str)
+    somente_ponta_de_gondola['Ender.Frac.'] = somente_ponta_de_gondola['Ender.Frac.'].astype(str)
 
     if selec_tipo_end_saida == 'Flowrack':
         df = somente_flowrack
@@ -489,9 +489,9 @@ with aba2:
 
     for corredor in corredores:
 
-        saida_corredor_atual = df[df['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].sum()
+        saida_corredor_atual = df[df['Ender.Frac.'].str.startswith(str(corredor))]['Qtde Venda Frac'].sum()
 
-        qnt_item_corredor_atual = df[df['Ender.Fracionado'].str.startswith(str(corredor))]['Qtde Venda Frac'].shape[0]
+        qnt_item_corredor_atual = df[df['Ender.Frac.'].str.startswith(str(corredor))]['Qtde Venda Frac'].shape[0]
 
         nova_linha = pd.Series({'Modulo': corredor_x_modulos[corredor],
                                 'Corredor': corredor,
@@ -542,10 +542,10 @@ with aba2:
             selecao_locais = st.selectbox('Selecione o local:', classes_frac)
 
             #Tabela de saida por classe
-            produto_flowrack = somente_flowrack[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            produto_flowrack = somente_flowrack[['Ender.Frac.', 'Código', 'Qtde Venda Frac']]
             local_flowrack = local_frac
-            local_flowrack['Ender.Fracionado'] = local_flowrack['Ender.Fracionado'].astype(str)
-            saida_por_local_flowrack = pd.merge(local_flowrack, produto_flowrack, on='Ender.Fracionado',  how = 'left')
+            local_flowrack['Ender.Frac.'] = local_flowrack['Ender.Frac.'].astype(str)
+            saida_por_local_flowrack = pd.merge(local_flowrack, produto_flowrack, on='Ender.Frac.',  how = 'left')
 
             #Selecionar o(s) modulo(s)
             selecao_modulo = saida_por_local_flowrack['modulo'].isin(modulos_escolhidos)
@@ -570,19 +570,19 @@ with aba2:
 
             selecao_local_flowrack = (local_frac['local'] == selecao_locais)
             local_flowrakc_selecionado = local_frac[selecao_local_flowrack]
-            enderecos_local_flowrack_selecionado = local_flowrakc_selecionado['Ender.Fracionado'].astype(float)
+            enderecos_local_flowrack_selecionado = local_flowrakc_selecionado['Ender.Frac.'].astype(float)
 
             def saida_flowrack_no_modulo_pela_classe(corredores):
 
                 selecao_flowrack_corredordes = ((situacao_final['Tipo'] == 'Flowrack') & \
-                                                (situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[0])) | \
-                                                situacao_final['Ender.Fracionado'].astype(str).str.startswith(str(corredores[1]))
+                                                (situacao_final['Ender.Frac.'].astype(str).str.startswith(str(corredores[0])) | \
+                                                situacao_final['Ender.Frac.'].astype(str).str.startswith(str(corredores[1]))
                                                 )
                                                 )
                 
                 flowrack_do_modulo = situacao_final[selecao_flowrack_corredordes]
 
-                selecao_flowrack_modulo_X_classe = flowrack_do_modulo['Ender.Fracionado'].isin(enderecos_local_flowrack_selecionado)
+                selecao_flowrack_modulo_X_classe = flowrack_do_modulo['Ender.Frac.'].isin(enderecos_local_flowrack_selecionado)
 
                 flowrack_modulo_X_classe = flowrack_do_modulo[selecao_flowrack_modulo_X_classe]
 
@@ -666,9 +666,9 @@ with aba2:
 
             selecao_do_local = local_frac['local'] == local
 
-            endereco_local_selec = local_frac[selecao_do_local]['Ender.Fracionado']
+            endereco_local_selec = local_frac[selecao_do_local]['Ender.Frac.']
 
-            selecao_produtos_enderecado_no_local_selec = produtos_destinados_para_local['Ender.Fracionado'].astype(str).isin(endereco_local_selec)
+            selecao_produtos_enderecado_no_local_selec = produtos_destinados_para_local['Ender.Frac.'].astype(str).isin(endereco_local_selec)
 
             produtos_enderecado_no_local_selec_errado = produtos_destinados_para_local[~selecao_produtos_enderecado_no_local_selec]
 
@@ -713,9 +713,9 @@ with aba2:
                 tipo_prateleira_selec = comeco_modulo
 
             #Tabela de saida por prateleira(final/comeco)
-            produto_ponta = somente_prateleira[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            produto_ponta = somente_prateleira[['Ender.Frac.', 'Código', 'Qtde Venda Frac']]
                         
-            selecao_do_tipo_de_prateleira = produto_ponta['Ender.Fracionado'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
+            selecao_do_tipo_de_prateleira = produto_ponta['Ender.Frac.'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
             saida_por_pratileira_selecionada = produto_ponta[selecao_do_tipo_de_prateleira]
             
             def encontrar_modulo(endereco):
@@ -727,7 +727,7 @@ with aba2:
                         return modulo
                 return "Erro"
 
-            saida_por_pratileira_selecionada['modulo'] = saida_por_pratileira_selecionada['Ender.Fracionado'].apply(encontrar_modulo)
+            saida_por_pratileira_selecionada['modulo'] = saida_por_pratileira_selecionada['Ender.Frac.'].apply(encontrar_modulo)
                 
             #Selecionar o(s) modulo(s)
             selecao_modulo = saida_por_pratileira_selecionada['modulo'].isin(modulos_escolhidos)
@@ -793,7 +793,7 @@ with aba2:
             st.markdown('# Saída por Ponta De Gôndola')
 
             #Tabela de saida por prateleira(final/comeco)
-            produto_ponta = somente_ponta_de_gondola[['Ender.Fracionado', 'Código', 'Qtde Venda Frac']]
+            produto_ponta = somente_ponta_de_gondola[['Ender.Frac.', 'Código', 'Qtde Venda Frac']]
             
             modulos_ponta = {1:[29],
                             2:[28, 27],
@@ -812,7 +812,7 @@ with aba2:
                         return modulo
                 return "Erro"
 
-            produto_ponta['modulo'] = produto_ponta['Ender.Fracionado'].apply(encontrar_modulo)
+            produto_ponta['modulo'] = produto_ponta['Ender.Frac.'].apply(encontrar_modulo)
                 
             #Selecionar o(s) modulo(s)
             selecao_modulo = produto_ponta['modulo'].isin(modulos_escolhidos)
