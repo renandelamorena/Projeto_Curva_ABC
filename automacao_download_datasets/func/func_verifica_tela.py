@@ -13,7 +13,6 @@ def click(caminho_imagem, qnt_click):
     if qnt_click == 1: # click normal
         pag.click(x=x, y=y)
 
-# Função para verificar se a imagem está presente na tela
 def verificar_imagem(caminho_imagem):
     try:
         # Procura a posição da imagem na captura de tela
