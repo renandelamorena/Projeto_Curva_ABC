@@ -43,49 +43,10 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
 situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
 
-# with st.sidebar:
-#     st.markdown('# Filtros')
+st.title('Situação final')
 
-#     with st.expander('Curvas'):
-#         frac_toggle = st.toggle('Fracionado', value=True)
-#         cx_toggle = st.toggle('Caixa Fechada', value=True)
-#         geral_toggle = st.toggle('Geral', value=True)
-    
-#     with st.expander('Colunas'):
-#         itens_permite_frac = situacao_final['Permite Frac.'].unique()
-#         opcoes_permite_frac = st.multiselect('Permite fracionado na caixa fechada:', itens_permite_frac, itens_permite_frac)
-        
-#         itens_tipo = situacao_final['Tipo'].unique()
-#         opcoes_tipo = st.multiselect('Tipo de endereço fracionado:', itens_tipo, itens_tipo)
-        
-#         itens_local = situacao_final['local'].unique()
-#         opcoes_local = st.multiselect('Tipo de local de caixa fechada:', itens_local, itens_local)
-   
-# #Seleção curva por tipo
-# if frac_toggle == False:
-    
-#     situacao_final.drop(['Curva Frac', 'Qtde Venda Frac', 'Dias Pedido Frac', 'Ativ.Ressupr.Frac', 'Média por dia frac'], axis='columns', inplace=True)
-
-# if cx_toggle == False:
-    
-#     situacao_final.drop(['Curva Cx', 'Qtde Venda Cx', 'Dias Pedido Cx', 'Ativ.Ressupr.Cx', 'Média por dia cx'], axis='columns', inplace=True)
-
-# if geral_toggle == False:
-    
-#     situacao_final.drop(['Curva Geral', 'Qtde Venda Geral', 'Dias Pedido Geral', 'Ativ.Ressupr.Geral', 'Média por dia geral'], axis='columns', inplace=True)
-
-# #Seleção coluna de permite fracionado na caixa fechada
-# selec_permite_frac = situacao_final['Permite Frac.'].isin(opcoes_permite_frac)
-# situacao_final = situacao_final[selec_permite_frac]
-
-# selec_tipo = situacao_final['Tipo'].isin(opcoes_tipo)
-# situacao_final = situacao_final[selec_tipo]
-
-# selec_local = situacao_final['local'].isin(opcoes_local)
-# situacao_final = situacao_final[selec_local]
-
-# with st.expander('Situação final - Dados Brutos'):
-#     st.dataframe(situacao_final)
+st.write('Excel de dados brutos da curva e cadastros:')
+botao_donwload(situacao_final, '⬇️ Excel', 'situacao_final.xlsx')
 
 st.title('Atualização dos Dados')
 
