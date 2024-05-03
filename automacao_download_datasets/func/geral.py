@@ -3,16 +3,10 @@ import pyperclip as pcl
 import os
 import time
 
-from func_verifica_tela import verificar_imagem_encontrada, click
+from func.verifica_tela import verificar_imagem_encontrada, click
 
-def pause_geral(seg):
+def pause(seg=2):
     pag.PAUSE = seg
-
-def p_i(pause):
-    pag.PAUSE = pause
-    
-def p_f():
-    pag.PAUSE = pause_geral(2)
 
 def caminho_absoluto(caminho_relativo_com_barras_normais):
     
@@ -33,7 +27,7 @@ def salvar_planilha(nome_arquivo, onde_fixado):
     pag.hotkey('ctrl', 'shift', 'f1')
 
     # vai em salvar como
-    p_i(0.4)
+    pause(0.4)
     pag.press('alt')
     pag.press('a')
     pag.press('a')
@@ -59,7 +53,7 @@ def salvar_planilha(nome_arquivo, onde_fixado):
     # fechar
     pag.hotkey('alt', 'f4')
     
-    p_f()
+    pause(2)
 
 def salvar_dados():
     pass
