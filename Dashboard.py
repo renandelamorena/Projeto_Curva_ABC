@@ -332,7 +332,7 @@ if total_somente_med_A > total_enderecos_molulos:
     linhas_excluidas = somente_med_A.tail(num_linhas_a_excluir)
 else:
     produtos_para_flowrack = somente_med_A
-    linhas_excluidas = []
+    linhas_excluidas = somente_med_A[somente_med_A['Código'] == 0]
 
 total_produtos_para_flowrack = produtos_para_flowrack.shape[0]
 
