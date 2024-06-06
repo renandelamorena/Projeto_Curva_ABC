@@ -3,6 +3,12 @@ import pandas as pd
 from io import BytesIO
 import os
 
+st.set_page_config(
+    page_title='Virtual',
+    layout='wide',
+    page_icon=':bar-chart:'
+    )
+
 def botao_donwload(tabela_excel, nome_do_botao, nome_do_arquivo):
     #Criar um DataFrame
     df = pd.DataFrame(tabela_excel)
