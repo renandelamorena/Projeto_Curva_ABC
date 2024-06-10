@@ -784,6 +784,60 @@ with aba2:
                 
             else:
                 st.write("Não foi possível encontrar uma combinação.")
+
+        situacao_final_ = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
+
+        selecao_dividir = ((situacao_final_['Estoque Frac'] != 0) & \
+                        (situacao_final_['Tipo'] == 'Prateleira') & \
+                        (situacao_final_['Ender.Frac.'] > 20) & \
+                        (situacao_final_['Ender.Frac.'] < 28)
+                        )
+
+        prateleira_para_dividir = situacao_final_[selecao_dividir]
+
+        selecao_nao_e_end_do_meio = ~((prateleira_para_dividir['Ender.Frac.'] > 21.580) & \
+                                    (prateleira_para_dividir['Ender.Frac.'] < 22) | \
+                                    (prateleira_para_dividir['Ender.Frac.'] > 22.580) & \
+                                    (prateleira_para_dividir['Ender.Frac.'] < 23)
+                                    )
+
+        prateleira_para_dividir = prateleira_para_dividir[selecao_nao_e_end_do_meio]
+
+        def comeca_com(df, corredor):
+            return df['Ender.Frac.'].astype(str).str.startswith(corredor)
+
+        # Mais saida
+        ir_para_final_modulo = prateleira_para_dividir[0:768]
+
+        selecao_trocar_para_o_final = ((comeca_com(ir_para_final_modulo, '20')) | \
+                                    (comeca_com(ir_para_final_modulo, '23')) | \
+                                    (comeca_com(ir_para_final_modulo, '24')) | \
+                                    (comeca_com(ir_para_final_modulo, '27'))
+                                    )
+
+        colocar_nos_corredores_21_22_25_26 = ir_para_final_modulo[selecao_trocar_para_o_final]
+
+        ir_para_comeco_modulo = prateleira_para_dividir[768:]
+
+        selecao_trocar_para_o_comeco = ((comeca_com(ir_para_comeco_modulo, '21')) | \
+                                        (comeca_com(ir_para_comeco_modulo, '22')) | \
+                                        (comeca_com(ir_para_comeco_modulo, '25')) | \
+                                        (comeca_com(ir_para_comeco_modulo, '26'))
+                                        )
+
+        colocar_nos_corredores_20_23_24_27 = ir_para_comeco_modulo[selecao_trocar_para_o_comeco]
+
+        st.write('# Realocar Prateleiras')
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric('Realocar para os corredores 20, 23, 24, 27 (Menor saída).', len(colocar_nos_corredores_20_23_24_27))
+            botao_download(colocar_nos_corredores_20_23_24_27, '⬇️ Excel', 'colocar_nos_corredores_20_23_24_27.xlsx')
+
+        with col2:
+            st.metric('Realocar para os corredores 21, 22, 25, 26 (Maior saída).', len(colocar_nos_corredores_21_22_25_26))
+            botao_download(colocar_nos_corredores_21_22_25_26, '⬇️ Excel', 'colocar_nos_corredores_21_22_25_26.xlsx')
         
     with st.expander('Ponta de Gôndola'):
                 
