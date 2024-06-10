@@ -785,15 +785,13 @@ with aba2:
             else:
                 st.write("Não foi possível encontrar uma combinação.")
 
-        situacao_final_ = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
-
-        selecao_dividir = ((situacao_final_['Estoque Frac'] != 0) & \
-                        (situacao_final_['Tipo'] == 'Prateleira') & \
-                        (situacao_final_['Ender.Frac.'] > 20) & \
-                        (situacao_final_['Ender.Frac.'] < 28)
+        selecao_dividir = ((situacao_final['Estoque Frac'] != 0) & \
+                        (situacao_final['Tipo'] == 'Prateleira') & \
+                        (situacao_final['Ender.Frac.'] > 20) & \
+                        (situacao_final['Ender.Frac.'] < 28)
                         )
 
-        prateleira_para_dividir = situacao_final_[selecao_dividir]
+        prateleira_para_dividir = situacao_final[selecao_dividir]
 
         selecao_nao_e_end_do_meio = ~((prateleira_para_dividir['Ender.Frac.'] > 21.580) & \
                                     (prateleira_para_dividir['Ender.Frac.'] < 22) | \
@@ -925,7 +923,66 @@ with aba2:
                 
             else:
                 st.write("Não foi possível encontrar uma combinação.")
-    
+
+    st.write('---')
+
+    with st.expander('Rowa'):
+
+        st.write('# Realocar Rowa')
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            selecao_curva_A_e_B_no_robo = ((situacao_final['Curva Frac'].str.contains('A|B')) & \
+                               (situacao_final['Ender.Frac.'] == 9010)
+                               )
+
+            itens_para_retirar_do_robo = situacao_final[selecao_curva_A_e_B_no_robo]
+
+            st.metric('Itens para retirar do Rowa (Maior saída).', len(itens_para_retirar_do_robo))
+
+            botao_download(itens_para_retirar_do_robo, '⬇️ Excel', 'itens_para_retirar_do_robo.xlsx')
+
+        with col3:
+
+            itens_verificados = st.text_area('Códigos de itens verificados:')
+
+            if itens_verificados != '':
+                lines = itens_verificados.split('\n')
+
+                numbers = [float(line.replace('.', '').replace(',', '.')) for line in lines]
+
+                itens_verificados = pd.DataFrame(numbers, columns=['Código'])
+
+                st.dataframe(itens_verificados, hide_index=True)
+
+            else:
+                itens_verificados = pd.DataFrame(columns=['Código'])
+
+        with col2:
+
+            descricao_nao_cabe = 'FD|WHEY|ESCOVA|ML|ESPARADRAPO|ZIIN ZIIN|CRISP BAR|DARK BAR|DIET WEEK|KIT|AGUA|VO2|FITA|1KG|900G|EVORA|APARELHO|PRESERVATIVO|MIX|CHUPETA|PACK|AGULHA|INALADOR'
+            codigos_que_nao_cabem_robo = pd.read_excel(caminho_absoluto('codigos_que_nao_cabem_robo.xlsx'))
+            codigos_que_nao_cabem_robo = codigos_que_nao_cabem_robo['Código'].astype(int)
+
+            selecao_curva_C_fora_do_robo = ((situacao_final['Curva Frac'].str.contains('C')) & \
+                                            (situacao_final['Ender.Frac.'] != 9010) & \
+                                            (situacao_final['Ender.Frac.'] > 20) & \
+                                            (situacao_final['Estoque Frac'] > 0) & \
+                                            (~situacao_final['Descrição'].str.contains(descricao_nao_cabe, case=True)) & \
+                                            (~situacao_final['Código'].isin(codigos_que_nao_cabem_robo)) & \
+                                            (~situacao_final['Código'].isin(itens_verificados['Código']))
+                                            )
+
+            itens_para_verificar_se_cabem_no_robo = situacao_final[selecao_curva_C_fora_do_robo]
+            itens_para_verificar_se_cabem_no_robo = itens_para_verificar_se_cabem_no_robo[['Código', 'Descrição', 'Ender.Frac.']]
+
+            st.metric('Itens para verificar se cabem no Rowa (Menor saída).', len(itens_para_verificar_se_cabem_no_robo))
+            botao_download(itens_para_verificar_se_cabem_no_robo, '⬇️ Excel', 'itens_para_verificar_se_cabem_no_robo.xlsx')
+            st.dataframe(itens_para_verificar_se_cabem_no_robo, hide_index=True)
+
+            print(itens_para_verificar_se_cabem_no_robo)
+            
 #Apanha Caixa
 
 with aba3:
