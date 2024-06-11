@@ -980,8 +980,6 @@ with aba2:
             st.metric('Itens para verificar se cabem no Rowa (Menor saída).', len(itens_para_verificar_se_cabem_no_robo))
             botao_download(itens_para_verificar_se_cabem_no_robo, '⬇️ Excel', 'itens_para_verificar_se_cabem_no_robo.xlsx')
             st.dataframe(itens_para_verificar_se_cabem_no_robo, hide_index=True)
-
-            print(itens_para_verificar_se_cabem_no_robo)
             
 #Apanha Caixa
 
