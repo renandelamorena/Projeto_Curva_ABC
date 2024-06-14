@@ -82,7 +82,7 @@ def criar_mapa_de_calor_saida(coluna_endereco, coluna_saida, mapa, nome_do_grafi
     fig.update_xaxes(side='top')
     return fig
 
-def criar_mapa_de_calor_cadastro(nome_do_grafico):
+def criar_mapa_de_calor_cadastro(nome_do_grafico, mapa):
     ## Ocupação (Cadastro)
 
     coluna_x_endereço = situacao_final[['Ender.Cx.Fech.', 'Código']]
@@ -354,6 +354,15 @@ with aba1:
     
 with aba2:
 
+    tipo_visualizacao_caixa = st.radio('Selecione o tipo de pallet:',
+                                       ['Chão', 'Elevado'],
+                                       captions=['Pallet que fica ditetamente no chão', 'Pallet que fica elevado'])
+    
+    if tipo_visualizacao_caixa == 'Chão':
+        mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx',), sheet_name='pallet chao').fillna('-').astype(str)
+    else:
+        mapa = pd.read_excel(caminho_absoluto('mapa_estoque/mapa_orientacao.xlsx',), sheet_name='pallet elevado').fillna('-').astype(str)
+
     tipo_de_visualizacao = st.radio('Selecione o tipo de visualização:',
                                     ['Cadastro', 'Saída'],
                                     captions=['Produtos com estoque ou vinculados por endereços', 'Saídas por atividades e vendas'])
@@ -381,7 +390,7 @@ with aba2:
     opcao_coluna = st.selectbox('Selecione o tipo de saída:', colunas)
 
     if tipo_de_visualizacao == 'Cadastro':
-        chart = criar_mapa_de_calor_cadastro(f'{opcao_coluna} por Endereço de Caixa Fechada')
+        chart = criar_mapa_de_calor_cadastro(f'{opcao_coluna} por Endereço de Caixa Fechada', mapa)
 
     else:
         chart = criar_mapa_de_calor_saida('Ender.Cx.Fech.', opcao_coluna, mapa, f'{opcao_coluna} por Endereço de Caixa Fechada')
