@@ -785,8 +785,7 @@ with aba2:
             else:
                 st.write("Não foi possível encontrar uma combinação.")
 
-        selecao_dividir = ((situacao_final['Estoque Frac'] != 0) & \
-                        (situacao_final['Tipo'] == 'Prateleira') & \
+        selecao_dividir = ((situacao_final['Tipo'] == 'Prateleira') & \
                         (situacao_final['Ender.Frac.'] > 20) & \
                         (situacao_final['Ender.Frac.'] < 28)
                         )
