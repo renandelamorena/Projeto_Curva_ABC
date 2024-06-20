@@ -805,7 +805,7 @@ with aba2:
             return df['Ender.Frac.'].astype(str).str.startswith(corredor)
 
         # Mais saida
-        ir_para_final_modulo = prateleira_para_dividir[0:768]
+        ir_para_final_modulo = prateleira_para_dividir[0:720]
 
         selecao_trocar_para_o_final = ((comeca_com(ir_para_final_modulo, '20')) | \
                                     (comeca_com(ir_para_final_modulo, '23')) | \
@@ -815,7 +815,7 @@ with aba2:
 
         colocar_nos_corredores_21_22_25_26 = ir_para_final_modulo[selecao_trocar_para_o_final]
 
-        ir_para_comeco_modulo = prateleira_para_dividir[768:]
+        ir_para_comeco_modulo = prateleira_para_dividir[720:]
 
         selecao_trocar_para_o_comeco = ((comeca_com(ir_para_comeco_modulo, '21')) | \
                                         (comeca_com(ir_para_comeco_modulo, '22')) | \
