@@ -408,10 +408,12 @@ corredor_x_modulos = {  29 : 1,
 #### Seleção e tabela de produtos com endereço de caixa fechada sem endereço de fracionado
 
 com_apanha_caixa_sem_apanha_frac = ((situacao_final['Ender.Cx.Fech.'].notna()) & \
-                                    (situacao_final['Ender.Frac.'].isna())
+                                    (situacao_final['Ender.Frac.'].isna()) & \
+                                    (situacao_final['Estoque Cx'] != '0') & \
+                                    (situacao_final['local'] != 'amostra')
                                     )
 
-enderecar_frac = situacao_final[com_apanha_caixa_sem_apanha_frac]
+enderecar_frac = situacao_final[com_apanha_caixa_sem_apanha_frac][['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac']]
 
 ## Graficos
 
@@ -443,7 +445,9 @@ with aba1:
         with coluna1:
             st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
         with coluna2:
-            botao_download(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
+            with st.popover('Download produtos para endereçar'):
+                st.dataframe(enderecar_frac, hide_index=True)
+                botao_download(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
 
     with coluna2_aba1:
         st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
@@ -452,7 +456,7 @@ with aba1:
         with coluna1:
             st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
         with coluna2:
-            botao_download(enderecar_caixa, 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
+            botao_download(enderecar_caixa[['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac']], 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
