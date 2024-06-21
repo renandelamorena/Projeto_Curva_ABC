@@ -459,13 +459,13 @@ with aba2:
     coluna1, coluna2, coluna3 = st.columns(3)
     with coluna1:
         st.metric('Curvas B e C no Flowrack:', total_curva_bc_flowrack)
-        botao_download(curva_bc_flowrack, 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
+        botao_download(curva_bc_flowrack[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.'), 'Download B e C - Flowrack', 'curva_bc_flowrack_mudar_para_prateleira.xlsx')
     with coluna2:
         st.metric('Curvas A da prateleira (No flowrack)', total_curva_a_normal_flowrack_para_prateleira)
-        botao_download(curva_a_normal_flowrack_para_prateleira,'Download A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
+        botao_download(curva_a_normal_flowrack_para_prateleira[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.'), 'Download A - Flowrack', 'curva_a_flowrack_mudar_para_prateleira.xlsx')
     with coluna3:
         st.metric('Curvas A do Flowrack (Na prateleira)', total_curva_a_normal_prateleira_para_flowrack)
-        botao_download(curva_a_normal_prateleira_para_flowrack,'Download A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
+        botao_download(curva_a_normal_prateleira_para_flowrack[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.') ,'Download A - Prateleira', 'curva_a_prateleira_mudar_para_flowrack.xlsx')
         
     st.markdown('# Comparação das Saídas Fracionadas')
         
@@ -686,13 +686,13 @@ with aba2:
         coluna1, coluna2, coluna3 = st.columns(3)
         with coluna1:
             st.metric('Realocar para Classe AA no Flowrack', total_colocar_local_AA)
-            botao_download(colocar_local_AA[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']], 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
+            botao_download(colocar_local_AA[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.'), 'Download Realocar no Flowrack - AA', 'realocar_para_classe_AA.xlsx')
         with coluna2:
             st.metric('Realocar para Classe AB no Flowrack', total_colocar_local_AB)
-            botao_download(colocar_local_AB[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']], 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
+            botao_download(colocar_local_AB[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.'), 'Download Realocar no Flowrack - AB', 'realocar_para_classe_AB.xlsx')
         with coluna3:
             st.metric('Realocar para Classe AC no Flowrack', total_colocar_local_AC)
-            botao_download(colocar_local_AC[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']], 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
+            botao_download(colocar_local_AC[['Código', 'Descrição', 'Qtde Venda Frac', 'Ender.Frac.']].sort_values(by='Ender.Frac.'), 'Download Realocar no Flowrack - AC', 'realocar_para_classe_AC.xlsx')
             
     with st.expander('Prateleiras'):
         
