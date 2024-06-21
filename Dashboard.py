@@ -1007,8 +1007,19 @@ with aba3:
         st.session_state.horizontal = False
         opcao_local_grafico = st.radio('Selecione o local:', locais)
 
-        botao_download(dfs_locais_tabelas[opcao_local_grafico][0], 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
-        botao_download(dfs_locais_tabelas[opcao_local_grafico][1], 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
+        with st.popover(f'Itens CERTOS no local de {opcao_local_grafico}'):
+
+            df_local_selec_certo = dfs_locais_tabelas[opcao_local_grafico][0][['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac', 'Ender.Cx.Fech.']].sort_values(by='Ender.Cx.Fech.')
+
+            botao_download(df_local_selec_certo, 'Baixar "Itens Certos"', f'itens_certos_local_{opcao_local_grafico}.xlsx')
+            st.dataframe(df_local_selec_certo, use_container_width=True, hide_index=True)
+
+        with st.popover(f'Itens ERRADOS no local de {opcao_local_grafico}'):
+
+            df_local_selec_errado = dfs_locais_tabelas[opcao_local_grafico][1][['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac', 'Ender.Cx.Fech.']].sort_values(by='Ender.Cx.Fech.')
+
+            botao_download(df_local_selec_errado, 'Baixar "Itens Errados"', f'itens_errados_local_{opcao_local_grafico}.xlsx')
+            st.dataframe(df_local_selec_errado, use_container_width=True, hide_index=True)
 
     with coluna2:
         chart = criar_grafico_pizza(dfs_locais_valores[opcao_local_grafico])
@@ -1033,9 +1044,11 @@ with aba3:
         total_trocar = df_selec.shape[0]
 
         st.metric('Total:', total_trocar)
+
+        df_selec = df_selec[['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac', 'Ender.Cx.Fech.']].sort_values(by='Ender.Cx.Fech.')
+
         botao_download(df_selec, 'Baixar tabela', f'trocal_local_para_{local_selec}.xlsx')
-        
-        st.dataframe(df_selec)
+        st.dataframe(df_selec, use_container_width=False, hide_index=True)
         
 with aba2:
         
