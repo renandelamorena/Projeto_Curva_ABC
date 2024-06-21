@@ -829,10 +829,16 @@ with aba2:
         col1, col2 = st.columns(2)
 
         with col1:
+
+            colocar_nos_corredores_20_23_24_27 = colocar_nos_corredores_20_23_24_27[['Código', 'Descrição', 'Ender.Frac.']]    
+
             st.metric('Realocar para os corredores 20, 23, 24, 27 (Menor saída).', len(colocar_nos_corredores_20_23_24_27))
             botao_download(colocar_nos_corredores_20_23_24_27, '⬇️ Excel', 'colocar_nos_corredores_20_23_24_27.xlsx')
 
         with col2:
+
+            colocar_nos_corredores_21_22_25_26 = colocar_nos_corredores_21_22_25_26[['Código', 'Descrição', 'Ender.Frac.']]    
+
             st.metric('Realocar para os corredores 21, 22, 25, 26 (Maior saída).', len(colocar_nos_corredores_21_22_25_26))
             botao_download(colocar_nos_corredores_21_22_25_26, '⬇️ Excel', 'colocar_nos_corredores_21_22_25_26.xlsx')
         
