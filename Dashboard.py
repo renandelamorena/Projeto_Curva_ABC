@@ -936,7 +936,7 @@ with aba2:
                                (situacao_final['Ender.Frac.'] == 9010)
                                )
 
-            itens_para_retirar_do_robo = situacao_final[selecao_curva_A_e_B_no_robo]
+            itens_para_retirar_do_robo = situacao_final[selecao_curva_A_e_B_no_robo][['Código', 'Descrição']]
 
             st.metric('Itens para retirar do Rowa (Maior saída).', len(itens_para_retirar_do_robo))
 
