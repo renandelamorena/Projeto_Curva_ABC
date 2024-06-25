@@ -90,6 +90,10 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
     return caminho_absoluto
 
+def porcento_ideal(valor, total):
+
+    return 100 - round((valor * 100 / total), 2)
+
 situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
 local_frac = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_frac.xlsx'))
 
@@ -433,32 +437,6 @@ fig_total_curva_frac = px.bar(total_curva_frac,
 ## Vizualização
 
 aba1, aba2, aba3 = st.tabs(['Métricas', 'Apanha Fracionado', 'Apanha Caixa'])
-
-#Métricas
-with aba1:
-
-    coluna1_aba1, coluna2_aba1 = st.columns(2)
-
-    with coluna1_aba1:
-        st.metric('Produtos com endereço de fracionado ineficinente:', formata_numero(total_curva_bc_flowrack + total_curva_a_normal_prateleira_para_flowrack + total_curva_a_normal_prateleira_para_flowrack))
-        st.metric('Curva A "medicamento"', formata_numero(somente_med_A.shape[0]))
-
-        coluna1, coluna2 = st.columns(2)
-        with coluna1:
-            st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
-        with coluna2:
-            with st.popover('Download produtos para endereçar'):
-                st.dataframe(enderecar_frac, hide_index=True)
-                botao_download(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
-
-    with coluna2_aba1:
-        st.metric('Produtos com endereço de caixa fechada ineficinente:', 1)
-
-        coluna1, coluna2 = st.columns(2)
-        with coluna1:
-            st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
-        with coluna2:
-            botao_download(enderecar_caixa[['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac']], 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
 
 #Apanha Fracionado
 with aba2:
@@ -1138,3 +1116,156 @@ with aba2:
         trocas
 
         botao_download(trocas, 'Download tabela para realocar', 'Cadas linha é uma troca a ser feita.xlsx')
+
+#Métricas
+with aba1:
+
+    st.write('# Apanha Fracionada')
+
+    with st.container(border=True):
+        
+        col1, col2 = st.columns(2)
+
+        with col2:
+            with st.popover('Por local de apanha fracionada'):
+                with st.expander('Flowrack e Prateleiras'):
+                    total_enderecos_prateleiras = 1488
+                    st.metric('Curvas B e C no Flowrack', f'{porcento_ideal(total_curva_bc_flowrack, total_enderecos_prateleiras)}%')
+
+                    itens_para_prateleira = len(linhas_excluidas)
+                    st.metric('Curvas A da prateleira (No flowrack)', f'{porcento_ideal(total_curva_a_normal_flowrack_para_prateleira, itens_para_prateleira)}%')
+
+                    st.metric('Curvas A do Flowrack (Na prateleira)', f'{porcento_ideal(total_curva_a_normal_prateleira_para_flowrack, total_produtos_para_flowrack)}%')
+
+                    st.write('---')
+
+                    todos_flowrack_prateleira = total_enderecos_prateleiras + itens_para_prateleira + total_produtos_para_flowrack
+                    errados_flowrack_prateleira = total_curva_bc_flowrack + total_curva_a_normal_flowrack_para_prateleira + total_curva_a_normal_prateleira_para_flowrack
+
+                    st.metric('Total', f'{porcento_ideal(errados_flowrack_prateleira, todos_flowrack_prateleira)}%')
+
+                with st.expander('Classe flowrack (Armazenamento)'):
+                    st.metric('Classe AA', f'{0}%')
+
+                    st.metric('Classe AB', f'{0}%')
+
+                    st.metric('Classe AC', f'{0}%')
+
+                    st.metric('Classe XPE', f'{0}%')
+
+                    st.write('---')
+
+                    st.metric('Total', f'{0}%')
+
+                with st.expander('Local Prateleira (Armazenamento)'):
+                    st.metric('Para o começo dos módulos', f'{0}%')
+
+                    st.metric('Para o final dos módulos', f'{0}%')
+
+                    st.write('---')
+
+                    st.metric('Total', f'{0}%')
+
+        with col1:
+            st.metric('Armazenamento ideal de apanha fracionada (Total)', f'{0}%')
+
+    with st.container(border=True):
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric('Divisão ideal da saída por módulo (Total)', f'{0}%')
+
+        with col2:
+            with st.popover('Por tipo de fracionado'):
+                with st.expander('Classe Flowrack (Saída)'):
+                    st.metric('Classe AA', f'{0}%')
+
+                    st.metric('Classe AB', f'{0}%')
+
+                    st.metric('Classe AC', f'{0}%')
+
+                    st.metric('Classe XPE', f'{0}%')
+
+                    st.write('---')
+
+                    st.metric('Total', f'{0}%')
+
+                with st.expander('Local da Prateleira (Saída)'):
+                    st.metric('Para o começo dos módulos', f'{0}%')
+
+                    st.metric('Para o final dos módulos', f'{0}%')
+
+                    st.write('---')
+
+                    st.metric('Total', f'{0}%')
+
+    coluna1_aba1, coluna2_aba1 = st.columns(2)
+
+    with coluna1_aba1:
+        st.metric('Curva A de "medicamentos"', formata_numero(somente_med_A.shape[0]))
+
+        with st.container(border=True):
+
+            coluna1, coluna2 = st.columns(2)
+            with coluna1:
+                st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
+            with coluna2:
+                with st.popover('Download produtos para endereçar'):
+                    st.dataframe(enderecar_frac, hide_index=True)
+                    botao_download(enderecar_frac, 'Download produtos para endereçar', 'enderecar_frac.xlsx')
+
+    st.write('---')
+
+    st.write('# Apanha Caixa Fechada')
+
+    with st.container(border=True):
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            total_locais_cx = sum((dfs_locais_valores["Ponta"][0], 
+                                dfs_locais_valores["Prateleira"][0],
+                                dfs_locais_valores["Apanha A"][0],
+                                dfs_locais_valores["Apanha B"][0],
+                                dfs_locais_valores["Apanha C"][0],
+                                dfs_locais_valores["Apanha AM"][0],
+                                dfs_locais_valores["Ponta"][1], 
+                                dfs_locais_valores["Prateleira"][1],
+                                dfs_locais_valores["Apanha A"][1],
+                                dfs_locais_valores["Apanha B"][1],
+                                dfs_locais_valores["Apanha C"][1],
+                                dfs_locais_valores["Apanha AM"][1],
+                                ))
+
+            total_errado_locais_cx = sum((dfs_locais_valores["Ponta"][1], 
+                                        dfs_locais_valores["Prateleira"][1],
+                                        dfs_locais_valores["Apanha A"][1],
+                                        dfs_locais_valores["Apanha B"][1],
+                                        dfs_locais_valores["Apanha C"][1],
+                                        dfs_locais_valores["Apanha AM"][1],
+                                        ))
+
+            st.metric('Armazenamento ideal de apanha caixa fechada (Total)', f'{porcento_ideal(total_errado_locais_cx, total_locais_cx)}%')
+
+        with col2:
+            with st.popover('Por local de apanha caixa fechadada'):
+                st.metric('Ponta', f'{porcento_ideal(dfs_locais_valores["Ponta"][1], dfs_locais_valores["Ponta"][0] + dfs_locais_valores["Ponta"][1])}%')
+                st.metric('Prateleira', f'{porcento_ideal(dfs_locais_valores["Prateleira"][1], dfs_locais_valores["Prateleira"][0] + dfs_locais_valores["Prateleira"][1])}%')
+                st.metric('Apanha A', f'{porcento_ideal(dfs_locais_valores["Apanha A"][1], dfs_locais_valores["Apanha A"][0] + dfs_locais_valores["Apanha A"][1])}%')
+                st.metric('Apanha B', f'{porcento_ideal(dfs_locais_valores["Apanha B"][1], dfs_locais_valores["Apanha B"][0] + dfs_locais_valores["Apanha B"][1])}%')
+                st.metric('Apanha C', f'{porcento_ideal(dfs_locais_valores["Apanha C"][1], dfs_locais_valores["Apanha C"][0] + dfs_locais_valores["Apanha C"][1])}%')
+                st.metric('Apanha AM', f'{porcento_ideal(dfs_locais_valores["Apanha AM"][1], dfs_locais_valores["Apanha AM"][0] + dfs_locais_valores["Apanha A"][1])}%')
+
+    coluna1_aba1, coluna2_aba1 = st.columns(2)
+
+    with coluna1_aba1:
+
+        with st.container(border=True):
+
+            coluna1, coluna2 = st.columns(2)
+            with coluna1:
+                st.metric('Produtos sem endereço de caixa fechada:', enderecar_caixa.shape[0])
+            with coluna2:
+                botao_download(enderecar_caixa[['Código', 'Descrição', 'Curva Frac', 'Qtde Venda Frac']], 'Download produtos para endereçar', 'enderecar_caixa.xlsx')
