@@ -95,35 +95,37 @@ local_frac = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datase
 
 ## Barra lateral com filtros
 
-with st.sidebar:
+# with st.sidebar:
 
-    st.write('# Filtros')
+    # st.write('# Filtros')
 
-    AC = 20
-    AB = 32
-    AA = 27
-    AM = 8
-    XPE = 9
+AC = 20
+AB = 32
+AA = 27
+AM = 8
+XPE = 9
 
-    total_enderecos_mosdulo = AC + AB + AA
+total_enderecos_mosdulo = AC + AB + AA
 
-    numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=5, max_value=6)
+    # numero_modulos = st.number_input('Número de modulos:', step=1, min_value=1, value=5, max_value=6)
 
-    total_enderecos_molulos = numero_modulos * total_enderecos_mosdulo
-    total_enderecos_aa = numero_modulos * AA
-    total_enderecos_ab = numero_modulos * AB
-    total_enderecos_ac = numero_modulos * AC
-    total_enderecos_am = numero_modulos * AM
-    total_enderecos_xpe = numero_modulos * XPE
+numero_modulos = 5
 
-    st.write('## Fracionado - Endereços:')
+total_enderecos_molulos = numero_modulos * total_enderecos_mosdulo
+total_enderecos_aa = numero_modulos * AA
+total_enderecos_ab = numero_modulos * AB
+total_enderecos_ac = numero_modulos * AC
+total_enderecos_am = numero_modulos * AM
+total_enderecos_xpe = numero_modulos * XPE
 
-    st.write('Utilizaveis (XPE não): ', total_enderecos_molulos)
-    st.write('Classe AA é: ', total_enderecos_aa)
-    st.write('Classe AB é: ', total_enderecos_ab)
-    st.write('Endereços classe AC é: ', total_enderecos_ac)
-    st.write('Liberados para antibióticos é: ', total_enderecos_am)
-    st.write('Destinados para XAROPE é: ', total_enderecos_xpe)
+    # st.write('## Fracionado - Endereços:')
+
+    # st.write('Utilizaveis (XPE não): ', total_enderecos_molulos)
+    # st.write('Classe AA é: ', total_enderecos_aa)
+    # st.write('Classe AB é: ', total_enderecos_ab)
+    # st.write('Endereços classe AC é: ', total_enderecos_ac)
+    # st.write('Liberados para antibióticos é: ', total_enderecos_am)
+    # st.write('Destinados para XAROPE é: ', total_enderecos_xpe)
 
 ## Tabelas
 
