@@ -92,7 +92,7 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
 
 def porcento_ideal(valor, total):
 
-    return 100 - round((valor * 100 / total), 2)
+    return 100 - round((valor * 100 / total), 1)
 
 situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
 local_frac = pd.read_excel(caminho_absoluto('data/analise_curva_abc/local/datasets/local_apanha_frac.xlsx'))
@@ -688,20 +688,25 @@ with aba2:
             #Filtro por tipo das prateleiras
             final_modulo = ['21', '22', '25', '26']
             comeco_modulo = ['20', '23', '24', '27']
+            todos = ['20', '23', '24', '27', '21', '22', '25', '26']
             
-            tipo_das_prateleiras = st.radio('Seleciona e tipo da prateleira:', ['Final dos Módulos', 'Começo dos Módulos'])
+            tipo_das_prateleiras = st.radio('Seleciona e tipo da prateleira:', ['Final dos Módulos', 'Começo dos Módulos', 'Todos'])
             
             if tipo_das_prateleiras == 'Final dos Módulos':
                 tipo_prateleira_selec = final_modulo
-            else:
+
+            elif tipo_das_prateleiras == 'Começo dos Módulos':  
                 tipo_prateleira_selec = comeco_modulo
+
+            else:
+                tipo_prateleira_selec = todos
 
             #Tabela de saida por prateleira(final/comeco)
             produto_ponta = somente_prateleira[['Ender.Frac.', 'Código', 'Qtde Venda Frac']]
-                        
+            
             selecao_do_tipo_de_prateleira = produto_ponta['Ender.Frac.'].apply(lambda x: any(x.startswith(item) for item in tipo_prateleira_selec))
             saida_por_pratileira_selecionada = produto_ponta[selecao_do_tipo_de_prateleira]
-            
+     
             def encontrar_modulo(endereco):
                 
                 dois_primeiros_digitos = int(str(endereco)[:2])
@@ -1145,60 +1150,35 @@ with aba1:
                     st.metric('Total', f'{porcento_ideal(errados_flowrack_prateleira, todos_flowrack_prateleira)}%')
 
                 with st.expander('Classe flowrack (Armazenamento)'):
-                    st.metric('Classe AA', f'{0}%')
+                    st.metric('Classe AA', f'{porcento_ideal(total_colocar_local_AA, total_enderecos_aa)}%')
 
-                    st.metric('Classe AB', f'{0}%')
+                    st.metric('Classe AB', f'{porcento_ideal(total_colocar_local_AB, total_enderecos_ab)}%')
 
-                    st.metric('Classe AC', f'{0}%')
-
-                    st.metric('Classe XPE', f'{0}%')
+                    st.metric('Classe AC', f'{porcento_ideal(total_colocar_local_AC, total_enderecos_ac)}%')
 
                     st.write('---')
 
-                    st.metric('Total', f'{0}%')
+                    total_errado_classes_flowrack = total_colocar_local_AA + total_colocar_local_AB + total_colocar_local_AC
+                    total_classes_flowrack = total_enderecos_aa + total_enderecos_ab + total_enderecos_ac
+
+                    st.metric('Total', f'{porcento_ideal(total_errado_classes_flowrack, total_classes_flowrack)}%')
 
                 with st.expander('Local Prateleira (Armazenamento)'):
-                    st.metric('Para o começo dos módulos', f'{0}%')
+                    total_colocar_nos_corredores_20_23_24_27 = len(colocar_nos_corredores_20_23_24_27)
+                    st.metric('Para o começo dos módulos', f'{porcento_ideal(total_colocar_nos_corredores_20_23_24_27, 768)}%')
 
-                    st.metric('Para o final dos módulos', f'{0}%')
+                    total_colocar_nos_corredores_21_22_25_26 = len(colocar_nos_corredores_21_22_25_26)
+                    st.metric('Para o final dos módulos', f'{porcento_ideal(total_colocar_nos_corredores_21_22_25_26, 720)}%')
 
                     st.write('---')
 
-                    st.metric('Total', f'{0}%')
+                    st.metric('Total', f'{porcento_ideal((total_colocar_nos_corredores_20_23_24_27 + total_colocar_nos_corredores_21_22_25_26), (768 + 720))}%')
 
         with col1:
-            st.metric('Armazenamento ideal de apanha fracionada (Total)', f'{0}%')
+            total_errado_armazenado_fracionado = (total_colocar_nos_corredores_20_23_24_27 + total_colocar_nos_corredores_21_22_25_26) + total_errado_classes_flowrack + errados_flowrack_prateleira
+            total_armazenado_fracionado = (768 + 720) + total_classes_flowrack + todos_flowrack_prateleira
 
-    with st.container(border=True):
-
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.metric('Divisão ideal da saída por módulo (Total)', f'{0}%')
-
-        with col2:
-            with st.popover('Por tipo de fracionado'):
-                with st.expander('Classe Flowrack (Saída)'):
-                    st.metric('Classe AA', f'{0}%')
-
-                    st.metric('Classe AB', f'{0}%')
-
-                    st.metric('Classe AC', f'{0}%')
-
-                    st.metric('Classe XPE', f'{0}%')
-
-                    st.write('---')
-
-                    st.metric('Total', f'{0}%')
-
-                with st.expander('Local da Prateleira (Saída)'):
-                    st.metric('Para o começo dos módulos', f'{0}%')
-
-                    st.metric('Para o final dos módulos', f'{0}%')
-
-                    st.write('---')
-
-                    st.metric('Total', f'{0}%')
+            st.metric('Armazenamento ideal de apanha fracionada (Total)', f'{porcento_ideal(total_errado_armazenado_fracionado, total_armazenado_fracionado)}%')
 
     coluna1_aba1, coluna2_aba1 = st.columns(2)
 
@@ -1206,7 +1186,7 @@ with aba1:
         st.metric('Curva A de "medicamentos"', formata_numero(somente_med_A.shape[0]))
 
         with st.container(border=True):
-
+  
             coluna1, coluna2 = st.columns(2)
             with coluna1:
                 st.metric('Produtos sem endereço de fracionado:', enderecar_frac.shape[0])
