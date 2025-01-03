@@ -422,3 +422,16 @@ with col1:
 
             if st.button('Enviar Dados'):
                 commit_to_github(github_token, repo_owner, repo_name, commit_message, files_to_commit)
+    
+with st.popover('Fonte dos dados:'):
+                
+    st.caption('Curva/Cadastro:')
+    st.caption('Fonte todas as curvas (curva_geral, curva_cx, curva_frac): Acesse o sistema WMS -> Gerenciamento de Estoque -> Consultas -> Curva -> Selecione o período desejado -> Filtrar -> Gerar Excel.')
+    st.caption('Fonte "produtos": Acesse o sistema WMS -> Gerenciamento de Estoque -> Consultas -> Consulta Cadastro de Endereços Apanha por Produto; selecionar todos em todos dos flags -> filtrar -> Gerar Excel.')
+
+    st.divider()
+
+    st.caption('Métricas:')
+    st.caption('Fonte "armazenagens": Acesse o sistema WMS -> Gerenciamento de Estoque -> No filtro "Função do endereço" selecione "Armazenagem" -> Filtrar -> Gerar Excel.')
+    st.caption('Fonte "armazenagem_estoque": Acesse o sistema WMS -> Gerenciamento de Estoque -> Consultas -> Consulta por endereço -> Deixe selecionado somente "Armazenagens".')
+    st.caption('Fonte "fracionado": Acesse o sistema WMS -> Gerenciamento de Estoque -> No filtro "Rua" selecione "995" -> Filtrar -> Gerar Excel.')
