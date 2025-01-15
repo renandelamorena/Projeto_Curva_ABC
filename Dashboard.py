@@ -10,7 +10,6 @@ from io import BytesIO
 import os
 from itertools import combinations
 from decimal import Decimal
-import numpy as np
 import math
 
 st.set_page_config(
