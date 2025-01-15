@@ -11,6 +11,7 @@ import os
 from itertools import combinations
 from decimal import Decimal
 import numpy as np
+import math
 
 st.set_page_config(
     page_title='Projeto Curva ABC',
@@ -585,14 +586,19 @@ with aba2:
 
             saida_dos_modulos = saida_dos_modulos[:numero_modulos]
                     
-            saida_dos_modulos_array = np.array(saida_dos_modulos)
-            soma_total = np.nansum(saida_dos_modulos_array)
+            soma_total = 0
+            for lista in saida_dos_modulos:
+                for valor in lista:
+                    if not math.isnan(valor):  # Verifica se o valor não é NaN
+                        soma_total += valor
             
             media_saida_modulo = round(soma_total / len(saida_dos_modulos), 1)
             
             saidas_list = []
-            for i in range(len(saida_dos_modulos_array)):
-                sum_lista_i = round(np.nansum(saida_dos_modulos_array[i]), 1)
+            for i in range(len(saida_dos_modulos)):
+                # Filtrar valores NaN antes da soma
+                lista_filtrada = [valor for valor in saida_dos_modulos[i] if not math.isnan(valor)]
+                sum_lista_i = round(sum(lista_filtrada), 1)
                 saida_dif_sum_lista_i = round((sum_lista_i - media_saida_modulo), 1)
                 saidas_list.append(Decimal(str(saida_dif_sum_lista_i)))
             
@@ -601,11 +607,11 @@ with aba2:
             st.write(f' #### Média definida para cada módulo: {formata_numero(round(media_saida_modulo))}')
             
             with st.container(border=True):
-                st.metric('1° Módulo', formata_numero(np.nansum(np.array(saida_dos_modulos[0]))), str(saidas_list[0]))
-                st.metric('2° Módulo', formata_numero(np.nansum(np.array(saida_dos_modulos[1]))), str(saidas_list[1]))
-                st.metric('3° Módulo', formata_numero(np.nansum(np.array(saida_dos_modulos[2]))), str(saidas_list[2]))
-                st.metric('4° Módulo', formata_numero(np.nansum(np.array(saida_dos_modulos[3]))), str(saidas_list[3]))
-                st.metric('5° Módulo', formata_numero(np.nansum(np.array(saida_dos_modulos[4]))), str(saidas_list[4]))
+                st.metric('1° Módulo', formata_numero(sum(valor for valor in saida_dos_modulos[0] if not math.isnan(valor))), str(saidas_list[0]))
+                st.metric('2° Módulo', formata_numero(sum(valor for valor in saida_dos_modulos[1] if not math.isnan(valor))), str(saidas_list[1]))
+                st.metric('3° Módulo', formata_numero(sum(valor for valor in saida_dos_modulos[2] if not math.isnan(valor))), str(saidas_list[2]))
+                st.metric('4° Módulo', formata_numero(sum(valor for valor in saida_dos_modulos[3] if not math.isnan(valor))), str(saidas_list[3]))
+                st.metric('5° Módulo', formata_numero(sum(valor for valor in saida_dos_modulos[4] if not math.isnan(valor))), str(saidas_list[4]))
                 
         def encontrar_combinacao(lista, alvo):
             for i in range(1, len(lista) + 1):
