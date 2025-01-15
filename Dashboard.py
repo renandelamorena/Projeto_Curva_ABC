@@ -93,7 +93,8 @@ def caminho_absoluto(caminho_relativo_com_barras_normais):
     return caminho_absoluto
 
 def porcento_ideal(valor, total):
-
+    if total == 0:
+        return None  # Ou um valor padrão
     return 100 - round((valor * 100 / total), 1)
 
 situacao_final = pd.read_csv(caminho_absoluto('data/tratamento_curva_abc/dados_tratados/csv/situacao_final.csv'))
